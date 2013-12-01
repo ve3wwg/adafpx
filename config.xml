@@ -172,7 +172,7 @@
 			<macro name="S_ISGID"/>
 			<macro name="S_ISVTX"/>
 		</set>
-		<set type="int_t" genset="50">
+		<set type="whence_t" genset="50">
 			<macro name="SEEK_SET"/>
 			<macro name="SEEK_CUR"/>
 			<macro name="SEEK_END"/>
@@ -182,6 +182,24 @@
 				<include file="sys/param.h" os="default"/>
 				<include file="sys/mount.h" os="default"/>
 			</includes>
+			<macro name="MS_BIND"/>
+			<macro name="MS_DIRSYNC"/>
+			<macro name="MS_MANDLOCK"/>
+			<macro name="MS_MOVE"/>
+			<macro name="MS_NOATIME"/>
+			<macro name="MS_NODEV"/>
+			<macro name="MS_NODIRATIME"/>
+			<macro name="MS_NOEXEC"/>
+			<macro name="MS_NOSUID"/>
+			<macro name="MS_RDONLY"/>
+			<macro name="MS_RELATIME"/>
+			<macro name="MS_REMOUNT"/>
+			<macro name="MS_SILENT"/>
+			<macro name="MS_STRICTATIME"/>
+			<macro name="MS_SYNCHRONOUS"/>
+			<macro name="MNT_FORCE"/>
+			<macro name="MNT_DETACH"/>
+			<macro name="MNT_EXPIRE"/>
 			<macro name="MNT_RDONLY"/>
 			<macro name="MNT_NOEXEC"/>
 			<macro name="MNT_NOSUID"/>
@@ -190,6 +208,7 @@
 			<macro name="MNT_SYNCHRONOUS"/>
 			<macro name="MNT_UPDATE"/>
 			<macro name="MNT_RELOAD"/>
+			<macro name="UMOUNT_NOFOLOW"/>
 		</set>
 		<set type="int_t" genset="70">
 			<includes>
@@ -338,7 +357,7 @@
 				<include file="sys/stat.h" os="default"/>
 				<include file="fcntl.h" os="default"/>
 			</includes>
-			<c_arg name="path" type="system.address" from="T1'Address"/>
+			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="oflags" type="int_t" from="OFlags"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
 			<ada_arg name="OFlags" io="in" type="int_t"/>
@@ -350,7 +369,7 @@
 				<include file="sys/stat.h" os="default"/>
 				<include file="fcntl.h" os="default"/>
 			</includes>
-			<c_arg name="path" type="system.address" from="T1'Address"/>
+			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="oflags" type="int_t" from="OFlags"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
@@ -364,7 +383,7 @@
 				<include file="sys/stat.h" os="default"/>
 				<include file="fcntl.h" os="default"/>
 			</includes>
-			<c_arg name="path" type="system.address" from="T1'Address"/>
+			<c_arg name="path" type="System.Addresse" from="T1'Address"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
 			<ada_arg name="Mode" io="in" type="mode_t"/>
@@ -423,7 +442,7 @@
 				<include file="sys/types.h" os="default"/>
 				<include file="sys/wait.h" os="default"/>
 			</includes>
-			<c_arg name="status" type="system.address" from="S'Address"/>
+			<c_arg name="status" type="System.Address" from="S'Address"/>
 			<ada_arg name="status" io="out" type="int_t" from="S"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(P)"/>
 			<temp name="S" type="int_t" init="0"/>
@@ -434,13 +453,249 @@
 				<include file="sys/wait.h" os="default"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
-			<c_arg name="status" type="system.address" from="S'Address"/>
+			<c_arg name="status" type="System.Address" from="S'Address"/>
 			<c_arg name="options" type="int_t" from="Options"/>
 			<ada_arg name="PID" io="in" type="pid_t"/>
 			<ada_arg name="Options" io="in" type="int_t"/>	
 			<ada_arg name="status" io="out" type="int_t" from="S"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(P)"/>
 			<temp name="S" type="int_t" init="0"/>
+		</func>
+		<func name="link" return="int_t" ada_type="procedure" rname="Status" ada_name="Link" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="path1" type="System.Address" from="C_Path1'Address"/>
+			<c_arg name="path2" type="System.Address" from="C_Path2'Address"/>
+			<ada_arg name="Path1" io="in" type="String"/>
+			<ada_arg name="Path2" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="C_Path1" type="String" init="C_String(Path1)"/>
+			<temp name="C_Path2" type="String" init="C_String(Path2)"/>
+		</func>
+		<func name="unlink" return="int_t" ada_type="procedure" rname="Status" ada_name="Unlink" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="Temp'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="chdir" return="int_t" ada_type="procedure" rname="Status" ada_name="Chdir" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="Temp'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="fchdir" return="int_t" ada_type="procedure" rname="Status" ada_name="FChdir" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="fildes" type="int_t" from="Fildes"/>
+			<ada_arg name="Fildes" io="in" type="int_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" inline="1">
+			<includes>
+				<include file="time.h" os="default"/>
+			</includes>
+			<c_arg name="t" type="System.Address" from="T'Address"/>
+			<ada_arg name="Time" io="out" type="time_t" from="T"/>
+			<temp name="T" type="time_t" init="0"/>
+		</func>
+		<func name="mknod" return="int_t" ada_type="procedure" rname="Status" ada_name="Mknod" inline="1">
+			<includes>
+				<include file="sys/unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+				<include file="sys/stat.h" os="default"/>
+				<include file="sys/fcntl.h" os="default"/>
+			</includes>
+			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
+			<c_arg name="mode" type="mode_t" from="Mode"/>
+			<c_arg name="dev" type="dev_t" from="Dev"/>
+			<ada_arg name="Pathname" io="in" type="String"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+			<ada_arg name="Dev" io="in" type="dev_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Pathname)"/>
+		</func>
+		<func name="chmod" return="int_t" ada_type="procedure" rname="Status" ada_name="Chmod" inline="1">
+			<includes>
+				<include file="sys/stat.h" os="default"/>
+			</includes>
+			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
+			<c_arg name="mode" type="mode_t" from="Mode"/>
+			<ada_arg name="Pathname" io="in" type="String"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Pathname)"/>
+		</func>
+		<func name="fchmod" return="int_t" ada_type="procedure" rname="Status" ada_name="FChmod" inline="1">
+			<includes>
+				<include file="sys/stat.h" os="default"/>
+			</includes>
+			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="mode" type="mode_t" from="Mode"/>
+			<ada_arg name="Fd" io="in" type="int_t"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="chown" return="int_t" ada_type="procedure" rname="Status" ada_name="Chown" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
+			<c_arg name="owner" type="uid_t" from="Owner"/>
+			<c_arg name="group" type="gid_t" from="Group"/>
+			<ada_arg name="Pathname" io="in" type="String"/>
+			<ada_arg name="Owner" io="in" type="uid_t"/>
+			<ada_arg name="Group" io="in" type="gid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Pathname)"/>
+		</func>
+		<func name="fchown" return="int_t" ada_type="procedure" rname="Status" ada_name="FChown" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="owner" type="uid_t" from="Owner"/>
+			<c_arg name="group" type="gid_t" from="Group"/>
+			<ada_arg name="Fd" io="in" type="int_t"/>
+			<ada_arg name="Owner" io="in" type="uid_t"/>
+			<ada_arg name="Group" io="in" type="gid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="lchown" return="int_t" ada_type="procedure" rname="Status" ada_name="LChown" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
+			<c_arg name="owner" type="uid_t" from="Owner"/>
+			<c_arg name="group" type="gid_t" from="Group"/>
+			<ada_arg name="Pathname" io="in" type="String"/>
+			<ada_arg name="Owner" io="in" type="uid_t"/>
+			<ada_arg name="Group" io="in" type="gid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="Temp" type="String" init="C_String(Pathname)"/>
+		</func>
+		<func name="lseek" return="int_t" ada_type="procedure" rname="Status" ada_name="LSeek" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+			</includes>
+			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="offset" type="offset_t" from="Offset"/>
+			<c_arg name="whence" type="whence_t" from="Whence"/>
+			<ada_arg name="Fd" io="in" type="int_t"/>
+			<ada_arg name="Offset" io="in" type="offset_t"/>
+			<ada_arg name="Whence" io="in" type="whence_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="getpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+			</includes>
+			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
+		</func>
+		<func name="getppid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getppid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+			</includes>
+			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
+		</func>
+		<func name="getpgid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="pid" type="pid_t" from="PID"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="PPID" io="out" type="pid_t" from="P"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(P)"/>
+		</func>
+		<func name="getpgrp" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgrp" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
+		</func>
+		<func name="setpgid" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="pid" type="pid_t" from="PID"/>
+			<c_arg name="pgid" type="pid_t" from="PGID"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="PPID" io="in" type="pid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="setpgrp" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgrp" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+			</includes>
+			<c_arg name="pid" type="pid_t" from="PID"/>
+			<c_arg name="pgid" type="pid_t" from="PGID"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="PPID" io="in" type="pid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="getgid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getgid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+			</includes>
+			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
+		</func>
+		<func name="getegid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getegid" inline="1">
+			<includes>
+				<include file="unistd.h" os="default"/>
+				<include file="sys/types.h" os="default"/>
+			</includes>
+			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
+		</func>
+		<func name="mount" return="int_t" ada_type="procedure" rname="Status" ada_name="Mount" inline="1">
+			<includes>
+				<include file="sys/mount.h" os="default"/>
+			</includes>
+			<c_arg name="source" type="System.Address" from="C_Source'Address"/>
+			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
+			<c_arg name="filesystemtype" type="System'Address" from="C_FST'Address"/>
+			<c_arg name="mountflags" type="uint_t" from="Mount_Flags"/>
+			<c_arg name="data" type="System'Address" from="Data"/>
+			<ada_arg name="Source" io="in" type="String"/>
+			<ada_arg name="Target" io="in" type="String"/>
+			<ada_arg name="Filesystem_Type" io="in" type="String"/>
+			<ada_arg name="Mount_Flags" io="in" type="uint_t"/>
+			<ada_arg name="Data" io="in" type="System.Address"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="C_Source" type="String" init="C_String(Source)"/>
+			<temp name="C_Target" type="String" init="C_String(Target)"/>
+			<temp name="C_FST" type="String" init="C_String(Filesystem_Type)"/>
+		</func>
+		<func name="umount" return="int_t" ada_type="procedure" rname="Status" ada_name="UMount" inline="1">
+			<includes>
+				<include file="sys/mount.h" os="default"/>
+			</includes>
+			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
+			<ada_arg name="Target" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="C_Target" type="String" init="C_String(Target)"/>
+		</func>
+		<func name="umount2" return="int_t" ada_type="procedure" rname="Status" ada_name="UMount2" inline="1">
+			<includes>
+				<include file="sys/mount.h" os="default"/>
+			</includes>
+			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
+			<c_arg name="flags" type="int_t" from="Flags"/>
+			<ada_arg name="Target" io="in" type="String"/>
+			<ada_arg name="Flags" io="in" type="int_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="C_Target" type="String" init="C_String(Target)"/>
 		</func>
 	</section2>
 </entities>
