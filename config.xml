@@ -152,7 +152,7 @@
 			<macro name="WUNTRACED"/>
 			<macro name="WCONTINUED"/>
 		</set>
-		<set type = "mode_t" genset="40">
+		<set type = "" genset="40" format="16#%04X#">
 			<includes>
 				<include file="sys/stat.h" os="default"/>
 			</includes>
@@ -177,7 +177,7 @@
 			<macro name="SEEK_CUR"/>
 			<macro name="SEEK_END"/>
 		</set>
-		<set type="mntflags_t" genset="60">
+		<set type="mntflags_t" genset="60" format="16#%08X#">
 			<includes>
 				<include file="sys/param.h" os="default"/>
 				<include file="sys/mount.h" os="default"/>
@@ -273,23 +273,23 @@
 			<macro name="SIG_HOLD"/>
 			<macro name="SIG_ERR"/>
 		</set>
-		<set type="int_t" genset="100">
+		<set type="" genset="100">
 			<includes>
 				<include file="sys/param.h" os="default"/>
 			</includes>
 			<macro name="MAXPATHLEN"/>
 		</set>
-		<set type="int_t" genset="110">
+		<set type="" genset="110">
 			<includes>
 				<include file="fcntl.h" os="default"/>
 			</includes>
 			<macro name="FD_CLOEXEC"/>
 		</set>
-		<set type="int_t" genset="120">
+		<set type="" genset="120">
 			<includes>
 				<include file="sys/utsname.h" os="default"/>
 			</includes>
-			<macro name="SYS_NAMELEN" alt="_SYS_NAMELEN" />
+			<macro name="SYS_NAMELEN" alt="_SYS_NAMELEN"/>
 		</set>
 		<set type="mode_t" genset="130" format="16#%08X#">
 			<includes>
