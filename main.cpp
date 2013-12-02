@@ -45,6 +45,7 @@ main(int argc,char **argv) {
 	comp_systypes();
 //	comp_funcs();
 
+	emit_macros();
 	emit_section2();
 exit(0);
 	set_input(stdin);

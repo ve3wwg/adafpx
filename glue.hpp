@@ -22,6 +22,7 @@ void comp_macros();
 void comp_types();
 void comp_systypes();
 
+void emit_macros();
 void emit_section2();
 
 #endif // GLUE_HPP

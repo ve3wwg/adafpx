@@ -9,8 +9,11 @@
 #include <string.h>
 #include <assert.h>
 
+#include <algorithm>
 #include <iostream>
+#include <sstream>
 
+#include "glue.hpp"
 #include "utils.hpp"
 #include "comp.hpp"
 #include "config.hpp"
@@ -97,6 +100,88 @@ comp_macros() {
 	for ( auto it=config.macro_sets.begin(); it != config.macro_sets.end(); ++it ) {
 		s_config::s_macro_set& mset = *it;
 		comp_macro_set(mset);
+	}
+}
+
+struct s_msort {
+	std::string	name;
+	long		value;
+};
+
+bool
+sort_msort(const s_msort& left,const s_msort& right) {
+	return left.value < right.value;
+}
+
+void
+emit_macros() {
+
+	for ( auto it=config.macro_sets.begin(); it != config.macro_sets.end(); ++it ) {
+		const s_config::s_macro_set& mset = *it;
+		char sgenset[32];
+		std::fstream ads;
+
+		sprintf(sgenset,"%04d",mset.genset);
+
+		std::cout << "Genset " << sgenset << " emit macros\n";
+	
+		if ( !gcc_open(ads,mset.genset,".ads") )
+			exit(3);
+
+		std::vector<s_msort> svec;
+
+		for ( auto mit=mset.values.begin(); mit != mset.values.end(); ++mit ) {
+			const std::string& name = mit->first;
+			const long value = mit->second;
+
+			svec.push_back({ name, value });
+		}
+
+		std::sort(svec.begin(),svec.end(),sort_msort);
+
+		for ( auto sit=svec.begin(); sit != svec.end(); ++sit ) {
+			const s_msort& ent = *sit;
+			std::stringstream s;
+
+			s << ent.name << " :";
+
+			ads << "   ";
+			ads.width(20);
+			ads << std::left << s.str() << " const ";
+
+			if ( mset.type != "" )
+				ads << mset.type << " ";
+			ads << ":= ";
+
+			char vbuf[128];
+			sprintf(vbuf,mset.format.c_str(),ent.value);
+
+			ads << vbuf << ";\n";
+		}	
+
+		if ( mset.alternates.size() > 0 ) {
+			ads << "\n";
+
+			for ( auto ait=mset.alternates.begin(); ait != mset.alternates.end(); ++ait ) {
+				const std::string& name = ait->first;
+				const std::string& value = ait->second;
+				std::stringstream s;
+
+				if ( value[0] == '_' )
+					continue;		// Not a legal Ada name
+
+				s << value << " :";
+
+				ads << "   ";
+				ads.width(20);
+				ads << std::left << s.str() << " const ";
+				if ( mset.type != "" )
+					ads << mset.type;
+				ads << ":= " << name << ";\n";
+			}	
+		}
+
+		ads.close();		
 	}
 }
 
