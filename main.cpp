@@ -39,6 +39,10 @@ main(int argc,char **argv) {
 
 	system("rm -fr ./staging");
 	mkdir("./staging",0777);
+	system("cp 0005.ads ./staging/.");
+	system("cp 0005.adb ./staging/.");
+	system("cp 9999.ads ./staging/.");
+	system("cp 9999.adb ./staging/.");
 
 	comp_macros();
 	comp_types();
@@ -47,6 +51,10 @@ main(int argc,char **argv) {
 
 	emit_macros();
 	emit_section2();
+
+	system("cat ./staging/????.ads >posix.ads");
+	system("cat ./staging/????.adb >posix.adb");
+
 exit(0);
 	set_input(stdin);
 
