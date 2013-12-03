@@ -128,13 +128,15 @@ emit_macros() {
 		if ( !gcc_open(ads,mset.genset,".ads") )
 			exit(3);
 
+		ads << "\n";
+
 		std::vector<s_msort> svec;
 
 		for ( auto mit=mset.values.begin(); mit != mset.values.end(); ++mit ) {
 			const std::string& name = mit->first;
 			const long value = mit->second;
 
-			svec.push_back({ name, value });
+			svec.push_back(s_msort({ name, value }));
 		}
 
 		std::sort(svec.begin(),svec.end(),sort_msort);
@@ -145,7 +147,7 @@ emit_macros() {
 
 			s << ent.name << " :";
 
-			ads << "   ";
+			ads << "    ";
 			ads.width(20);
 			ads << std::left << s.str() << " constant ";
 
