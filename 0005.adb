@@ -1,7 +1,9 @@
 ----------------------------------------------------------------------
 -- Ada for POSIX (AdaFPX)
 ----------------------------------------------------------------------
--- This is generated source code. Do not edit.
+-- Warren W. Gay VE3WWG     Tue Dec  3 18:49:48 2013
+--
+-- This is generated source code. Edit at your own risk.
 
 package body Posix is
 
