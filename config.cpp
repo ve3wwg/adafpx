@@ -96,10 +96,8 @@ loadconfig() {
 			mset.macros.push_back(macro_name);
 
 			const std::string alt = mnode.attribute("alt").value();
-			if ( alt != "" ) {
+			if ( alt != "" )
 				mset.alternates[macro_name] = alt;
-assert(alt != "");
-			}
 		}
 
 		config.macro_sets.push_back(mset);
@@ -172,6 +170,13 @@ assert(alt != "");
 			const pugi::xml_node& func = *it;
 
 			if ( strcmp(func.name(),"func") != 0 )
+				continue;
+
+			std::string os = func.attribute("os").value();
+			if ( os == "" )
+				os = "*";
+
+			if ( !match(os,platform) )
 				continue;
 
 			s_config::s_section2::s_func funcent;
