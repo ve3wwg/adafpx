@@ -22,7 +22,7 @@ OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \
 
 main:	ansi-c-lex.cpp ansi-c-yacc.cpp $(OBJS)
 	$(CXX) $(OBJS) -o main
-	rm -f main main.o *.ali cglue.o
+	rm -f atest atest.o *.ali b~* cglue.o
 
 run:
 	./main
