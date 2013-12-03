@@ -383,7 +383,7 @@
 				<include file="sys/stat.h" os="default"/>
 				<include file="fcntl.h" os="default"/>
 			</includes>
-			<c_arg name="path" type="System.Addresse" from="T1'Address"/>
+			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
 			<ada_arg name="Mode" io="in" type="mode_t"/>
@@ -397,21 +397,21 @@
 			<ada_arg name="Fd" io="in" type="int_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="dup" return="int_t" ada_type="procedure" rname="Fd" ada_name="Dup" inline="1">
+		<func name="dup" return="int_t" ada_type="procedure" rname="R" ada_name="Dup" inline="1">
 			<includes>
 				<include file="unistd.h" os="default"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<ada_arg name="Fd" io="in" type="int_t"/>
-			<ada_arg name="Fd2" io="out" type="int_t" from="Fd"/>
-			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Fd)"/>
+			<ada_arg name="Fd2" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="dup2" return="int_t" ada_type="procedure" rname="Status" ada_name="Dup2" inline="1">
 			<includes>
 				<include file="unistd.h" os="default"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
-			<c_arg name="fd2" type="int_t" from="Fd"/>
+			<c_arg name="fd2" type="int_t" from="Fd2"/>
 			<ada_arg name="Fd" io="in" type="int_t"/>
 			<ada_arg name="Fd2" io="in" type="int_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
@@ -631,7 +631,7 @@
 			<c_arg name="pid" type="pid_t" from="PID"/>
 			<c_arg name="pgid" type="pid_t" from="PGID"/>
 			<ada_arg name="PID" io="in" type="pid_t"/>
-			<ada_arg name="PPID" io="in" type="pid_t"/>
+			<ada_arg name="PGID" io="in" type="pid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
 		<func name="setpgrp" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgrp" inline="1">
@@ -639,9 +639,9 @@
 				<include file="unistd.h" os="default"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
-			<c_arg name="pgid" type="pid_t" from="PGID"/>
+			<c_arg name="pgid" type="pid_t" from="PGRP"/>
 			<ada_arg name="PID" io="in" type="pid_t"/>
-			<ada_arg name="PPID" io="in" type="pid_t"/>
+			<ada_arg name="PGRP" io="in" type="pid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
 		<func name="getgid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getgid" inline="1">
@@ -664,9 +664,9 @@
 			</includes>
 			<c_arg name="source" type="System.Address" from="C_Source'Address"/>
 			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
-			<c_arg name="filesystemtype" type="System'Address" from="C_FST'Address"/>
+			<c_arg name="filesystemtype" type="System.Address" from="C_FST'Address"/>
 			<c_arg name="mountflags" type="uint_t" from="Mount_Flags"/>
-			<c_arg name="data" type="System'Address" from="Data"/>
+			<c_arg name="data" type="System.Address" from="Data"/>
 			<ada_arg name="Source" io="in" type="String"/>
 			<ada_arg name="Target" io="in" type="String"/>
 			<ada_arg name="Filesystem_Type" io="in" type="String"/>
