@@ -69,7 +69,7 @@ emit_section2() {
 				proto << " return " << func.returns;
 		}
 
-		ads << "  " << proto.str() << ";\n";
+		ads << "   " << proto.str() << ";\n";
 		if ( func.finline )
 			ads << "   pragma Inline(" << func.ada_name << ");\n\n";
 
