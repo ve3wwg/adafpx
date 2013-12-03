@@ -28,7 +28,7 @@ run:
 	./main
 
 atest::	cglue.o
-	gnatmake -Wall atest.adb -o atest -largs cglue.o
+	gnatmake -Wall atest.adb -o atest -largs cglue.o -lstdc++
 
 clean:
 	rm -f *.o core 
