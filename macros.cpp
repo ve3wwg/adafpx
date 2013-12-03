@@ -147,7 +147,7 @@ emit_macros() {
 
 			ads << "   ";
 			ads.width(20);
-			ads << std::left << s.str() << " const ";
+			ads << std::left << s.str() << " constant ";
 
 			if ( mset.type != "" )
 				ads << mset.type << " ";
@@ -174,7 +174,7 @@ emit_macros() {
 
 				ads << "   ";
 				ads.width(20);
-				ads << std::left << s.str() << " const ";
+				ads << std::left << s.str() << " constant ";
 				if ( mset.type != "" )
 					ads << mset.type;
 				ads << ":= " << name << ";\n";
