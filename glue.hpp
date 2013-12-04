@@ -25,6 +25,7 @@ void comp_systypes();
 void emit_basic_types();
 void emit_sys_types();
 void emit_macros();
+void emit_structs();
 void emit_section2();
 
 #endif // GLUE_HPP
