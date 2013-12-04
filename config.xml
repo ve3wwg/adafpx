@@ -1,6 +1,45 @@
 <entities>
+	<basic_types genset="50">
+		<type name="char" ada="char_t"/>
+		<type name="short" ada="short_t"/>
+		<type name="int" ada="int_t"/>
+		<type name="long" ada="long_t"/>
+		<type name="long long" ada="llong_t"/>
+	<!--	<type name="void*"/>  -->
+	</basic_types>
+	<posix_types genset="75">
+		<includes>
+			<include file="stdint.h" os="default"/>
+			<include file="time.h" os="default"/>
+			<include file="sys/times.h" os="default"/>
+			<include file="sys/utsname.h" os="default"/>
+			<include file="unistd.h" os="default"/>
+			<include file="sys/types.h" os="default"/>
+			<include file="sys/stat.h" os="default"/>
+			<include file="sys/uio.h" os="default"/>
+			<include file="sys/ptrace.h" os="default"/>
+			<include file="sys/param.h" os="default"/>
+			<include file="signal.h" os="default"/>
+		</includes>
+		<type name="off_t"/>
+		<type name="size_t"/>
+		<type name="ssize_t"/>
+		<type name="mode_t"/>
+		<type name="uid_t"/>
+		<type name="gid_t"/>
+		<type name="pid_t"/>
+		<type name="time_t"/>
+		<type name="dev_t"/>
+		<type name="nlink_t"/>
+		<type name="blkcnt_t"/>
+		<type name="blksize_t"/>
+		<type name="sig_t"/>
+		<type name="clock_t"/>
+		<type name="ino64_t" os="Darwin 12.*.*"/>
+		<type name="ino64_t" os="Darwin 13.*.*"/>
+	</posix_types>
 	<macro_constants>
-		<set type="errno_t" format="%ld" genset="10">
+		<set type="errno_t" format="%ld" genset="110">
 			<includes>
 				<include file="errno.h" os="Darwin 13.*.*"/>
 				<include file="errno.h" os="default"/>
@@ -113,7 +152,7 @@
 			<macro name="EOWNERDEAD"/>
 			<macro name="ELAST"/>
 		</set>
-		<set type="fcntl_t" genset="20">
+		<set type="fcntl_t" genset="120">
 			<includes>
 				<include file="fcntl.h" os="default"/>
 			</includes>
@@ -144,7 +183,7 @@
 			<macro name="F_ALLOCATECONTIG"/>
 			<macro name="F_ALLOCATEALL"/>
 		</set>
-		<set type="int_t" genset="30">
+		<set type="int_t" genset="130">
 			<includes>
 				<include file="sys/wait.h" os="default"/>
 			</includes>
@@ -152,7 +191,7 @@
 			<macro name="WUNTRACED"/>
 			<macro name="WCONTINUED"/>
 		</set>
-		<set type = "" genset="40" format="16#%04X#">
+		<set type = "" genset="140" format="16#%04X#">
 			<includes>
 				<include file="sys/stat.h" os="default"/>
 			</includes>
@@ -172,12 +211,12 @@
 			<macro name="S_ISGID"/>
 			<macro name="S_ISVTX"/>
 		</set>
-		<set type="whence_t" genset="50">
+		<set type="whence_t" genset="150">
 			<macro name="SEEK_SET"/>
 			<macro name="SEEK_CUR"/>
 			<macro name="SEEK_END"/>
 		</set>
-		<set type="mntflags_t" genset="60" format="16#%08X#">
+		<set type="mntflags_t" genset="160" format="16#%08X#">
 			<includes>
 				<include file="sys/param.h" os="default"/>
 				<include file="sys/mount.h" os="default"/>
@@ -210,7 +249,7 @@
 			<macro name="MNT_RELOAD"/>
 			<macro name="UMOUNT_NOFOLOW"/>
 		</set>
-		<set type="int_t" genset="70">
+		<set type="int_t" genset="170">
 			<includes>
 				<include file="sys/types.h" os="default"/>
 				<include file="sys/ptrace.h" os="default"/>
@@ -223,7 +262,7 @@
 			<macro name="PT_ATTACH"/>
 			<macro name="PT_DETACH"/>
 		</set>
-		<set type="amode_t" genset="80">
+		<set type="amode_t" genset="180">
 			<includes>
 				<include file="unistd.h" os="default"/>
 			</includes>
@@ -231,7 +270,7 @@
 			<macro name="W_OK"/>
 			<macro name="F_OK"/>
 		</set>
-		<set type="int_t" genset="90">
+		<set type="int_t" genset="190">
 			<includes>
 				<include file="signal.h" os="default"/>
 			</includes>
@@ -273,25 +312,25 @@
 			<macro name="SIG_HOLD"/>
 			<macro name="SIG_ERR"/>
 		</set>
-		<set type="" genset="100">
+		<set type="" genset="200">
 			<includes>
 				<include file="sys/param.h" os="default"/>
 			</includes>
 			<macro name="MAXPATHLEN"/>
 		</set>
-		<set type="" genset="110">
+		<set type="" genset="210">
 			<includes>
 				<include file="fcntl.h" os="default"/>
 			</includes>
 			<macro name="FD_CLOEXEC"/>
 		</set>
-		<set type="" genset="120">
+		<set type="" genset="220">
 			<includes>
 				<include file="sys/utsname.h" os="default"/>
 			</includes>
 			<macro name="SYS_NAMELEN" alt="_SYS_NAMELEN"/>
 		</set>
-		<set type="mode_t" genset="130" format="16#%08X#">
+		<set type="" genset="230" format="16#%08X#">
 			<includes>
 				<include file="fcntl.h" os="default"/>
 			</includes>
@@ -311,45 +350,6 @@
 			<macro name="O_CLOEXEC" desc="Mark as close-on-exec"/>
 		</set>
 	</macro_constants>
-	<basic_types genset="500">
-		<type name="char"/>
-		<type name="short"/>
-		<type name="int"/>
-		<type name="long"/>
-		<type name="long long"/>
-		<type name="void*"/>
-	</basic_types>
-	<posix_types genset="510">
-		<includes>
-			<include file="stdint.h" os="default"/>
-			<include file="time.h" os="default"/>
-			<include file="sys/times.h" os="default"/>
-			<include file="sys/utsname.h" os="default"/>
-			<include file="unistd.h" os="default"/>
-			<include file="sys/types.h" os="default"/>
-			<include file="sys/stat.h" os="default"/>
-			<include file="sys/uio.h" os="default"/>
-			<include file="sys/ptrace.h" os="default"/>
-			<include file="sys/param.h" os="default"/>
-			<include file="signal.h" os="default"/>
-		</includes>
-		<type name="off_t"/>
-		<type name="size_t"/>
-		<type name="ssize_t"/>
-		<type name="mode_t"/>
-		<type name="uid_t"/>
-		<type name="gid_t"/>
-		<type name="pid_t"/>
-		<type name="time_t"/>
-		<type name="dev_t"/>
-		<type name="nlink_t"/>
-		<type name="blkcnt_t"/>
-		<type name="blksize_t"/>
-		<type name="sig_t"/>
-		<type name="clock_t"/>
-		<type name="ino64_t" os="Darwin 12.*.*"/>
-		<type name="ino64_t" os="Darwin 13.*.*"/>
-	</posix_types>
 	<section2 genset="600">
 		<func name="open" return="int_t" ada_type="procedure" rname="Fd" ada_name="Open" inline="1">
 			<includes>
@@ -588,10 +588,10 @@
 				<include file="sys/types.h" os="default"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
-			<c_arg name="offset" type="offset_t" from="Offset"/>
+			<c_arg name="offset" type="off_t" from="Offset"/>
 			<c_arg name="whence" type="whence_t" from="Whence"/>
 			<ada_arg name="Fd" io="in" type="int_t"/>
-			<ada_arg name="Offset" io="in" type="offset_t"/>
+			<ada_arg name="Offset" io="in" type="off_t"/>
 			<ada_arg name="Whence" io="in" type="whence_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
