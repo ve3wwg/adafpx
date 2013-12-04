@@ -30,10 +30,9 @@ main(int argc,char **argv) {
 	version = uts_version();
 	machine = uts_machine();
 
-	printf("OS: %s, machine %s\n",
-		platform.c_str(),
-		machine.c_str());
-	printf("Version: %s\n",version.c_str());
+	std::cout << "Platform: " << platform << "\n"
+		<< "Machine:  " << machine << "\n"
+		<< "Version:  " << version << "\n";
 
 	loadconfig();
 
