@@ -183,7 +183,7 @@
 			<macro name="F_ALLOCATECONTIG"/>
 			<macro name="F_ALLOCATEALL"/>
 		</set>
-		<set type="int_t" genset="130">
+		<set type="" genset="130">
 			<includes>
 				<include file="sys/wait.h" os="default"/>
 			</includes>
@@ -249,7 +249,7 @@
 			<macro name="MNT_RELOAD"/>
 			<macro name="UMOUNT_NOFOLOW"/>
 		</set>
-		<set type="int_t" genset="170">
+		<set type="" genset="170">
 			<includes>
 				<include file="sys/types.h" os="default"/>
 				<include file="sys/ptrace.h" os="default"/>
@@ -270,7 +270,7 @@
 			<macro name="W_OK"/>
 			<macro name="F_OK"/>
 		</set>
-		<set type="int_t" genset="190">
+		<set type="sig_t" genset="190">
 			<includes>
 				<include file="signal.h" os="default"/>
 			</includes>
