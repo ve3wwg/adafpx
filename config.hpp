@@ -25,6 +25,7 @@ struct s_config {
 	struct s_basic_types {
 		struct s_basic_type {
 			unsigned		size;		// Size in bytes of the type
+			std::string		ada;		// Ada name for the type
 		};
 		int				genset;
 		std::unordered_map<std::string,s_basic_type> info;
