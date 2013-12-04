@@ -79,6 +79,16 @@ struct s_config {
 		};
 		std::vector<s_func>		funcs;
 	} section2;
+	
+	struct s_structs {
+		struct s_struct {
+			int			genset;			// Struct genset #
+			std::string		c_name;			// C structure name
+			std::string		a_name;			// Name to use in Ada
+			std::vector<std::string> includes;
+		};
+		std::vector<s_struct>		structvec;
+	} structs;
 };
 
 extern s_config config;

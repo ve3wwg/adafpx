@@ -237,6 +237,35 @@ loadconfig() {
 			config.section2.funcs.push_back(funcent);
 		}
 	}
+
+	//////////////////////////////////////////////////////////////
+	// structure types
+	//////////////////////////////////////////////////////////////
+	{
+		pugi::xml_node node = doc.child("entities").child("structs");
+
+		for ( auto it=node.begin(); it != node.end(); ++it ) {
+			pugi::xml_node& snode = *it;
+
+			if ( strcmp(snode.name(),"struct") != 0 )
+				continue;
+
+			s_config::s_structs::s_struct stype;
+
+			stype.genset = snode.attribute("genset").as_int();
+			assert(stype.genset > 0);
+			
+			stype.c_name = snode.attribute("name").value();
+			stype.a_name = snode.attribute("ada").value();
+
+			{
+				pugi::xml_node inode = snode.child("includes");
+				load_includes(stype.includes,inode);
+			}
+
+			config.structs.structvec.push_back(stype);
+		}
+	}
 }
 
 // End config.cpp

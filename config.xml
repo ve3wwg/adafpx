@@ -350,7 +350,7 @@
 			<macro name="O_CLOEXEC" desc="Mark as close-on-exec"/>
 		</set>
 	</macro_constants>
-	<section2 genset="600">
+	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="Fd" ada_name="Open" inline="1">
 			<includes>
 				<include file="sys/types.h" os="default"/>
@@ -698,4 +698,84 @@
 			<temp name="C_Target" type="String" init="C_String(Target)"/>
 		</func>
 	</section2>
+	<structs>
+		<struct name="timespec" ada="s_timespec" genset="400">
+			<includes>
+				<include file="fcntl.h"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+		</struct>
+		<struct name="timeval" ada="s_timeval" genset="410">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+		</struct>
+		<struct name="rusage" ada="s_rusage" genset="420">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+		</struct>
+		<struct name="fbootstraptransfer" ada="s_fbootstrap_transfer" os="Darwin *" genset="430">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="flock" ada="s_flock" genset="440">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="fstore" ada="s_fstore" genset="450">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="log2phys" ada="s_log2phys" os="Darwin *" genset="460">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="stat" ada="s_stat" genset="470">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
+			</includes>
+		</struct>
+		<struct name="tm" ada="s_tm" genset="480">
+			<includes>
+				<include file="time.h"/>
+			</includes>
+		</struct>
+		<struct name="iovec" ada="s_iovec" genset="490">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+				<include file="utime.h"/>
+			</includes>
+		</struct>
+		<struct name="utimbuf" ada="s_utimbuf" genset="500">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+				<include file="utime.h"/>
+			</includes>
+		</struct>
+		<struct name="tms" ada="s_tms" genset="510">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="times.h"/>
+			</includes>
+		</struct>
+		<struct name="radvisory" ada="s_radvisory" os="Darwin *" genset="520">
+			<includes>
+				<include file="sys/param.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+		</struct>
+	</structs>
 </entities>
