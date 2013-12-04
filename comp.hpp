@@ -10,6 +10,7 @@
 
 bool gcc_open(std::fstream& fs,int genset,const std::string& suffix=".c");
 bool gcc_compile(std::fstream& fs,int genset);
+bool gcc_precompile(std::fstream& fs,int genset,const std::string& variation="");
 
 #endif // COMP_HPP
 

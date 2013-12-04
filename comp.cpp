@@ -94,4 +94,42 @@ gcc_compile(std::fstream& fs,int genset) {
 	return true;
 }
 
+bool
+gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
+	char filename[32];
+	std::string cmd, path;
+	int rc;
+
+	if ( fs.is_open() )
+		fs.close();
+
+	sprintf(filename,"%04d",genset);
+
+	{
+		std::stringstream s;
+		s << "./staging/" << filename << variation << ".c";
+		path = s.str();
+	}
+	{
+		std::stringstream s;
+		s 	<< "gcc -P -E " << path << " > ./staging/" << filename << ".out"
+			<< " 2>./staging/" << filename << ".err ";
+		cmd = s.str();
+	}
+
+	rc = system(cmd.c_str());	// Compile
+	if ( rc ) {
+		std::cerr << "Precompile failed: " << cmd << "\n";
+		return false;
+	}
+
+	fs.open(path.c_str(),std::fstream::in);
+	if ( fs.fail() ) {
+		std::cerr << strerror(errno) << ": opening " << path << " for read.\n";
+		return false;
+	}
+
+	return true;
+}
+
 // End comp.cpp
