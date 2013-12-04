@@ -120,6 +120,7 @@ loadconfig() {
 			std::string name = tnode.attribute("name").value();
 			
 			btype.size = 0;				// Unknown at this time
+			btype.ada  = tnode.attribute("ada").value();
 			config.basic_types.info[name] = btype;
 		}
 	}
