@@ -22,6 +22,8 @@ void comp_macros();
 void comp_types();
 void comp_systypes();
 
+void emit_basic_types();
+void emit_sys_types();
 void emit_macros();
 void emit_section2();
 
