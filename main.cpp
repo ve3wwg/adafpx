@@ -52,6 +52,7 @@ main(int argc,char **argv) {
 	emit_basic_types();
 	emit_sys_types();
 	emit_macros();
+	emit_structs();
 	emit_section2();
 
 	system("cat ./staging/????.ads >posix.ads");
