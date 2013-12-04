@@ -41,6 +41,7 @@ main(int argc,char **argv) {
 	mkdir("./staging",0777);
 	system("cp 0005.ads ./staging/.");
 	system("cp 0005.adb ./staging/.");
+	system("cp 0060.ads ./staging/.");
 	system("cp 9999.ads ./staging/.");
 	system("cp 9999.adb ./staging/.");
 
@@ -49,6 +50,8 @@ main(int argc,char **argv) {
 	comp_systypes();
 //	comp_funcs();
 
+	emit_basic_types();
+	emit_sys_types();
 	emit_macros();
 	emit_section2();
 
