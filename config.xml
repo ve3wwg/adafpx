@@ -9,17 +9,17 @@
 	</basic_types>
 	<posix_types genset="75">
 		<includes>
-			<include file="stdint.h" os="default"/>
-			<include file="time.h" os="default"/>
-			<include file="sys/times.h" os="default"/>
-			<include file="sys/utsname.h" os="default"/>
-			<include file="unistd.h" os="default"/>
-			<include file="sys/types.h" os="default"/>
-			<include file="sys/stat.h" os="default"/>
-			<include file="sys/uio.h" os="default"/>
-			<include file="sys/ptrace.h" os="default"/>
-			<include file="sys/param.h" os="default"/>
-			<include file="signal.h" os="default"/>
+			<include file="stdint.h"/>
+			<include file="time.h"/>
+			<include file="sys/times.h"/>
+			<include file="sys/utsname.h"/>
+			<include file="unistd.h"/>
+			<include file="sys/types.h"/>
+			<include file="sys/stat.h"/>
+			<include file="sys/uio.h"/>
+			<include file="sys/ptrace.h"/>
+			<include file="sys/param.h"/>
+			<include file="signal.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -42,7 +42,7 @@
 		<set type="errno_t" format="%ld" genset="110">
 			<includes>
 				<include file="errno.h" os="Darwin 13.*.*"/>
-				<include file="errno.h" os="default"/>
+				<include file="errno.h"/>
 			</includes>
 			<macro name="EPERM"/>
 			<macro name="ENOENT"/>
@@ -154,7 +154,7 @@
 		</set>
 		<set type="fcntl_t" genset="120">
 			<includes>
-				<include file="fcntl.h" os="default"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<macro name="F_DUPFD"/>
 			<macro name="F_DUPFD_CLOEXEC"/>
@@ -185,7 +185,7 @@
 		</set>
 		<set type="" genset="130">
 			<includes>
-				<include file="sys/wait.h" os="default"/>
+				<include file="sys/wait.h"/>
 			</includes>
 			<macro name="WNOHANG"/>
 			<macro name="WUNTRACED"/>
@@ -193,7 +193,7 @@
 		</set>
 		<set type = "" genset="140" format="16#%04X#">
 			<includes>
-				<include file="sys/stat.h" os="default"/>
+				<include file="sys/stat.h"/>
 			</includes>
 			<macro name="S_IRWXU"/>
 			<macro name="S_IRUSR"/>
@@ -218,8 +218,8 @@
 		</set>
 		<set type="mntflags_t" genset="160" format="16#%08X#">
 			<includes>
-				<include file="sys/param.h" os="default"/>
-				<include file="sys/mount.h" os="default"/>
+				<include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<macro name="MS_BIND"/>
 			<macro name="MS_DIRSYNC"/>
@@ -251,8 +251,8 @@
 		</set>
 		<set type="" genset="170">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/ptrace.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/ptrace.h"/>
 			</includes>
 			<macro name="PT_TRACE_ME"/>
 			<macro name="PT_DENY_ATTACH"/>
@@ -264,7 +264,7 @@
 		</set>
 		<set type="amode_t" genset="180">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<macro name="R_OK"/>
 			<macro name="W_OK"/>
@@ -272,7 +272,7 @@
 		</set>
 		<set type="sig_t" genset="190">
 			<includes>
-				<include file="signal.h" os="default"/>
+				<include file="signal.h"/>
 			</includes>
 			<macro name="SIGHUP"/>
 			<macro name="SIGINT"/>
@@ -314,25 +314,25 @@
 		</set>
 		<set type="" genset="200">
 			<includes>
-				<include file="sys/param.h" os="default"/>
+				<include file="sys/param.h"/>
 			</includes>
 			<macro name="MAXPATHLEN"/>
 		</set>
 		<set type="" genset="210">
 			<includes>
-				<include file="fcntl.h" os="default"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<macro name="FD_CLOEXEC"/>
 		</set>
 		<set type="" genset="220">
 			<includes>
-				<include file="sys/utsname.h" os="default"/>
+				<include file="sys/utsname.h"/>
 			</includes>
 			<macro name="SYS_NAMELEN" alt="_SYS_NAMELEN"/>
 		</set>
 		<set type="" genset="230" format="16#%08X#">
 			<includes>
-				<include file="fcntl.h" os="default"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<macro name="O_RDONLY" desc="Open for reading only"/>
 			<macro name="O_WRONLY" desc="Open for writing only"/>
@@ -353,9 +353,9 @@
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="Fd" ada_name="Open" inline="1">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/stat.h" os="default"/>
-				<include file="fcntl.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="oflags" type="int_t" from="OFlags"/>
@@ -365,9 +365,9 @@
 		</func>
 		<func name="open" return="int_t" ada_type="procedure" rname="Fd" ada_name="Open" inline="1">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/stat.h" os="default"/>
-				<include file="fcntl.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="oflags" type="int_t" from="OFlags"/>
@@ -379,9 +379,9 @@
 		</func>
 		<func name="creat" return="int_t" ada_type="procedure" rname="Fd" ada_name="Create" inline="1">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/stat.h" os="default"/>
-				<include file="fcntl.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="fcntl.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="T1'Address"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
@@ -391,7 +391,7 @@
 		</func>
 		<func name="close" return="int_t" ada_type="procedure" rname="Status" ada_name="Close" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<ada_arg name="Fd" io="in" type="int_t"/>
@@ -399,7 +399,7 @@
 		</func>
 		<func name="dup" return="int_t" ada_type="procedure" rname="R" ada_name="Dup" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<ada_arg name="Fd" io="in" type="int_t"/>
@@ -408,7 +408,7 @@
 		</func>
 		<func name="dup2" return="int_t" ada_type="procedure" rname="Status" ada_name="Dup2" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<c_arg name="fd2" type="int_t" from="Fd2"/>
@@ -418,29 +418,29 @@
 		</func>
 		<func name="exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="status" type="int_t" from="Status"/>
 			<ada_arg name="Status" io="in" type="int_t"/>
 		</func>
 		<func name="_exit" altname="UX_exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit2" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="status" type="int_t" from="Status"/>
 			<ada_arg name="Status" io="in" type="int_t"/>
 		</func>
 		<func name="fork" return="pid_t" ada_type="procedure" rname="P" ada_name="Fork" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(PID)"/>
 		</func>
 		<func name="wait" return="pid_t" ada_type="procedure" rname="P" ada_name="Wait" inline="1">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/wait.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/wait.h"/>
 			</includes>
 			<c_arg name="status" type="System.Address" from="S'Address"/>
 			<ada_arg name="status" io="out" type="int_t" from="S"/>
@@ -449,8 +449,8 @@
 		</func>
 		<func name="waitpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Wait_Pid" inline="1">
 			<includes>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/wait.h" os="default"/>
+				<include file="sys/types.h"/>
+				<include file="sys/wait.h"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
 			<c_arg name="status" type="System.Address" from="S'Address"/>
@@ -463,7 +463,7 @@
 		</func>
 		<func name="link" return="int_t" ada_type="procedure" rname="Status" ada_name="Link" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="path1" type="System.Address" from="C_Path1'Address"/>
 			<c_arg name="path2" type="System.Address" from="C_Path2'Address"/>
@@ -475,7 +475,7 @@
 		</func>
 		<func name="unlink" return="int_t" ada_type="procedure" rname="Status" ada_name="Unlink" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="Temp'Address"/>
 			<ada_arg name="Path" io="in" type="String"/>
@@ -484,7 +484,7 @@
 		</func>
 		<func name="chdir" return="int_t" ada_type="procedure" rname="Status" ada_name="Chdir" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="Temp'Address"/>
 			<ada_arg name="Path" io="in" type="String"/>
@@ -493,7 +493,7 @@
 		</func>
 		<func name="fchdir" return="int_t" ada_type="procedure" rname="Status" ada_name="FChdir" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="fildes" type="int_t" from="Fildes"/>
 			<ada_arg name="Fildes" io="in" type="int_t"/>
@@ -501,7 +501,7 @@
 		</func>
 		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" inline="1">
 			<includes>
-				<include file="time.h" os="default"/>
+				<include file="time.h"/>
 			</includes>
 			<c_arg name="t" type="System.Address" from="T'Address"/>
 			<ada_arg name="Time" io="out" type="time_t" from="T"/>
@@ -509,10 +509,10 @@
 		</func>
 		<func name="mknod" return="int_t" ada_type="procedure" rname="Status" ada_name="Mknod" inline="1">
 			<includes>
-				<include file="sys/unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
-				<include file="sys/stat.h" os="default"/>
-				<include file="sys/fcntl.h" os="default"/>
+				<include file="sys/unistd.h"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="sys/fcntl.h"/>
 			</includes>
 			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
@@ -525,7 +525,7 @@
 		</func>
 		<func name="chmod" return="int_t" ada_type="procedure" rname="Status" ada_name="Chmod" inline="1">
 			<includes>
-				<include file="sys/stat.h" os="default"/>
+				<include file="sys/stat.h"/>
 			</includes>
 			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
@@ -536,7 +536,7 @@
 		</func>
 		<func name="fchmod" return="int_t" ada_type="procedure" rname="Status" ada_name="FChmod" inline="1">
 			<includes>
-				<include file="sys/stat.h" os="default"/>
+				<include file="sys/stat.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
@@ -546,7 +546,7 @@
 		</func>
 		<func name="chown" return="int_t" ada_type="procedure" rname="Status" ada_name="Chown" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
 			<c_arg name="owner" type="uid_t" from="Owner"/>
@@ -559,7 +559,7 @@
 		</func>
 		<func name="fchown" return="int_t" ada_type="procedure" rname="Status" ada_name="FChown" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<c_arg name="owner" type="uid_t" from="Owner"/>
@@ -571,7 +571,7 @@
 		</func>
 		<func name="lchown" return="int_t" ada_type="procedure" rname="Status" ada_name="LChown" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="pathname" type="System.Address" from="Temp'Address"/>
 			<c_arg name="owner" type="uid_t" from="Owner"/>
@@ -584,8 +584,8 @@
 		</func>
 		<func name="lseek" return="int_t" ada_type="procedure" rname="Status" ada_name="LSeek" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
 			</includes>
 			<c_arg name="fd" type="int_t" from="Fd"/>
 			<c_arg name="offset" type="off_t" from="Offset"/>
@@ -597,21 +597,21 @@
 		</func>
 		<func name="getpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
 			</includes>
 			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
 		<func name="getppid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getppid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
 			</includes>
 			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
 		<func name="getpgid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
 			<ada_arg name="PID" io="in" type="pid_t"/>
@@ -620,13 +620,13 @@
 		</func>
 		<func name="getpgrp" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgrp" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
 		<func name="setpgid" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
 			<c_arg name="pgid" type="pid_t" from="PGID"/>
@@ -636,7 +636,7 @@
 		</func>
 		<func name="setpgrp" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgrp" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
+				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="pid" type="pid_t" from="PID"/>
 			<c_arg name="pgid" type="pid_t" from="PGRP"/>
@@ -646,21 +646,21 @@
 		</func>
 		<func name="getgid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getgid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
 			</includes>
 			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
 		</func>
 		<func name="getegid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getegid" inline="1">
 			<includes>
-				<include file="unistd.h" os="default"/>
-				<include file="sys/types.h" os="default"/>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
 			</includes>
 			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
 		</func>
 		<func name="mount" return="int_t" ada_type="procedure" rname="Status" ada_name="Mount" inline="1">
 			<includes>
-				<include file="sys/mount.h" os="default"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<c_arg name="source" type="System.Address" from="C_Source'Address"/>
 			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
@@ -679,7 +679,7 @@
 		</func>
 		<func name="umount" return="int_t" ada_type="procedure" rname="Status" ada_name="UMount" inline="1" os="Linux*">
 			<includes>
-				<include file="sys/mount.h" os="default"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
 			<ada_arg name="Target" io="in" type="String"/>
@@ -688,7 +688,7 @@
 		</func>
 		<func name="umount2" return="int_t" ada_type="procedure" rname="Status" ada_name="UMount2" inline="1" os="Linux*">
 			<includes>
-				<include file="sys/mount.h" os="default"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<c_arg name="target" type="System.Address" from="C_Target'Address"/>
 			<c_arg name="flags" type="int_t" from="Flags"/>
@@ -768,7 +768,7 @@
 		<struct name="tms" ada="s_tms" genset="510">
 			<includes>
 				<include file="sys/types.h"/>
-				<include file="times.h"/>
+				<include file="times.h" os="Linux *"/>
 			</includes>
 		</struct>
 		<struct name="radvisory" ada="s_radvisory" os="Darwin *" genset="520">

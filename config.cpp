@@ -31,9 +31,12 @@ load_includes(std::vector<std::string>& vec,pugi::xml_node& inode) {
 
 	for ( auto iit = inode.begin(); iit != inode.end(); ++iit ) {		
 		pugi::xml_node & inclnode = *iit;
-		const std::string os = inclnode.attribute("os").value();
+		std::string os = inclnode.attribute("os").value();
 		const std::string inclfile = inclnode.attribute("file").value();
 			
+		if ( os == "" )
+			os = "*";
+
 		if ( inclset.find(inclfile) != inclset.end() )
 			continue;		// Already have this one
 
