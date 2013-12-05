@@ -27,29 +27,40 @@
 
 static void yyerror(char const *s);
 
-#define YYSTYPE 	int
+/* #define YYSTYPE 	int */
 
 extern int yylex();
 %}
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
-%token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-%token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME
+%union	{
+	struct s_token {
+		int	token;
+		int	symbol;
+	}		t;
+};
 
-%token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token BOOL COMPLEX IMAGINARY
-%token STRUCT UNION ENUM ELLIPSIS
+%token <t> IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
+%token <s_token> PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
+%token <s_token> AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token <s_token> SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
+%token <s_token> XOR_ASSIGN OR_ASSIGN TYPE_NAME
 
-%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token <s_token> TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
+%token <s_token> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+%token <s_token> BOOL COMPLEX IMAGINARY
+%token <s_token> STRUCT UNION ENUM ELLIPSIS
+
+%token <s_token> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
 %start translation_unit
 %%
 
 primary_expression
-	: IDENTIFIER
+	: IDENTIFIER {
+			yylval.t.token = IDENTIFIER;
+			yylval.t.symbol = lex_symbol();
+			std::cout << "<<<identifier_a " << lex_revsym(yylval.t.symbol) << ">>>\n";
+		}
 	| CONSTANT
 	| STRING_LITERAL
 	| '(' expression ')'
@@ -193,16 +204,30 @@ declaration
 	;
 
 declaration_specifiers
-	: storage_class_specifier
+	: storage_class_specifier {
+			std::cout << "<<<storage_class_specifier>>>\n";
+		}
 	| storage_class_specifier declaration_specifiers {
 			std::cout << "<<<typedef declaration>>>\n";
 		}
-	| type_specifier
-	| type_specifier declaration_specifiers
-	| type_qualifier
-	| type_qualifier declaration_specifiers
-	| function_specifier
-	| function_specifier declaration_specifiers
+	| type_specifier {
+			std::cout << "<<<type_specifier>>>\n";
+		}
+	| type_specifier declaration_specifiers {
+			std::cout << "<<<type_specifier declaration_specifiers>>>\n";
+		}
+	| type_qualifier {
+			std::cout << "<<<type_qualifier>>>\n";
+		}
+	| type_qualifier declaration_specifiers {
+			std::cout << "<<<type_qualifier declaration_specifiers>>>\n";
+		}
+	| function_specifier {
+			std::cout << "<<<function_specifiers>>>\n";
+		}
+	| function_specifier declaration_specifiers {
+			std::cout << "<<<function_specifier declaration_specifiers>>>\n";
+		}
 	;
 
 init_declarator_list
@@ -216,7 +241,9 @@ init_declarator
 	;
 
 storage_class_specifier
-	: TYPEDEF
+	: TYPEDEF {
+			std::cout << "<<<typedef>>>\n";
+		}
 	| EXTERN
 	| STATIC
 	| AUTO
@@ -313,7 +340,11 @@ declarator
 	;
 
 direct_declarator
-	: IDENTIFIER
+	: IDENTIFIER {
+			yylval.t.token = IDENTIFIER;
+			yylval.t.symbol = lex_symbol();
+			std::cout << "<<<identifier_a " << lex_revsym(yylval.t.symbol) << ">>>\n";
+		}
 	| '(' declarator ')'
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'

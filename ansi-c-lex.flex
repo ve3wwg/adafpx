@@ -34,6 +34,8 @@ IS                      ((u|U)|(u|U)?(l|L|ll|LL)|(l|L|ll|LL)(u|U))
 
 #include <string>
 
+#include <iostream>
+
 std::unordered_map<std::string,int> symmap;
 std::unordered_map<int,std::string> revsym;
 
@@ -185,8 +187,14 @@ comment() {
 unsigned column = 0;
 
 int
-lex_token() {
+lex_symbol() {
+	std::cout << "lex_symid = " << lex_symid << "\n";
 	return lex_symid;
+}
+
+const std::string&
+lex_revsym(int symid) {
+	return revsym[symid];
 }
 
 static void
