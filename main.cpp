@@ -59,7 +59,6 @@ main(int argc,char **argv) {
 	system("cat ./staging/????.adb >posix.adb");
 
 exit(0);
-	set_input(stdin);
 
 	while ( (ltoken = yylex()) != 0 ) {
 		unsigned lno = lex_lineno();
