@@ -30,10 +30,10 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 	c.close();
 
-	if ( !gcc_precompile(c,node.genset) )
+	if ( !gcc_precomplex(node.genset) )
 		exit(2);
 
-	c.close();
+	yyparse();
 }
 
 void
