@@ -40,7 +40,7 @@ std::unordered_map<int,std::string> revsym;
 static void comment();
 static void count();
 static void lex_error(const char *format,...);
-static int input();
+extern int input();
 static int reg_sym(const char *text);
 
 int lex_symid = -1;
@@ -232,6 +232,7 @@ lex_error(const char *format,...) {
 	fflush(stderr);
 }
 
+#if 0
 FILE *instr = 0;
 
 static int
@@ -250,6 +251,7 @@ set_input(FILE *str) {
 	lno = 0;
 	column = 0;
 }
+#endif
 
 static int
 reg_sym(const char *text) {
