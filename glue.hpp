@@ -12,7 +12,6 @@
 extern std::unordered_map<std::string,int> symmap;
 extern std::unordered_map<int,std::string> revsym;
 
-void set_input(FILE *str);
 unsigned lex_lineno();
 int lex_token();
 int yylex();
