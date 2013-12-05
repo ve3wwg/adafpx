@@ -16,6 +16,28 @@
 
 #include "comp.hpp"
 
+std::fstream lexstr;
+
+extern int
+input() {
+	if ( !lexstr.is_open() )
+		return EOF;
+	else if ( !lexstr.good() ) {
+		lexstr.close();
+		return EOF;
+	}
+
+	char ch;
+
+	lexstr >> ch;
+	return ch;
+}
+
+bool
+lex_open(int genset,const std::string& suffix) {
+	return gcc_open(lexstr,genset,suffix);
+}
+
 bool
 gcc_open(std::fstream& fs,int genset,const std::string& suffix) {
 	char filename[32];
@@ -130,6 +152,11 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 	}
 
 	return true;
+}
+
+bool
+gcc_precomplex(int genset,const std::string& variation) {
+	return gcc_precompile(lexstr,genset,variation);
 }
 
 // End comp.cpp

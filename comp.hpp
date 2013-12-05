@@ -9,8 +9,13 @@
 #include <fstream>
 
 bool gcc_open(std::fstream& fs,int genset,const std::string& suffix=".c");
+bool lex_open(int genset,const std::string& suffix);
+
 bool gcc_compile(std::fstream& fs,int genset);
 bool gcc_precompile(std::fstream& fs,int genset,const std::string& variation="");
+bool gcc_precomplex(int genset,const std::string& variation="");
+
+extern int yyparse();
 
 #endif // COMP_HPP
 
