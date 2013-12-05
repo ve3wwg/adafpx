@@ -8,6 +8,9 @@
 
 #include <fstream>
 
+unsigned lex_lineno();
+int lex_token();
+
 bool gcc_open(std::fstream& fs,int genset,const std::string& suffix=".c");
 bool lex_open(int genset,const std::string& suffix);
 

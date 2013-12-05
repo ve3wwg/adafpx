@@ -40,10 +40,17 @@ std::unordered_map<int,std::string> revsym;
 static void comment();
 static void count();
 static void lex_error(const char *format,...);
-extern int input();
+extern int comp_input();
 static int reg_sym(const char *text);
 
 int lex_symid = -1;
+
+extern unsigned lex_lineno();
+
+#define YY_INPUT(buf,result,max_size) { \
+       int c = comp_input(); \
+       result = (c == EOF) ? YY_NULL : (buf[0] = c, 1); \
+}
 
 %}
 
@@ -167,7 +174,7 @@ comment() {
 	char c, prev = 0;
 	unsigned line_no = lex_lineno();
   
-	while ( (c = input()) != 0 ) {	/* (EOF maps to 0) */
+	while ( (c = yyinput()) != 0 ) {	/* (EOF maps to 0) */
 		if ( c == '/' && prev == '*' )
 			return;
 		prev = c;
@@ -175,48 +182,16 @@ comment() {
 	lex_error("Unterminated comment in line %u\n",line_no);
 }
 
-bool nextl = false;
-unsigned lno = 0;
 unsigned column = 0;
-
-unsigned
-lex_lineno() {
-	return lno;
-}
 
 int
 lex_token() {
 	return lex_symid;
 }
 
-static void 
+static void
 count() {
-	int i;
-
 	lex_symid = -1;
-
-	for ( i=0; yytext[i] != 0; i++ ) {
-		if ( yytext[i] == '\n' ) {
-			if ( nextl ) {
-				++lno;
-				column = 0;
-			} else	nextl = true;
-		} else if ( yytext[i] == '\t' ) {
-			if ( nextl ) {
-				nextl = false;
-				column = 0;
-				++lno;
-			}
-			column += 8 - (column % 8);
-		} else	{
-			if ( nextl ) {
-				nextl = false;
-				++lno;
-				column = 0;
-			}
-			column++;
-		}
-	}
 }
 
 static void
@@ -231,27 +206,6 @@ lex_error(const char *format,...) {
 	va_end(ap);
 	fflush(stderr);
 }
-
-#if 0
-FILE *instr = 0;
-
-static int
-input() {
-
-	if ( !instr )
-		return EOF;
-	return fgetc(instr);
-}
-
-void
-set_input(FILE *str) {
-	(void)yyunput;
-
-	instr = str;
-	lno = 0;
-	column = 0;
-}
-#endif
 
 static int
 reg_sym(const char *text) {

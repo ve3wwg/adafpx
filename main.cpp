@@ -25,6 +25,9 @@ int
 main(int argc,char **argv) {
 	std::string platform, version, machine;
 	int ltoken;
+	extern int yydebug;
+
+	yydebug = 1;
 
 	platform = uts_platform();
 	version = uts_version();

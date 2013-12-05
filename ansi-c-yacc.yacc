@@ -16,12 +16,20 @@
  * Jutta Degener, 2012
  */
 %{
+#define YYDEBUG 1
+
+#include <iostream>
+
 #include <stdio.h>
 #include <assert.h>
 #include "glue.hpp"
 #include "ansi-c-yacc.hpp"
 
 static void yyerror(char const *s);
+
+#define YYSTYPE 	int
+
+extern int yylex();
 %}
 
 %token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
@@ -186,7 +194,9 @@ declaration
 
 declaration_specifiers
 	: storage_class_specifier
-	| storage_class_specifier declaration_specifiers
+	| storage_class_specifier declaration_specifiers {
+			std::cout << "<<<typedef declaration>>>\n";
+		}
 	| type_specifier
 	| type_specifier declaration_specifiers
 	| type_qualifier
@@ -491,8 +501,7 @@ extern int column;
 void
 yyerror(char const *s) {
 
-	fflush(stdout);
-	printf("\n%*s\n%*s\n", column, "^", column, s);
+	std::cerr << "Error in line " << lex_lineno() << ": " << s << "\n";
 }
 
 /* End ansi-c.yacc */

@@ -18,23 +18,50 @@
 
 std::fstream lexstr;
 
-extern int
-input() {
-	if ( !lexstr.is_open() )
-		return EOF;
-	else if ( !lexstr.good() ) {
+static bool end_of_line = false;
+static unsigned lno = 1;
+
+unsigned
+lex_lineno() {
+	return lno;
+}
+
+static void
+comp_input_reset() {
+	end_of_line = false;
+	lno = 1;
+	if ( lexstr.is_open() )
 		lexstr.close();
+}
+
+int
+comp_input() {
+
+	if ( end_of_line ) {
+		++lno;
+		end_of_line = false;
+std::cout << "Line # " << lno << "\n";
+	}
+
+	if ( !lexstr.is_open() ) {
+std::cout << "  returned EOF(1);\n";		
+		return EOF;
+	} else if ( !lexstr.good() ) {
+		lexstr.close();
+std::cout << "  returned EOF(2);\n";		
 		return EOF;
 	}
 
-	char ch;
+	char ch = lexstr.get();
 
-	lexstr >> ch;
+	if ( ch == '\n' )
+		end_of_line = true;
 	return ch;
 }
 
 bool
 lex_open(int genset,const std::string& suffix) {
+	comp_input_reset();
 	return gcc_open(lexstr,genset,suffix);
 }
 
@@ -145,7 +172,14 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 		return false;
 	}
 
-	fs.open(path.c_str(),std::fstream::in);
+	std::string outpath;
+	{
+		std::stringstream s;
+		s 	<< "./staging/" << filename << ".out";
+		outpath = s.str();
+	}
+
+	fs.open(outpath.c_str(),std::fstream::in);
 	if ( fs.fail() ) {
 		std::cerr << strerror(errno) << ": opening " << path << " for read.\n";
 		return false;
@@ -156,6 +190,7 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 
 bool
 gcc_precomplex(int genset,const std::string& variation) {
+	comp_input_reset();
 	return gcc_precompile(lexstr,genset,variation);
 }
 
