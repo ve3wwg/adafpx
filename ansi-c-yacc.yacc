@@ -67,8 +67,12 @@ extern int yylex();
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
+%token ATTRIBUTE ASM
+
 %start translation_unit
 %%
+
+/* int open(const char *, int, ...) __asm("_" "open" ); */
 
 primary_expression
 	: IDENTIFIER {
