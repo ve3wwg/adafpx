@@ -100,6 +100,9 @@ extern unsigned lex_lineno();
 "volatile"		{ count(); return(VOLATILE); }
 "while"			{ count(); return(WHILE); }
 
+"__attribute__"		{ count(); return(ATTRIBUTE); }
+"__asm"			{ count(); return(ASM); }
+
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
 0[xX]{H}+{IS}?		{ count(); reg_sym(yytext); return(CONSTANT); }
