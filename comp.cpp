@@ -176,7 +176,9 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 	}
 	{
 		std::stringstream s;
-		s 	<< "gcc -P -E " << path << " > ./staging/" << filename << ".out"
+		s 	<< "gcc -P -E " << path
+			<< " | sed '/^ *#.*$/d' "
+			<< " > ./staging/" << filename << ".out"
 			<< " 2>./staging/" << filename << ".err ";
 		cmd = s.str();
 	}
