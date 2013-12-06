@@ -15,6 +15,7 @@ extern std::unordered_map<int,std::string> revsym;
 unsigned lex_lineno();
 int lex_symbol();
 const std::string& lex_revsym(int symid);
+void register_type(int symid);
 
 int yylex();
 

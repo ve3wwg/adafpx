@@ -33,17 +33,20 @@ IS                      ((u|U)|(u|U)?(l|L|ll|LL)|(l|L|ll|LL)(u|U))
 #include "ansi-c-yacc.hpp"
 
 #include <string>
+#include <unordered_set>
 
 #include <iostream>
 
 std::unordered_map<std::string,int> symmap;
 std::unordered_map<int,std::string> revsym;
+std::unordered_set<int> types;
 
 static void comment();
 static void count();
 static void lex_error(const char *format,...);
 extern int comp_input();
 static int reg_sym(const char *text);
+static int ident_type(int symid);
 
 int lex_symid = -1;
 
@@ -97,7 +100,7 @@ extern unsigned lex_lineno();
 "volatile"		{ count(); return(VOLATILE); }
 "while"			{ count(); return(WHILE); }
 
-{L}({L}|{D})*		{ count(); reg_sym(yytext); return(IDENTIFIER); }
+{L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
 0[xX]{H}+{IS}?		{ count(); reg_sym(yytext); return(CONSTANT); }
 0[0-7]*{IS}?		{ count(); reg_sym(yytext); return(CONSTANT); }
@@ -228,6 +231,31 @@ reg_sym(const char *text) {
 
 	lex_symid = nsymid;
 	return lex_symid;
+}
+
+static int
+ident_type(int symid) {
+
+	auto it = types.find(symid);
+	if ( it != types.end() ) {
+std::cout << "RETURN TYPE_NAME for '" << revsym[symid] << "'\n";
+		return TYPE_NAME;
+	}
+
+std::cout << "RETURN IDENTIFIER for '" << revsym[symid] << "'\n";
+	return IDENTIFIER;
+}
+
+void
+register_type(int symid) {
+	types.insert(symid);
+std::cout << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
+}
+
+void
+register_builtin(const std::string& type) {
+	int id = reg_sym(type.c_str());
+	register_type(id);
 }
 
 /* End ansi-c-lex.flex */

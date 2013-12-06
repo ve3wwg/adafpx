@@ -61,6 +61,21 @@ loadconfig() {
 		exit(1);
 	}
 
+	{
+		pugi::xml_node bnode = doc.child("entities").child("builtin_types");
+		for ( auto it=bnode.begin(); it != bnode.end(); ++it ) {
+			pugi::xml_node& builtin = *it;
+			if ( strcmp(builtin.name(),"builtin") != 0 )
+				continue;
+			const std::string type = builtin.attribute("type").value();
+			std::string os   = builtin.attribute("os").value();
+			if ( os == "" )
+				os = "*";
+			if ( match(os,platform) )
+				config.builtins.insert(type);
+		}
+	}
+
 	pugi::xml_node bnode = doc.child("entities").child("macro_constants");
 	for ( auto sit = bnode.begin(); sit != bnode.end(); ++sit ) {
 		pugi::xml_node& snode = *sit;

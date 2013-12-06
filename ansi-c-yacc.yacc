@@ -19,6 +19,7 @@
 #define YYDEBUG 1
 
 #include <iostream>
+#include <vector>
 
 #include <stdio.h>
 #include <assert.h>
@@ -27,39 +28,54 @@
 
 static void yyerror(char const *s);
 
-/* #define YYSTYPE 	int */
+enum e_ntype {
+	None = 0,
+	Ident,		// Identifier
+	Typedef,	// Typedef
+	List		// List
+};
+
+struct s_node {
+	e_ntype		type;
+	int		symbol;
+	std::vector<int> list;
+
+	s_node() { 
+		type = None;
+		symbol = 0;
+	}
+};
+
+static int Node(s_node& node);
+static s_node& Get(int nno);
+
+#define YYSTYPE 	int
 
 extern int yylex();
 %}
 
-%union	{
-	struct s_token {
-		int	token;
-		int	symbol;
-	}		t;
-};
+%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
+%token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
+%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
+%token XOR_ASSIGN OR_ASSIGN TYPE_NAME
 
-%token <t> IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
-%token <s_token> PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token <s_token> AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-%token <s_token> SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token <s_token> XOR_ASSIGN OR_ASSIGN TYPE_NAME
+%token TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
+%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+%token BOOL COMPLEX IMAGINARY
+%token STRUCT UNION ENUM ELLIPSIS
 
-%token <s_token> TYPEDEF EXTERN STATIC AUTO REGISTER INLINE RESTRICT
-%token <s_token> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token <s_token> BOOL COMPLEX IMAGINARY
-%token <s_token> STRUCT UNION ENUM ELLIPSIS
-
-%token <s_token> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
 %start translation_unit
 %%
 
 primary_expression
 	: IDENTIFIER {
-			yylval.t.token = IDENTIFIER;
-			yylval.t.symbol = lex_symbol();
-			std::cout << "<<<identifier_a " << lex_revsym(yylval.t.symbol) << ">>>\n";
+			s_node node;
+			node.type = Ident;
+			node.symbol = lex_symbol();
+			yylval = Node(node);
 		}
 	| CONSTANT
 	| STRING_LITERAL
@@ -200,13 +216,25 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
+	| declaration_specifiers init_declarator_list ';' {
+			s_node& decl = Get($1);
+
+			if ( decl.type == Typedef ) {
+std::cout << " >>> GOT TYPEDEF <<<\n";
+				s_node& node = Get($2);
+
+				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
+					s_node& dnode = Get(*it);
+					assert(dnode.type == Ident);
+					register_type(dnode.symbol);	// Register this symbol as a type with lexer
+				}
+std::cout << node.list.size() << " declarations registered as types\n";
+			}
+		}
 	;
 
 declaration_specifiers
-	: storage_class_specifier {
-			std::cout << "<<<storage_class_specifier>>>\n";
-		}
+	: storage_class_specifier
 	| storage_class_specifier declaration_specifiers {
 			std::cout << "<<<typedef declaration>>>\n";
 		}
@@ -231,8 +259,16 @@ declaration_specifiers
 	;
 
 init_declarator_list
-	: init_declarator
-	| init_declarator_list ',' init_declarator
+	: init_declarator {
+			s_node node;
+			node.type = List;
+			node.list.push_back($1);
+			yylval = Node(node);
+		}
+	| init_declarator_list ',' init_declarator {
+			s_node& node = Get($1);
+			node.list.push_back($2);
+		}
 	;
 
 init_declarator
@@ -242,6 +278,9 @@ init_declarator
 
 storage_class_specifier
 	: TYPEDEF {
+			s_node node;
+			node.type = Typedef;
+			yylval = Node(node);
 			std::cout << "<<<typedef>>>\n";
 		}
 	| EXTERN
@@ -335,15 +374,18 @@ function_specifier
 	;
 
 declarator
-	: pointer direct_declarator
+	: pointer direct_declarator {
+			$$ = $2;
+		}
 	| direct_declarator
 	;
 
 direct_declarator
 	: IDENTIFIER {
-			yylval.t.token = IDENTIFIER;
-			yylval.t.symbol = lex_symbol();
-			std::cout << "<<<identifier_a " << lex_revsym(yylval.t.symbol) << ">>>\n";
+			s_node node;
+			node.type = Ident;
+			node.symbol = lex_symbol();
+			yylval = Node(node);
 		}
 	| '(' declarator ')'
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
@@ -533,6 +575,23 @@ void
 yyerror(char const *s) {
 
 	std::cerr << "Error in line " << lex_lineno() << ": " << s << "\n";
+	exit(13);
+}
+
+static std::unordered_map<int,s_node> nodemap;
+static unsigned nodeno = 0;
+
+static int
+Node(s_node& node) {
+	nodemap[++nodeno] = node;
+	return nodeno;
+}
+
+static s_node&
+Get(int nno) {
+	auto it = nodemap.find(nno);
+	assert(it != nodemap.end());
+	return it->second;
 }
 
 /* End ansi-c.yacc */

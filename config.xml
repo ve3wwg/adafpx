@@ -1,4 +1,7 @@
 <entities>
+	<builtin_types>
+		<builtin type="__builtin_va_list" os="Darwin *"/>
+	</builtin_types>
 	<basic_types genset="50">
 		<type name="char" ada="char_t"/>
 		<type name="short" ada="short_t"/>

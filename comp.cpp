@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "comp.hpp"
+#include "config.hpp"
 
 std::fstream lexstr;
 
@@ -28,10 +29,24 @@ lex_lineno() {
 
 static void
 comp_input_reset() {
+
+	//////////////////////////////////////////////////////////////
+	// Reset the iostream for Reading
+	//////////////////////////////////////////////////////////////
+
 	end_of_line = false;
 	lno = 1;
 	if ( lexstr.is_open() )
 		lexstr.close();
+
+	//////////////////////////////////////////////////////////////
+	// Preload any builtin type definitions
+	//////////////////////////////////////////////////////////////
+	
+	for ( auto it=config.builtins.begin(); it != config.builtins.end(); ++it ) {
+		const std::string& type = *it;
+		register_builtin(type);
+	}
 }
 
 int
@@ -185,6 +200,7 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 		return false;
 	}
 
+std::cout << "PARSING: " << outpath << "\n";
 	return true;
 }
 

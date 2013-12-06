@@ -9,8 +9,11 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 struct s_config {
+	std::unordered_set<std::string>		builtins;
+
 	struct s_macro_set {
 		int				genset;
 		std::string			type;
