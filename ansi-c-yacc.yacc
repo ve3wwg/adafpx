@@ -75,7 +75,7 @@ primary_expression
 			s_node node;
 			node.type = Ident;
 			node.symbol = lex_symbol();
-			yylval = Node(node);
+			$$ = Node(node);
 		}
 	| CONSTANT
 	| STRING_LITERAL
@@ -217,6 +217,9 @@ constant_expression
 declaration
 	: declaration_specifiers ';'
 	| declaration_specifiers init_declarator_list ';' {
+		if ( $1 != 0 ) {
+std::cout << "Declaration: $1 = " << $1 << ", $2 = " << $2 << " node.type=" << "\n";
+std::cout << Get($1).type << "\n";
 			s_node& decl = Get($1);
 
 			if ( decl.type == Typedef ) {
@@ -231,12 +234,16 @@ std::cout << " >>> GOT TYPEDEF <<<\n";
 std::cout << node.list.size() << " declarations registered as types\n";
 			}
 		}
+		$$ = $2;
+	}
 	;
 
 declaration_specifiers
-	: storage_class_specifier
+	: storage_class_specifier {
+std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).type << "\n";
+	}
 	| storage_class_specifier declaration_specifiers {
-			std::cout << "<<<typedef declaration>>>\n";
+			$$ = $1;
 		}
 	| type_specifier {
 			std::cout << "<<<type_specifier>>>\n";
@@ -263,11 +270,12 @@ init_declarator_list
 			s_node node;
 			node.type = List;
 			node.list.push_back($1);
-			yylval = Node(node);
+			$$ = Node(node);
 		}
 	| init_declarator_list ',' init_declarator {
 			s_node& node = Get($1);
 			node.list.push_back($2);
+			$$ = $1;
 		}
 	;
 
@@ -278,11 +286,11 @@ init_declarator
 
 storage_class_specifier
 	: TYPEDEF {
-			s_node node;
-			node.type = Typedef;
-			yylval = Node(node);
-			std::cout << "<<<typedef>>>\n";
-		}
+		s_node node;
+		node.type = Typedef;
+		$$ = Node(node);
+std::cout << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
+	}
 	| EXTERN
 	| STATIC
 	| AUTO
@@ -385,7 +393,7 @@ direct_declarator
 			s_node node;
 			node.type = Ident;
 			node.symbol = lex_symbol();
-			yylval = Node(node);
+			$$ = Node(node);
 		}
 	| '(' declarator ')'
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
