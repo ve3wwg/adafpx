@@ -102,6 +102,10 @@ extern unsigned lex_lineno();
 
 "__attribute__"		{ count(); return(ATTRIBUTE); }
 "__asm"			{ count(); return(ASM); }
+"__restrict"		{ count(); return(RESTRICT); }
+"__restrict__"		{ count(); return(RESTRICT); }
+"__extension__"		{ count(); }
+"__const"		{ count(); return(CONST); }
 
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
@@ -253,6 +257,13 @@ void
 register_type(int symid) {
 	types.insert(symid);
 std::cout << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
+}
+
+void
+lexer_reset() {
+	symmap.clear();
+	revsym.clear();
+	types.clear();
 }
 
 void

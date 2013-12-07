@@ -74,15 +74,23 @@ extern int yylex();
 
 /* int open(const char *, int, ...) __asm("_" "open" ); */
 
+attribute_clause_list
+	: attribute_clause
+	| attribute_clause_list attribute_clause
+	| ;
+
 attribute_clause
 	: ATTRIBUTE '(' '(' ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER ')' ')'
-	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')'')' ')'
-	| ;
+	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')' ')' ')'
+	;
 
 attribute_list
 	: IDENTIFIER
-	| attribute_list ',' IDENTIFIER;
+	| CONSTANT
+	| attribute_list ',' IDENTIFIER
+	| attribute_list ',' CONSTANT
+	;
 
 primary_expression
 	: IDENTIFIER {
@@ -280,7 +288,7 @@ std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).
 	;
 
 init_declarator_list
-	: init_declarator {
+	: init_declarator attribute_clause_list {
 			s_node node;
 			node.type = List;
 			node.list.push_back($1);
@@ -294,8 +302,8 @@ init_declarator_list
 	;
 
 init_declarator
-	: declarator attribute_clause 
-	| declarator attribute_clause '=' initializer
+	: declarator
+	| declarator '=' initializer
 	;
 
 storage_class_specifier
@@ -567,13 +575,21 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration
-	| translation_unit external_declaration
+	: external_declaration {
+		std::cout << "<<<external_declaration>>>\n";
+	}
+	| translation_unit external_declaration {
+		std::cout << "<<<translation_unit external_declaration>>>\n";
+	}
 	;
 
 external_declaration
-	: function_definition
-	| declaration
+	: function_definition {
+		std::cout << "<<<function_definition>>>\n";
+	}
+	| declaration {
+		std::cout << "<<<declaration>>>\n";
+	}
 	;
 
 function_definition

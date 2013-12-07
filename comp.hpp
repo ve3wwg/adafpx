@@ -11,6 +11,7 @@
 unsigned lex_lineno();
 int lex_token();
 void register_builtin(const std::string& type);
+void lexer_reset();
 
 bool gcc_open(std::fstream& fs,int genset,const std::string& suffix=".c");
 bool lex_open(int genset,const std::string& suffix);
