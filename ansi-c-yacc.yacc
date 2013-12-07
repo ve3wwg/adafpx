@@ -74,6 +74,16 @@ extern int yylex();
 
 /* int open(const char *, int, ...) __asm("_" "open" ); */
 
+attribute_clause
+	: ATTRIBUTE '(' '(' ')' ')'
+	| ATTRIBUTE '(' '(' IDENTIFIER ')' ')'
+	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')'')' ')'
+	| ;
+
+attribute_list
+	: IDENTIFIER
+	| attribute_list ',' IDENTIFIER;
+
 primary_expression
 	: IDENTIFIER {
 			s_node node;
@@ -284,8 +294,8 @@ init_declarator_list
 	;
 
 init_declarator
-	: declarator
-	| declarator '=' initializer
+	: declarator attribute_clause 
+	| declarator attribute_clause '=' initializer
 	;
 
 storage_class_specifier
