@@ -24,14 +24,20 @@
 #include <stdio.h>
 #include <assert.h>
 #include "glue.hpp"
+#include "comp.hpp"
 #include "ansi-c-yacc.hpp"
 
 static void yyerror(char const *s);
+
+unsigned lex_lineno();
 
 enum e_ntype {
 	None = 0,
 	Ident,		// Identifier
 	Typedef,	// Typedef
+	Type,		// Type name
+	Struct,		// struct
+	Union,		// union
 	List		// List
 };
 
@@ -74,6 +80,14 @@ extern int yylex();
 
 /* int open(const char *, int, ...) __asm("_" "open" ); */
 
+asm_clause
+	: ASM '(' asm_list ')'
+	;
+
+asm_list
+	: STRING_LITERAL
+	| asm_list STRING_LITERAL ;
+
 attribute_clause_list
 	: attribute_clause
 	| attribute_clause_list attribute_clause
@@ -82,23 +96,33 @@ attribute_clause_list
 attribute_clause
 	: ATTRIBUTE '(' '(' ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER ')' ')'
+	| ATTRIBUTE '(' '(' CONST ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')' ')' ')'
 	;
 
 attribute_list
-	: IDENTIFIER
-	| CONSTANT
-	| attribute_list ',' IDENTIFIER
-	| attribute_list ',' CONSTANT
+	: attr_parm
+	| attribute_list ',' attr_parm
 	;
+
+attr_parm
+	: IDENTIFIER
+	| IDENTIFIER '=' attr_const
+	| CONSTANT
+	;
+
+attr_const
+	: IDENTIFIER
+	| STRING_LITERAL
+	| CONSTANT;
 
 primary_expression
 	: IDENTIFIER {
-			s_node node;
-			node.type = Ident;
-			node.symbol = lex_symbol();
-			$$ = Node(node);
-		}
+		s_node node;
+		node.type = Ident;
+		node.symbol = $1;
+		$$ = Node(node);
+	}
 	| CONSTANT
 	| STRING_LITERAL
 	| '(' expression ')'
@@ -238,10 +262,11 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'
+	| attribute_clause declaration_specifiers ';'
 	| declaration_specifiers init_declarator_list ';' {
 		if ( $1 != 0 ) {
 std::cout << "Declaration: $1 = " << $1 << ", $2 = " << $2 << " node.type=" << "\n";
-std::cout << Get($1).type << "\n";
+std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
 			s_node& decl = Get($1);
 
 			if ( decl.type == Typedef ) {
@@ -258,51 +283,94 @@ std::cout << node.list.size() << " declarations registered as types\n";
 		}
 		$$ = $2;
 	}
+	| attribute_clause declaration_specifiers init_declarator_list ';' {
+		if ( $2 != 0 ) {
+std::cout << "Declaration(2): $2 = " << $2 << ", $2 = " << $2 << " node.type=" << "\n";
+std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
+			s_node& decl = Get($2);
+
+			if ( decl.type == Typedef ) {
+std::cout << " >>> GOT TYPEDEF <<<\n";
+				s_node& node = Get($3);
+
+				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
+					s_node& dnode = Get(*it);
+					assert(dnode.type == Ident);
+					register_type(dnode.symbol);	// Register this symbol as a type with lexer
+				}
+std::cout << node.list.size() << " declarations registered as types\n";
+			}
+		}
+		$$ = $2;
+	}
 	;
 
 declaration_specifiers
 	: storage_class_specifier {
+		if ( $1 != 0 ) {
 std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).type << "\n";
+		} else	{
+			std::cout << "<<<storage_class_specifier>>>\n";
+		}
 	}
 	| storage_class_specifier declaration_specifiers {
-			$$ = $1;
+std::cout << "<<<storage_class_specifier declaration_specifiers>>>\n";
+		if ( $1 > 0 ) {
+			s_node& node1 = Get($1);
+std::cout << "... node.type=" << node1.type << ", sym=" << node1.symbol << " '" << lex_revsym(node1.symbol) << "' \n";
 		}
+		if ( $2 > 0 ) {
+			s_node& node2 = Get($2);
+std::cout << "... node.type=" << node2.type << ", sym=" << node2.symbol << " '" << lex_revsym(node2.symbol) << "' \n";
+		}
+		$$ = $1;
+	}
 	| type_specifier {
-			std::cout << "<<<type_specifier>>>\n";
-		}
+		std::cout << "<<<type_specifier>>> id=" << $1 << "\n";
+	}
 	| type_specifier declaration_specifiers {
-			std::cout << "<<<type_specifier declaration_specifiers>>>\n";
+		std::cout << "<<<type_specifier declaration_specifiers>>>\n";
+		if ( $1 > 0 ) {
+			s_node& node1 = Get($1);
+std::cout << "... node1.type = " << node1.type << ", sym=" << node1.symbol << "\n";
 		}
+		if ( $2 > 0 ) {
+			s_node& node2 = Get($2);
+std::cout << "... node2.type = " << node2.type << ", sym=" << node2.symbol << "\n";
+		}
+	}
 	| type_qualifier {
-			std::cout << "<<<type_qualifier>>>\n";
-		}
+		std::cout << "<<<type_qualifier>>>\n";
+	}
 	| type_qualifier declaration_specifiers {
-			std::cout << "<<<type_qualifier declaration_specifiers>>>\n";
-		}
+		std::cout << "<<<type_qualifier declaration_specifiers>>>\n";
+	}
 	| function_specifier {
-			std::cout << "<<<function_specifiers>>>\n";
-		}
+		std::cout << "<<<function_specifiers>>>\n";
+	}
 	| function_specifier declaration_specifiers {
-			std::cout << "<<<function_specifier declaration_specifiers>>>\n";
-		}
+		std::cout << "<<<function_specifier declaration_specifiers>>>\n";
+	}
 	;
 
 init_declarator_list
-	: init_declarator attribute_clause_list {
-			s_node node;
-			node.type = List;
-			node.list.push_back($1);
-			$$ = Node(node);
-		}
+	: init_declarator {
+		s_node node;
+		node.type = List;
+		node.list.push_back($1);
+		$$ = Node(node);
+	}
 	| init_declarator_list ',' init_declarator {
-			s_node& node = Get($1);
-			node.list.push_back($2);
-			$$ = $1;
-		}
+		s_node& node = Get($1);
+		node.list.push_back($2);
+		$$ = $1;
+	}
 	;
 
 init_declarator
 	: declarator
+	| declarator attribute_clause_list 
+	| declarator asm_clause
 	| declarator '=' initializer
 	;
 
@@ -313,10 +381,26 @@ storage_class_specifier
 		$$ = Node(node);
 std::cout << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
 	}
-	| EXTERN
-	| STATIC
-	| AUTO
-	| REGISTER
+	| EXTERN {
+		s_node node;
+		node.type = None;
+		$$ = Node(node);
+	}
+	| STATIC {
+		s_node node;
+		node.type = None;
+		$$ = Node(node);
+	}
+	| AUTO {
+		s_node node;
+		node.type = None;
+		$$ = Node(node);
+	}
+	| REGISTER {
+		s_node node;
+		node.type = None;
+		$$ = Node(node);
+	}
 	;
 
 type_specifier
@@ -332,20 +416,49 @@ type_specifier
 	| BOOL
 	| COMPLEX
 	| IMAGINARY
-	| struct_or_union_specifier
+	| struct_or_union_specifier {
+		s_node& node = Get($1);
+std::cout << "<<<struct_or_union_specifier>>> type=" << node.type << ", sym=" << node.symbol << "\n";
+	}
 	| enum_specifier
-	| TYPE_NAME
+	| TYPE_NAME {
+		s_node node;
+		node.type = Type;
+		node.symbol = $1;
+		$$ = Node(node);
+std::cout << "<<<type_name>> id =" << $$ << "sym=" << node.symbol << "\n";
+	}
 	;
 
 struct_or_union_specifier
-	: struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-	| struct_or_union '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER
+	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
+		s_node& node = Get($1);
+		node.symbol = $2;
+std::cout << "<<<struct_or_union identifier {}>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
+	}
+	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
+std::cout << "<<<struct_or_union anon>>>\n";
+	}
+	| struct_or_union IDENTIFIER {
+		s_node& node = Get($1);
+		node.symbol = $2;
+std::cout << "<<<struct_or_union identifier>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
+	}
 	;
 
 struct_or_union
-	: STRUCT
-	| UNION
+	: STRUCT {
+		s_node node;
+		node.type = Struct;
+		node.symbol = 0;
+		$$ = Node(node);
+	}
+	| UNION {
+		s_node node;
+		node.type = Union;
+		node.symbol = 0;
+		$$ = Node(node);
+	}
 	;
 
 struct_declaration_list
@@ -405,19 +518,31 @@ function_specifier
 
 declarator
 	: pointer direct_declarator {
-			$$ = $2;
+		$$ = $2;
+std::cout << "<<<pointer direct_declarator>>>\n";
+	}
+	| direct_declarator {
+std::cout << "<<<direct_declarator>>> id=" << $1 << "\n";
+		if ( $1 > 0 ) {
+			s_node& node = Get($1);
+std::cout << "... node.type=" << node.type << ",sym=" << node.symbol << " '" << lex_revsym(node.symbol) << "' \n";
 		}
-	| direct_declarator
+		$$ = $1;
+	}
 	;
 
 direct_declarator
 	: IDENTIFIER {
-			s_node node;
-			node.type = Ident;
-			node.symbol = lex_symbol();
-			$$ = Node(node);
-		}
-	| '(' declarator ')'
+		s_node node;
+		node.type = Ident;
+		node.symbol = $1;
+		$$ = Node(node);
+std::cout << "<<<direct_declarator(identifier)>>>, id=" << $1 << ", '" << lex_revsym($1) << "' \n";
+	}
+	| '(' declarator ')' {
+std::cout << "<<<(declarator)>>>\n";
+		$$ = $2;
+	}
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'
 	| direct_declarator '[' assignment_expression ']'
@@ -427,7 +552,9 @@ direct_declarator
 	| direct_declarator '[' '*' ']'
 	| direct_declarator '[' ']'
 	| direct_declarator '(' parameter_type_list ')'
-	| direct_declarator '(' identifier_list ')'
+	| direct_declarator '(' identifier_list ')' {
+		std::cout << "<<<(identifier_list)>>>\n";
+	}
 	| direct_declarator '(' ')'
 	;
 

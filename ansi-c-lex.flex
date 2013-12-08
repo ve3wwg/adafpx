@@ -48,9 +48,9 @@ extern int comp_input();
 static int reg_sym(const char *text);
 static int ident_type(int symid);
 
-int lex_symid = -1;
-
 extern unsigned lex_lineno();
+
+static int structunion = 0;
 
 #define YY_INPUT(buf,result,max_size) { \
        int c = comp_input(); \
@@ -91,10 +91,10 @@ extern unsigned lex_lineno();
 "signed"		{ count(); return(SIGNED); }
 "sizeof"		{ count(); return(SIZEOF); }
 "static"		{ count(); return(STATIC); }
-"struct"		{ count(); return(STRUCT); }
+"struct"		{ count(); structunion = 1; return(STRUCT); }
 "switch"		{ count(); return(SWITCH); }
 "typedef"		{ count(); return(TYPEDEF); }
-"union"			{ count(); return(UNION); }
+"union"			{ count(); structunion = 1; return(UNION); }
 "unsigned"		{ count(); return(UNSIGNED); }
 "void"			{ count(); return(VOID); }
 "volatile"		{ count(); return(VOLATILE); }
@@ -106,6 +106,7 @@ extern unsigned lex_lineno();
 "__restrict__"		{ count(); return(RESTRICT); }
 "__extension__"		{ count(); }
 "__const"		{ count(); return(CONST); }
+"__inline"		{ count(); return(INLINE); }
 
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
@@ -196,12 +197,6 @@ comment() {
 
 unsigned column = 0;
 
-int
-lex_symbol() {
-	std::cout << "lex_symid = " << lex_symid << "\n";
-	return lex_symid;
-}
-
 const std::string&
 lex_revsym(int symid) {
 	return revsym[symid];
@@ -209,7 +204,7 @@ lex_revsym(int symid) {
 
 static void
 count() {
-	lex_symid = -1;
+	;
 }
 
 static void
@@ -236,12 +231,18 @@ reg_sym(const char *text) {
 	symmap[text] = ++nsymid;	// Allocate a symbol id
 	revsym[nsymid] = text;
 
-	lex_symid = nsymid;
-	return lex_symid;
+	return nsymid;
 }
 
 static int
 ident_type(int symid) {
+
+	yylval = symid;
+
+	if ( structunion ) {
+		structunion = 0;
+		return IDENTIFIER;
+	}
 
 	auto it = types.find(symid);
 	if ( it != types.end() ) {
