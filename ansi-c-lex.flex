@@ -148,7 +148,7 @@ L?\"(\\.|[^\\"\n])*\"	{ count(); reg_sym(yytext); return(STRING_LITERAL); }
 "=="			{ count(); return(EQ_OP); }
 "!="			{ count(); return(NE_OP); }
 ";"			{ count(); return(';'); }
-("{"|"<%")		{ count(); return('{'); }
+("{"|"<%")		{ count(); structunion = 0; return('{'); }
 ("}"|"%>")		{ count(); return('}'); }
 ","			{ count(); return(','); }
 ":"			{ count(); return(':'); }
