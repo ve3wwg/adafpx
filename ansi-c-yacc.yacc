@@ -47,12 +47,15 @@ struct s_node {
 	unsigned	ptr;		// Pointer levels
 
 	std::vector<int> list;		// List 
+	std::vector<int> list2;		// 2nd list
 
 	s_node() { 
 		type = None;
 		symbol = 0;
 	}
 };
+
+static void dump(s_node& node,int level=0);
 
 static int Node(s_node& node);
 static s_node& Get(int nno);
@@ -463,13 +466,19 @@ std::cout << "<<<type_name>> id =" << $$ << "sym=" << node.symbol << "\n";
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
 		s_node& node = Get($1);
-		s_node& node2 = Get($2);
+		node.symbol = $2;
 		s_node& node3 = Get($3);
-		node.symbol = node2.symbol;
 		node.list = node3.list;
 std::cout << "<<<struct_or_union identifier {}>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
+		dump(node);
 	}
 	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
+		s_node& node = Get($1);
+		node.symbol = 0;		// Anonymous struct/union
+		if ( $3 ) {
+			s_node& node3 = Get($3);
+			node.list = node3.list;
+		}
 std::cout << "<<<struct_or_union anon>>>\n";
 	}
 	| struct_or_union IDENTIFIER {
@@ -483,13 +492,11 @@ struct_or_union
 	: STRUCT {
 		s_node node;
 		node.type = Struct;
-		node.symbol = 0;
 		$$ = Node(node);
 	}
 	| UNION {
 		s_node node;
 		node.type = Union;
-		node.symbol = 0;
 		$$ = Node(node);
 	}
 	;
@@ -497,19 +504,50 @@ struct_or_union
 struct_declaration_list
 	: struct_declaration
 	| struct_declaration_list struct_declaration {
-		s_node& node = Get($1);
-		node.list.push_back($2);
+		if ( !$1 ) {
+			$$ = $2;
+		} else if ( $2 ) {
+			s_node& node = Get($1);
+			node.list.push_back($2);
+		}
 	}
 	;
 
 struct_declaration
-	: specifier_qualifier_list struct_declarator_list ';'
+	: specifier_qualifier_list struct_declarator_list ';' {
+		if ( $1 ) {
+			if ( $2 ) {
+				s_node& node = Get($1);
+				node.list2.push_back($2);
+			}
+		}
+		$$ = $1;
+	}
 	;
 
 specifier_qualifier_list
-	: type_specifier specifier_qualifier_list
+	: type_specifier specifier_qualifier_list {
+		if ( $1 ) {
+			if ( $2 ) {
+				s_node& node = Get($1);
+				node.list.push_back($2);
+			}
+			$$ = $1;
+		} else	{
+			$$ = $2;
+		}
+	}
 	| type_specifier
-	| type_qualifier specifier_qualifier_list
+	| type_qualifier specifier_qualifier_list {
+		if ( $1 ) {
+			if ( $2 ) {
+				s_node& node = Get($2);
+				node.list.push_back($2);
+			}
+		} else	{
+			$$ = $2;
+		}
+	}
 	| type_qualifier
 	;
 
@@ -803,6 +841,33 @@ Get(int nno) {
 	auto it = nodemap.find(nno);
 	assert(it != nodemap.end());
 	return it->second;
+}
+
+std::string
+indent(int level) {
+	std::string s;
+
+	s.append(level*2,' ');
+	return s;
+}
+
+static void
+dump(s_node& node,int level) {
+
+	std::cout 	<< indent(level) << "node.type = " << node.type << " {\n"
+			<< indent(level) << "  .symbol = " << node.symbol;
+			
+	if ( node.symbol > 0 ) {
+		std::string symbol = lex_revsym(node.symbol);
+		std::cout << " '" << symbol << "'\n";
+	}
+
+	for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
+		s_node& lnode = Get(*it);
+
+		dump(lnode,level+1);
+	}
+	std::cout << indent(level) << "}\n";
 }
 
 /* End ansi-c.yacc */
