@@ -42,9 +42,11 @@ enum e_ntype {
 };
 
 struct s_node {
-	e_ntype		type;
-	int		symbol;
-	std::vector<int> list;
+	e_ntype		type;		// Node type
+	int		symbol;		// Symbol ref
+	unsigned	ptr;		// Pointer levels
+
+	std::vector<int> list;		// List 
 
 	s_node() { 
 		type = None;
@@ -312,44 +314,53 @@ std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).
 		} else	{
 			std::cout << "<<<storage_class_specifier>>>\n";
 		}
+		$$ = $1;
 	}
 	| storage_class_specifier declaration_specifiers {
-std::cout << "<<<storage_class_specifier declaration_specifiers>>>\n";
-		if ( $1 > 0 ) {
+		if ( !$1 ) {
+			$$ = $2;
+		} else if ( !$2 ) {
+			$$ = $1;
+		} else	{
 			s_node& node1 = Get($1);
-std::cout << "... node.type=" << node1.type << ", sym=" << node1.symbol << " '" << lex_revsym(node1.symbol) << "' \n";
+//			s_node& node2 = Get($2);
+
+			node1.list.push_back($2);
+std::cout << "<<<storage_class_specifier declaration_specifiers>>>\n";
 		}
-		if ( $2 > 0 ) {
-			s_node& node2 = Get($2);
-std::cout << "... node.type=" << node2.type << ", sym=" << node2.symbol << " '" << lex_revsym(node2.symbol) << "' \n";
-		}
-		$$ = $1;
 	}
 	| type_specifier {
 		std::cout << "<<<type_specifier>>> id=" << $1 << "\n";
+		$$ = $1;
 	}
 	| type_specifier declaration_specifiers {
-		std::cout << "<<<type_specifier declaration_specifiers>>>\n";
-		if ( $1 > 0 ) {
-			s_node& node1 = Get($1);
-std::cout << "... node1.type = " << node1.type << ", sym=" << node1.symbol << "\n";
-		}
-		if ( $2 > 0 ) {
-			s_node& node2 = Get($2);
-std::cout << "... node2.type = " << node2.type << ", sym=" << node2.symbol << "\n";
+		if ( !$1 ) {
+			$$ = $2;
+		} else if ( !$2 ) {
+			$$ = $1;
+		} else	{
+			s_node& node = Get($1);
+//			s_node& node2 = Get($2);
+
+			node.list.push_back($2);
+			std::cout << "<<<type_specifier declaration_specifiers>>>\n";
 		}
 	}
 	| type_qualifier {
 		std::cout << "<<<type_qualifier>>>\n";
+		$$ = $1;
 	}
 	| type_qualifier declaration_specifiers {
 		std::cout << "<<<type_qualifier declaration_specifiers>>>\n";
+		$$ = $2;
 	}
 	| function_specifier {
 		std::cout << "<<<function_specifiers>>>\n";
+		$$ = $1;
 	}
 	| function_specifier declaration_specifiers {
 		std::cout << "<<<function_specifier declaration_specifiers>>>\n";
+		$$ = $2;
 	}
 	;
 
@@ -382,45 +393,64 @@ storage_class_specifier
 std::cout << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
 	}
 	| EXTERN {
-		s_node node;
-		node.type = None;
-		$$ = Node(node);
+		$$ = 0;
 	}
 	| STATIC {
-		s_node node;
-		node.type = None;
-		$$ = Node(node);
+		$$ = 0;
 	}
 	| AUTO {
-		s_node node;
-		node.type = None;
-		$$ = Node(node);
+		$$ = 0;
 	}
 	| REGISTER {
-		s_node node;
-		node.type = None;
-		$$ = Node(node);
+		$$ = 0;
 	}
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| BOOL
-	| COMPLEX
-	| IMAGINARY
+	: VOID {
+		$$ = 0;
+	}
+	| CHAR {
+		$$ = 0;
+	}
+	| SHORT {
+		$$ = 0;
+	}
+	| INT {
+		$$ = 0;
+	}
+	| LONG {
+		$$ = 0;
+	}
+	| FLOAT {
+		$$ = 0;
+	}
+	| DOUBLE {
+		$$ = 0;
+	}
+	| SIGNED {
+		$$ = 0;
+	}
+	| UNSIGNED {
+		$$ = 0;
+	}
+	| BOOL {
+		$$ = 0;
+	}
+	| COMPLEX {
+		$$ = 0;
+	}
+	| IMAGINARY {
+		$$ = 0;
+	}
 	| struct_or_union_specifier {
 		s_node& node = Get($1);
 std::cout << "<<<struct_or_union_specifier>>> type=" << node.type << ", sym=" << node.symbol << "\n";
+		$$ = $1;
 	}
-	| enum_specifier
+	| enum_specifier {
+		$$ = $1;
+	}
 	| TYPE_NAME {
 		s_node node;
 		node.type = Type;
@@ -433,7 +463,10 @@ std::cout << "<<<type_name>> id =" << $$ << "sym=" << node.symbol << "\n";
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
 		s_node& node = Get($1);
-		node.symbol = $2;
+		s_node& node2 = Get($2);
+		s_node& node3 = Get($3);
+		node.symbol = node2.symbol;
+		node.list = node3.list;
 std::cout << "<<<struct_or_union identifier {}>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
 	}
 	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
@@ -463,7 +496,10 @@ struct_or_union
 
 struct_declaration_list
 	: struct_declaration
-	| struct_declaration_list struct_declaration
+	| struct_declaration_list struct_declaration {
+		s_node& node = Get($1);
+		node.list.push_back($2);
+	}
 	;
 
 struct_declaration
@@ -507,17 +543,27 @@ enumerator
 	;
 
 type_qualifier
-	: CONST
-	| RESTRICT
-	| VOLATILE
+	: CONST {
+		$$ = 0;
+	}
+	| RESTRICT {
+		$$ = 0;
+	}
+	| VOLATILE {
+		$$ = 0;
+	}
 	;
 
 function_specifier
-	: INLINE
+	: INLINE {
+		$$ = 0;
+	}
 	;
 
 declarator
 	: pointer direct_declarator {
+		s_node& node = Get($1);
+		++node.ptr;
 		$$ = $2;
 std::cout << "<<<pointer direct_declarator>>>\n";
 	}
