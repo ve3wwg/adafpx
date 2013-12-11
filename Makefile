@@ -10,7 +10,8 @@ include Makefile.incl
 	$(YACC) -o $*.cpp --defines=$*.hpp $<
 
 .flex.cpp:
-	$(FLEX) -d --outfile=$*.cpp $<
+	$(FLEX) --outfile=$*.cpp $<
+#	$(FLEX) -d --outfile=$*.cpp $<
 
 .cpp.o:
 	$(CXX) -c -Wall $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
