@@ -11,6 +11,7 @@
 unsigned lex_lineno();
 int lex_token();
 void register_builtin(const std::string& type);
+void register_type(int symid);
 void lexer_reset();
 const std::string& lex_revsym(int symid);
 
