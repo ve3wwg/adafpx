@@ -47,18 +47,23 @@ struct s_node {
 	unsigned	ptr;		// Pointer levels
 
 	std::vector<int> list;		// List 
-	std::vector<int> list2;		// 2nd list
+
+	int		next;		// Next node in chain
 
 	s_node() { 
 		type = None;
 		symbol = 0;
+		next = 0;
 	}
 };
 
-static void dump(s_node& node,int level=0);
+static const char *to_string(e_ntype type);
+static void dump(s_node& node,const char *desc=0,int level=0);
+static void dump(int lval,const char *desc);
 
 static int Node(s_node& node);
 static s_node& Get(int nno);
+static int Append(s_node& node,int nodeno);
 
 #define YYSTYPE 	int
 
@@ -85,9 +90,10 @@ extern int yylex();
 
 /* int open(const char *, int, ...) __asm("_" "open" ); */
 
-asm_clause
+/* asm_clause
 	: ASM '(' asm_list ')'
 	;
+*/
 
 asm_list
 	: STRING_LITERAL
@@ -126,6 +132,7 @@ primary_expression
 		s_node node;
 		node.type = Ident;
 		node.symbol = $1;
+		dump(node,"IDENTIFIER");
 		$$ = Node(node);
 	}
 	| CONSTANT
@@ -266,27 +273,39 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';'
-	| attribute_clause declaration_specifiers ';'
+	: declaration_specifiers ';' {
+		$$ = $1;
+		dump($$,"declaration_specifiers ';'");
+	}
+	| attribute_clause declaration_specifiers ';' {
+		$$ = $2;
+		dump($$,"attr declaration_specifiers ';'");
+	}
 	| declaration_specifiers init_declarator_list ';' {
 		if ( $1 != 0 ) {
 std::cout << "Declaration: $1 = " << $1 << ", $2 = " << $2 << " node.type=" << "\n";
 std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
 			s_node& decl = Get($1);
 
+			dump(decl,"declaration_specifiers");
+
 			if ( decl.type == Typedef ) {
 std::cout << " >>> GOT TYPEDEF <<<\n";
 				s_node& node = Get($2);
 
+				decl.next = $2;
+				dump(decl,"init_declarator_list");
+
 				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
-					s_node& dnode = Get(*it);
-					assert(dnode.type == Ident);
-					register_type(dnode.symbol);	// Register this symbol as a type with lexer
+					int nid = *it;
+					s_node& tnode = Get(nid);
+					register_type(tnode.symbol);
 				}
+
 std::cout << node.list.size() << " declarations registered as types\n";
 			}
 		}
-		$$ = $2;
+		$$ = $1;
 	}
 	| attribute_clause declaration_specifiers init_declarator_list ';' {
 		if ( $2 != 0 ) {
@@ -294,9 +313,13 @@ std::cout << "Declaration(2): $2 = " << $2 << ", $2 = " << $2 << " node.type=" <
 std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
 			s_node& decl = Get($2);
 
+			dump(decl,"attr + declaration_specifiers");
+
 			if ( decl.type == Typedef ) {
 std::cout << " >>> GOT TYPEDEF <<<\n";
 				s_node& node = Get($3);
+
+				dump(node,"attr + init_declaration_list");
 
 				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 					s_node& dnode = Get(*it);
@@ -307,17 +330,14 @@ std::cout << node.list.size() << " declarations registered as types\n";
 			}
 		}
 		$$ = $2;
+		dump($$,"attr declaration_specifiers init_declarator_list ';'");
 	}
 	;
 
 declaration_specifiers
 	: storage_class_specifier {
-		if ( $1 != 0 ) {
-std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).type << "\n";
-		} else	{
-			std::cout << "<<<storage_class_specifier>>>\n";
-		}
 		$$ = $1;
+		dump($$,"storage_class_specifier");
 	}
 	| storage_class_specifier declaration_specifiers {
 		if ( !$1 ) {
@@ -326,44 +346,34 @@ std::cout << "Declaration_Specifiers $$ = " << $1 << " node.type = " << Get($1).
 			$$ = $1;
 		} else	{
 			s_node& node1 = Get($1);
-//			s_node& node2 = Get($2);
 
-			node1.list.push_back($2);
-std::cout << "<<<storage_class_specifier declaration_specifiers>>>\n";
+			node1.next = $2;
+			dump(node1,"storage_class_specifier declaration_specifiers");
 		}
+		dump($1,"storage_class_specifier");
 	}
 	| type_specifier {
-		std::cout << "<<<type_specifier>>> id=" << $1 << "\n";
-		$$ = $1;
+		$$ = 0;		// Ignore these
 	}
 	| type_specifier declaration_specifiers {
-		if ( !$1 ) {
-			$$ = $2;
-		} else if ( !$2 ) {
-			$$ = $1;
-		} else	{
-			s_node& node = Get($1);
-//			s_node& node2 = Get($2);
-
-			node.list.push_back($2);
-			std::cout << "<<<type_specifier declaration_specifiers>>>\n";
-		}
+		$$ = $2;
+		dump($$,"type_specifier declaration_specifiers");
 	}
 	| type_qualifier {
-		std::cout << "<<<type_qualifier>>>\n";
-		$$ = $1;
+		$$ = 0;
 	}
 	| type_qualifier declaration_specifiers {
-		std::cout << "<<<type_qualifier declaration_specifiers>>>\n";
 		$$ = $2;
+		dump($$,"type_qualifier declaration_specifiers");
 	}
 	| function_specifier {
-		std::cout << "<<<function_specifiers>>>\n";
-		$$ = $1;
+		$$ = 0;
+		dump($$,"function_specifier");
 	}
 	| function_specifier declaration_specifiers {
 		std::cout << "<<<function_specifier declaration_specifiers>>>\n";
 		$$ = $2;
+		dump($$,"function_specifier declaration_specifiers");
 	}
 	;
 
@@ -373,19 +383,33 @@ init_declarator_list
 		node.type = List;
 		node.list.push_back($1);
 		$$ = Node(node);
+		dump($$,"init_declarator");
 	}
 	| init_declarator_list ',' init_declarator {
 		s_node& node = Get($1);
 		node.list.push_back($2);
 		$$ = $1;
+		dump($$,"init_declarator_list init_declarator");
 	}
 	;
 
 init_declarator
-	: declarator
-	| declarator attribute_clause_list 
-	| declarator asm_clause
-	| declarator '=' initializer
+	: declarator {
+		$$ = $1;
+		dump($$,"declarator");
+	}
+	| declarator attribute_clause attribute_clause_list {
+		$$ = $1;
+		dump($$,"declarator attr attr_list");
+	}
+	| declarator ASM '(' asm_list ')' {
+		$$ = $1;
+		dump($$,"declarator ASM (...)");
+	}
+	| declarator '=' initializer {
+		$$ = $1;
+		dump($$,"declarator '=' initializer");
+	}
 	;
 
 storage_class_specifier
@@ -393,6 +417,7 @@ storage_class_specifier
 		s_node node;
 		node.type = Typedef;
 		$$ = Node(node);
+		dump($$,"storage_class_specifier");
 std::cout << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
 	}
 	| EXTERN {
@@ -450,15 +475,18 @@ type_specifier
 		s_node& node = Get($1);
 std::cout << "<<<struct_or_union_specifier>>> type=" << node.type << ", sym=" << node.symbol << "\n";
 		$$ = $1;
+		dump($$,"struct_or_union_specifier");
 	}
 	| enum_specifier {
 		$$ = $1;
+		dump($$,"enum_specifier");
 	}
 	| TYPE_NAME {
 		s_node node;
 		node.type = Type;
 		node.symbol = $1;
 		$$ = Node(node);
+		dump($$,"TYPE_NAME");
 std::cout << "<<<type_name>> id =" << $$ << "sym=" << node.symbol << "\n";
 	}
 	;
@@ -467,24 +495,23 @@ struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
 		s_node& node = Get($1);
 		node.symbol = $2;
-		s_node& node3 = Get($3);
-		node.list = node3.list;
-std::cout << "<<<struct_or_union identifier {}>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
-		dump(node);
+		node.next = $4;
+		$$ = $1;
+		dump($$,"struct_or_union IDENTIFIER '{' struct_declaration_list '}' attr");
 	}
 	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
 		s_node& node = Get($1);
 		node.symbol = 0;		// Anonymous struct/union
-		if ( $3 ) {
-			s_node& node3 = Get($3);
-			node.list = node3.list;
-		}
-std::cout << "<<<struct_or_union anon>>>\n";
+		node.next = $3;
+		$$ = $1;
+		dump($$,"struct_or_union '{' struct_declaration_list '}' attribute_clause_list");
 	}
 	| struct_or_union IDENTIFIER {
 		s_node& node = Get($1);
 		node.symbol = $2;
-std::cout << "<<<struct_or_union identifier>>> node.type=" << node.type << ", symbol=" << node.symbol << "\n";
+		node.next = 0;
+		$$ = $1;
+		dump($$,"struct_or_union IDENTIFIER");
 	}
 	;
 
@@ -492,36 +519,45 @@ struct_or_union
 	: STRUCT {
 		s_node node;
 		node.type = Struct;
+		node.symbol = 0;
 		$$ = Node(node);
+		dump($$,"***STRUCT***");
 	}
 	| UNION {
 		s_node node;
 		node.type = Union;
+		node.symbol = 0;
 		$$ = Node(node);
+		dump($$,"***UNION***");
 	}
 	;
 
 struct_declaration_list
-	: struct_declaration
+	: struct_declaration {
+		s_node node;
+		node.type = List;
+		node.list.push_back($1);
+		$$ = Node(node);
+		dump($$,"struct_dclaration");
+	}
 	| struct_declaration_list struct_declaration {
-		if ( !$1 ) {
-			$$ = $2;
-		} else if ( $2 ) {
-			s_node& node = Get($1);
-			node.list.push_back($2);
-		}
+		s_node& node = Get($1);
+		node.list.push_back($2);
+		$$ = $1;
+		dump($$,"struct_declaration_list struct_declaration");
 	}
 	;
 
 struct_declaration
 	: specifier_qualifier_list struct_declarator_list ';' {
+		
+
 		if ( $1 ) {
-			if ( $2 ) {
-				s_node& node = Get($1);
-				node.list2.push_back($2);
-			}
+			s_node& node = Get($1);
+			node.next = $2;
 		}
 		$$ = $1;
+		dump($$,"specifier_qualifier_list struct_declarator_list ';'");
 	}
 	;
 
@@ -536,19 +572,16 @@ specifier_qualifier_list
 		} else	{
 			$$ = $2;
 		}
+		dump($$,"type_specifier specifier_qualifier_list");
 	}
 	| type_specifier
 	| type_qualifier specifier_qualifier_list {
-		if ( $1 ) {
-			if ( $2 ) {
-				s_node& node = Get($2);
-				node.list.push_back($2);
-			}
-		} else	{
-			$$ = $2;
-		}
+		$$ = $2;
+		dump($$,"type_qualifier specifier_qualifier_list");
 	}
-	| type_qualifier
+	| type_qualifier {
+		$$ = 0;		// Ignore these
+	}
 	;
 
 struct_declarator_list
@@ -603,6 +636,7 @@ declarator
 		s_node& node = Get($1);
 		++node.ptr;
 		$$ = $2;
+		dump($$,"pointer direct_declarator");
 std::cout << "<<<pointer direct_declarator>>>\n";
 	}
 	| direct_declarator {
@@ -612,6 +646,7 @@ std::cout << "<<<direct_declarator>>> id=" << $1 << "\n";
 std::cout << "... node.type=" << node.type << ",sym=" << node.symbol << " '" << lex_revsym(node.symbol) << "' \n";
 		}
 		$$ = $1;
+		dump($$,"direct_declarator");
 	}
 	;
 
@@ -621,11 +656,13 @@ direct_declarator
 		node.type = Ident;
 		node.symbol = $1;
 		$$ = Node(node);
+		dump($$,"Identifier");
 std::cout << "<<<direct_declarator(identifier)>>>, id=" << $1 << ", '" << lex_revsym($1) << "' \n";
 	}
 	| '(' declarator ')' {
 std::cout << "<<<(declarator)>>>\n";
 		$$ = $2;
+		dump($$,"(declarator)");
 	}
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'
@@ -638,8 +675,12 @@ std::cout << "<<<(declarator)>>>\n";
 	| direct_declarator '(' parameter_type_list ')'
 	| direct_declarator '(' identifier_list ')' {
 		std::cout << "<<<(identifier_list)>>>\n";
+		dump($$,"direct_declarator '(' identifier_list ')'");
 	}
-	| direct_declarator '(' ')'
+	| direct_declarator '(' ')' {
+		$$ = $1;
+		dump($$,"direct_declarator '(' ')'");
+	}
 	;
 
 pointer
@@ -843,6 +884,23 @@ Get(int nno) {
 	return it->second;
 }
 
+static int
+Append(int tonode,int nodeno) {
+
+	assert(tonode > 0);
+
+	for (;;) {
+		s_node& node = Get(tonode);
+		if ( node.next == 0 ) {
+			node.next = nodeno;
+			break;
+		}
+		tonode = node.next;
+	}
+
+	return tonode;			// Returns node that it was added to
+}
+
 std::string
 indent(int level) {
 	std::string s;
@@ -852,22 +910,68 @@ indent(int level) {
 }
 
 static void
-dump(s_node& node,int level) {
+dump(int lval,const char *desc) {
+	if ( lval <= 0 ) {
+		std::cout << "DUMP of node (" << (desc ? desc : "") << "):  null ("
+			<< lval << ");\n";
+	} else	{
+		s_node& node = Get(lval);
+		dump(node,desc,0);
+	}
+}
 
-	std::cout 	<< indent(level) << "node.type = " << node.type << " {\n"
+static void
+dump(s_node& node,const char *desc,int level) {
+
+	if ( desc )
+		std::cout << indent(level) << "DUMP of node (" << desc << "):\n";
+	else	std::cout << indent(level) << "DUMP of node:\n";
+
+	std::cout 	<< indent(level) << "node.type = " << node.type << " ("
+			<< to_string(node.type) << ") {\n"
 			<< indent(level) << "  .symbol = " << node.symbol;
 			
 	if ( node.symbol > 0 ) {
 		std::string symbol = lex_revsym(node.symbol);
 		std::cout << " '" << symbol << "'\n";
-	}
+	} else	std::cout << "\n";
 
 	for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 		s_node& lnode = Get(*it);
 
-		dump(lnode,level+1);
+		dump(lnode,0,level+1);
 	}
+
+	if ( node.next > 0 ) {
+		s_node& next = Get(node.next);
+		dump(next,"next",level+1);
+	}
+
 	std::cout << indent(level) << "}\n";
+}
+
+static const char *
+to_string(e_ntype type) {
+
+	switch ( type ) {
+	case None :
+		return "None";
+	case Ident :
+		return "Ident";
+	case Typedef :
+		return "Typedef";
+	case Type :
+		return "Type";
+	case Struct :
+		return "Struct";
+	case Union :
+		return "Union";
+	case List :
+		return "List";
+	default :
+		;
+	}
+	return "??";
 }
 
 /* End ansi-c.yacc */
