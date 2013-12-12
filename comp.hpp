@@ -35,6 +35,9 @@ struct s_node {
 	}
 };
 
+extern std::string yytarget;
+extern int yytarget_struct;
+
 unsigned lex_lineno();
 int lex_token();
 void register_builtin(const std::string& type);

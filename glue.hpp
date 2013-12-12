@@ -12,9 +12,6 @@
 extern std::unordered_map<std::string,int> symmap;
 extern std::unordered_map<int,std::string> revsym;
 
-unsigned lex_lineno();
-const std::string& lex_revsym(int symid);
-
 int yylex();
 
 void loadconfig();
