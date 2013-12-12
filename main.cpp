@@ -27,7 +27,8 @@ main(int argc,char **argv) {
 	int ltoken;
 	extern int yydebug;
 
-	yydebug = 1;
+	if ( argc > 1 )
+		yydebug = 1;
 
 	platform = uts_platform();
 	version = uts_version();
