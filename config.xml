@@ -771,6 +771,7 @@
 		<struct name="tms" ada="s_tms" genset="510">
 			<includes>
 				<include file="sys/types.h"/>
+				<include file="sys/times.h" os="Darwin *"/>
 				<include file="times.h" os="Linux *"/>
 			</includes>
 		</struct>
@@ -778,6 +779,7 @@
 			<includes>
 				<include file="sys/param.h"/>
 				<include file="sys/stat.h"/>
+				<include file="fcntl.h"/>
 			</includes>
 		</struct>
 	</structs>
