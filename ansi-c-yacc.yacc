@@ -31,39 +31,16 @@ static void yyerror(char const *s);
 
 unsigned lex_lineno();
 
-enum e_ntype {
-	None = 0,
-	Ident,		// Identifier
-	Typedef,	// Typedef
-	Type,		// Type name
-	Struct,		// struct
-	Union,		// union
-	List		// List
-};
-
-struct s_node {
-	e_ntype		type;		// Node type
-	int		symbol;		// Symbol ref
-	unsigned	ptr;		// Pointer levels
-
-	std::vector<int> list;		// List 
-
-	int		next;		// Next node in chain
-
-	s_node() { 
-		type = None;
-		symbol = 0;
-		next = 0;
-	}
-};
-
 static const char *to_string(e_ntype type);
 static void dump(s_node& node,const char *desc=0,int level=0);
 static void dump(int lval,const char *desc);
 
 static int Node(s_node& node);
-static s_node& Get(int nno);
+s_node& Get(int nno);
 static int Append(s_node& node,int nodeno);
+
+std::string yytarget;
+int yytarget_struct = 0;
 
 #define YYSTYPE 	int
 
@@ -283,14 +260,11 @@ declaration
 	}
 	| declaration_specifiers init_declarator_list ';' {
 		if ( $1 != 0 ) {
-std::cout << "Declaration: $1 = " << $1 << ", $2 = " << $2 << " node.type=" << "\n";
-std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
 			s_node& decl = Get($1);
 
 			dump(decl,"declaration_specifiers");
 
 			if ( decl.type == Typedef ) {
-std::cout << " >>> GOT TYPEDEF <<<\n";
 				s_node& node = Get($2);
 
 				decl.next = $2;
@@ -301,22 +275,17 @@ std::cout << " >>> GOT TYPEDEF <<<\n";
 					s_node& tnode = Get(nid);
 					register_type(tnode.symbol);
 				}
-
-std::cout << node.list.size() << " declarations registered as types\n";
 			}
 		}
 		$$ = $1;
 	}
 	| attribute_clause declaration_specifiers init_declarator_list ';' {
 		if ( $2 != 0 ) {
-std::cout << "Declaration(2): $2 = " << $2 << ", $2 = " << $2 << " node.type=" << "\n";
-std::cout << Get($1).type << " Line " << lex_lineno() << "\n";
 			s_node& decl = Get($2);
 
 			dump(decl,"attr + declaration_specifiers");
 
 			if ( decl.type == Typedef ) {
-std::cout << " >>> GOT TYPEDEF <<<\n";
 				s_node& node = Get($3);
 
 				dump(node,"attr + init_declaration_list");
@@ -326,7 +295,6 @@ std::cout << " >>> GOT TYPEDEF <<<\n";
 					assert(dnode.type == Ident);
 					register_type(dnode.symbol);	// Register this symbol as a type with lexer
 				}
-std::cout << node.list.size() << " declarations registered as types\n";
 			}
 		}
 		$$ = $2;
@@ -371,7 +339,6 @@ declaration_specifiers
 		dump($$,"function_specifier");
 	}
 	| function_specifier declaration_specifiers {
-		std::cout << "<<<function_specifier declaration_specifiers>>>\n";
 		$$ = $2;
 		dump($$,"function_specifier declaration_specifiers");
 	}
@@ -473,7 +440,6 @@ type_specifier
 	}
 	| struct_or_union_specifier {
 		s_node& node = Get($1);
-std::cout << "<<<struct_or_union_specifier>>> type=" << node.type << ", sym=" << node.symbol << "\n";
 		$$ = $1;
 		dump($$,"struct_or_union_specifier");
 	}
@@ -487,17 +453,22 @@ std::cout << "<<<struct_or_union_specifier>>> type=" << node.type << ", sym=" <<
 		node.symbol = $1;
 		$$ = Node(node);
 		dump($$,"TYPE_NAME");
-std::cout << "<<<type_name>> id =" << $$ << "sym=" << node.symbol << "\n";
 	}
 	;
 
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
+		assert($1);
+		assert($2);
+		assert($4);
 		s_node& node = Get($1);
 		node.symbol = $2;
 		node.next = $4;
 		$$ = $1;
 		dump($$,"struct_or_union IDENTIFIER '{' struct_declaration_list '}' attr");
+		if ( lex_revsym($2) == yytarget )
+			yytarget_struct = $$;
+
 	}
 	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
 		s_node& node = Get($1);
@@ -542,7 +513,13 @@ struct_declaration_list
 	}
 	| struct_declaration_list struct_declaration {
 		s_node& node = Get($1);
-		node.list.push_back($2);
+		s_node& node2 = Get($2);
+
+		if ( node2.type != Type || !node.next ) {
+			node.list.push_back($2);
+		} else	{
+			node.list.push_back(node2.next);
+		}
 		$$ = $1;
 		dump($$,"struct_declaration_list struct_declaration");
 	}
@@ -550,13 +527,13 @@ struct_declaration_list
 
 struct_declaration
 	: specifier_qualifier_list struct_declarator_list ';' {
-		
-
 		if ( $1 ) {
 			s_node& node = Get($1);
 			node.next = $2;
+			$$ = $1;
+		} else	{
+			$$ = $2;
 		}
-		$$ = $1;
 		dump($$,"specifier_qualifier_list struct_declarator_list ';'");
 	}
 	;
@@ -637,14 +614,8 @@ declarator
 		++node.ptr;
 		$$ = $2;
 		dump($$,"pointer direct_declarator");
-std::cout << "<<<pointer direct_declarator>>>\n";
 	}
 	| direct_declarator {
-std::cout << "<<<direct_declarator>>> id=" << $1 << "\n";
-		if ( $1 > 0 ) {
-			s_node& node = Get($1);
-std::cout << "... node.type=" << node.type << ",sym=" << node.symbol << " '" << lex_revsym(node.symbol) << "' \n";
-		}
 		$$ = $1;
 		dump($$,"direct_declarator");
 	}
@@ -657,10 +628,8 @@ direct_declarator
 		node.symbol = $1;
 		$$ = Node(node);
 		dump($$,"Identifier");
-std::cout << "<<<direct_declarator(identifier)>>>, id=" << $1 << ", '" << lex_revsym($1) << "' \n";
 	}
 	| '(' declarator ')' {
-std::cout << "<<<(declarator)>>>\n";
 		$$ = $2;
 		dump($$,"(declarator)");
 	}
@@ -674,7 +643,6 @@ std::cout << "<<<(declarator)>>>\n";
 	| direct_declarator '[' ']'
 	| direct_declarator '(' parameter_type_list ')'
 	| direct_declarator '(' identifier_list ')' {
-		std::cout << "<<<(identifier_list)>>>\n";
 		dump($$,"direct_declarator '(' identifier_list ')'");
 	}
 	| direct_declarator '(' ')' {
@@ -827,21 +795,13 @@ jump_statement
 	;
 
 translation_unit
-	: external_declaration {
-		std::cout << "<<<external_declaration>>>\n";
-	}
-	| translation_unit external_declaration {
-		std::cout << "<<<translation_unit external_declaration>>>\n";
-	}
+	: external_declaration
+	| translation_unit external_declaration
 	;
 
 external_declaration
-	: function_definition {
-		std::cout << "<<<function_definition>>>\n";
-	}
-	| declaration {
-		std::cout << "<<<declaration>>>\n";
-	}
+	: function_definition
+	| declaration
 	;
 
 function_definition
@@ -871,13 +831,21 @@ yyerror(char const *s) {
 static std::unordered_map<int,s_node> nodemap;
 static unsigned nodeno = 0;
 
+void
+parser_reset() {
+	nodeno = 0;
+	nodemap.clear();
+	yytarget.clear();
+	yytarget_struct = 0;
+}
+
 static int
 Node(s_node& node) {
 	nodemap[++nodeno] = node;
 	return nodeno;
 }
 
-static s_node&
+s_node&
 Get(int nno) {
 	auto it = nodemap.find(nno);
 	assert(it != nodemap.end());
