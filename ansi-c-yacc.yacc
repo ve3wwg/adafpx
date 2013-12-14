@@ -505,11 +505,15 @@ struct_or_union
 
 struct_declaration_list
 	: struct_declaration {
-		s_node node;
-		node.type = List;
-		node.list.push_back($1);
-		$$ = Node(node);
-		dump($$,"struct_dclaration");
+		if ( $1 ) {
+			s_node node;
+			node.type = List;
+			node.list.push_back($1);
+			$$ = Node(node);
+			dump($$,"struct_dclaration");
+		} else	{
+			$$ = 0;
+		}
 	}
 	| struct_declaration_list struct_declaration {
 		s_node& node = Get($1);
@@ -534,7 +538,8 @@ struct_declaration
 		} else	{
 			$$ = $2;
 		}
-		dump($$,"specifier_qualifier_list struct_declarator_list ';'");
+		if ( $$ )
+			dump($$,"specifier_qualifier_list struct_declarator_list ';'");
 	}
 	;
 
@@ -641,13 +646,16 @@ direct_declarator
 	| direct_declarator '[' type_qualifier_list '*' ']'
 	| direct_declarator '[' '*' ']'
 	| direct_declarator '[' ']'
-	| direct_declarator '(' parameter_type_list ')'
+	| direct_declarator '(' parameter_type_list ')' {
+		$$ = 0;
+	}
 	| direct_declarator '(' identifier_list ')' {
-		dump($$,"direct_declarator '(' identifier_list ')'");
+//		dump($$,"direct_declarator '(' identifier_list ')'");
+		$$ = 0;
 	}
 	| direct_declarator '(' ')' {
-		$$ = $1;
-		dump($$,"direct_declarator '(' ')'");
+		$$ = 0;
+//		dump($$,"direct_declarator '(' ')'");
 	}
 	;
 
