@@ -346,17 +346,26 @@ declaration_specifiers
 
 init_declarator_list
 	: init_declarator {
-		s_node node;
-		node.type = List;
-		node.list.push_back($1);
-		$$ = Node(node);
-		dump($$,"init_declarator");
+		if ( $1 ) {
+			s_node node;
+			node.type = List;
+			node.list.push_back($1);
+			$$ = Node(node);
+			dump($$,"init_declarator");
+		} else	{
+			$$ = 0;
+		}
 	}
 	| init_declarator_list ',' init_declarator {
-		s_node& node = Get($1);
-		node.list.push_back($2);
-		$$ = $1;
-		dump($$,"init_declarator_list init_declarator");
+		if ( $1 && $3 ) {
+			s_node& node = Get($1);
+			node.list.push_back($3);
+			$$ = $1;
+			dump($$,"init_declarator_list init_declarator");
+		} else if ( $3 ) {
+			$$ = $1;
+			dump($$,"init_declarator_list init_declarator");
+		}
 	}
 	;
 
@@ -578,11 +587,21 @@ struct_declarator
 	;
 
 enum_specifier
-	: ENUM '{' enumerator_list '}'
-	| ENUM IDENTIFIER '{' enumerator_list '}'
-	| ENUM '{' enumerator_list ',' '}'
-	| ENUM IDENTIFIER '{' enumerator_list ',' '}'
-	| ENUM IDENTIFIER
+	: ENUM '{' enumerator_list '}' {
+		$$ = 0;
+	}
+	| ENUM IDENTIFIER '{' enumerator_list '}' {
+		$$ = 0;
+	}
+	| ENUM '{' enumerator_list ',' '}' {
+		$$ = 0;
+	}
+	| ENUM IDENTIFIER '{' enumerator_list ',' '}' {
+		$$ = 0;
+	}
+	| ENUM IDENTIFIER {
+		$$ = 0;
+	}
 	;
 
 enumerator_list
@@ -615,14 +634,19 @@ function_specifier
 
 declarator
 	: pointer direct_declarator {
-		s_node& node = Get($1);
-		++node.ptr;
-		$$ = $2;
-		dump($$,"pointer direct_declarator");
+		if ( $2 ) {
+			s_node& node = Get($2);
+			++node.ptr;
+			$$ = $2;
+			dump($$,"pointer direct_declarator");
+		} else	{
+			$$ = 0;
+		}
 	}
 	| direct_declarator {
 		$$ = $1;
-		dump($$,"direct_declarator");
+		if ( $$ )
+			dump($$,"direct_declarator");
 	}
 	;
 
