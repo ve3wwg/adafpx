@@ -57,15 +57,15 @@ comp_input() {
 	if ( end_of_line ) {
 		++lno;
 		end_of_line = false;
-std::cout << "Line # " << lno << "\n";
+std::cerr << "Line # " << lno << "\n";
 	}
 
 	if ( !lexstr.is_open() ) {
-std::cout << "  returned EOF(1);\n";		
+std::cerr << "  returned EOF(1);\n";		
 		return EOF;
 	} else if ( !lexstr.good() ) {
 		lexstr.close();
-std::cout << "  returned EOF(2);\n";		
+std::cerr << "  returned EOF(2);\n";		
 		return EOF;
 	}
 
@@ -204,7 +204,7 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 		return false;
 	}
 
-std::cout << "PARSING: " << outpath << "\n";
+std::cerr << "PARSING: " << outpath << "\n";
 	return true;
 }
 

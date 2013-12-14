@@ -41,7 +41,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	yytarget_struct = 0;
 	yyparse();
 
-	std::cout << "GOT STRUCT '" << yytarget << "' ID := " << yytarget_struct << "\n";
+	std::cerr << "GOT STRUCT '" << yytarget << "' ID := " << yytarget_struct << "\n";
 
 	if ( yytarget_struct <= 0 ) {
 		std::cerr << "struct " << yytarget << " is unknown? (Genset " << genset << ")\n";
@@ -82,21 +82,93 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		s_node& node = Get(*it);
 		std::string member;
 		bool struct_member = node.type == Struct;
+		bool array_ref = false;
 
-		if ( node.type == Ident ) {
+		switch ( node.type ) {
+		case Ident :
 			member = lex_revsym(node.symbol);
-		} else 	{
-			s_node& nnode = Get(node.next);
-			member = lex_revsym(nnode.symbol);
+			break;
+		case ArrayRef :
+			{
+				s_node& anode = Get(node.next);
+				assert(anode.type == Ident);
+				member = lex_revsym(anode.symbol);
+			}
+			array_ref = true;
+			break;
+		case Struct :
+			{
+				s_node& nnode = Get(node.next);
+				assert(nnode.type == Ident);
+				member = lex_revsym(nnode.symbol);
+			}
+			break;
+		case Type :
+//		(lldb) p nnode
+//		(s_node) $0 = {
+//			type = ArrayRef
+//			symbol = 0
+//			ltoken = 0
+//			ptr = 0
+//			list = size=0 {}
+//			next = 652
+//			next2 = 653
+//			next3 = 0
+//		}
+			{
+				s_node& nnode = Get(node.next);
+				switch ( nnode.type ) {
+				case Ident :
+					member = lex_revsym(nnode.symbol);
+					break;
+				case ArrayRef :
+					{
+					//	(s_node) a1 = {
+					//	  type = Ident
+					//	  symbol = 1463
+					//	  ltoken = 0
+					//	  ptr = 0
+					//	  list = size=0 {}
+					//	  next = 0
+					//	  next2 = 0
+					//	  next3 = 0
+					//	}
+						s_node& a1 = Get(nnode.next);
+						
+						assert(a1.type == Ident);
+						member = lex_revsym(a1.symbol);
+					}
+					array_ref = true;
+					break;
+				default :
+					assert(0);
+				}
+			}
+			break;
+		default :
+			assert(0);
 		}
 
-		c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u\\n\",\n"
-			<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
-			<< "\t\toffsetof(" << member << "),\n";
+		if ( !array_ref ) {
+			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|0\\n\",\n"
+				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
+				<< "\t\toffsetof(" << member << "),\n";
+	
+			if ( !struct_member )
+				c << "\t\ttest_struct." << member << " <= 0 ? 1 : 0);\n";
+			else	c << "\t\t0);\n";
+		} else	{
+			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|%u\\n\",\n"
+				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
+				<< "\t\toffsetof(" << member << "),\n";
+	
+			if ( !struct_member )
+				c << "\t\ttest_struct." << member << " <= 0 ? 1 : 0,\n";
+			else	c << "\t\t0,\n";
 
-		if ( !struct_member )
-			c << "\t\ttest_struct." << member << " <= 0 ? 1 : 0);\n";
-		else	c << "\t\t0);\n";
+			c 	<< "\t\t(unsigned)((sizeof test_struct." << member << ") / "
+				<< "sizeof test_struct." << member << "[0]));\n";
+		}
 	}
 
 	c	<< "\n\treturn 0;\n}\n";

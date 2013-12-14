@@ -11,27 +11,36 @@
 
 enum e_ntype {
 	None = 0,
+	Token,		// Lexical token (.ltoken)
 	Ident,		// Identifier
+	Constant,	// Constant
+	StringLit,	// String literal
 	Typedef,	// Typedef
 	Type,		// Type name
 	Struct,		// struct
 	Union,		// union
+	ArrayRef,	// [ ] ref
 	List		// List
 };
 
 struct s_node {
 	e_ntype		type;		// Node type
 	int		symbol;		// Symbol ref
+	int		ltoken;		// Lexical token or 0
 	unsigned	ptr;		// Pointer levels
 
 	std::vector<int> list;		// List 
 
 	int		next;		// Next node in chain
+	int		next2;
+	int		next3;
 
 	s_node() { 
 		type = None;
 		symbol = 0;
-		next = 0;
+		ltoken = 0;
+		next = next2 = next3 = 0;
+		ptr = 0;
 	}
 };
 
