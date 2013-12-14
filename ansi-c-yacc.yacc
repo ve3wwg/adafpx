@@ -111,9 +111,23 @@ primary_expression
 		dump(node,"IDENTIFIER");
 		$$ = Node(node);
 	}
-	| CONSTANT
-	| STRING_LITERAL
-	| '(' expression ')'
+	| CONSTANT {
+		s_node node;
+		node.type = Constant;
+		node.symbol = $1;
+		$$ = Node(node);
+		dump($$,"CONSTANT");
+	}
+	| STRING_LITERAL {
+		s_node node;
+		node.type = StringLit;
+		node.symbol = $1;
+		$$ = Node(node);
+		dump($$,"STRING_LITERAL");
+	}		
+	| '(' expression ')' {
+		$$ = $2;
+	}
 	;
 
 postfix_expression
@@ -136,93 +150,244 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
-	| unary_operator cast_expression
-	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')'
+	| INC_OP unary_expression {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		node.next = $2;
+		$$ = Node(node);
+	}
+	| DEC_OP unary_expression {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		node.next = $2;
+		$$ = Node(node);
+	}
+	| unary_operator cast_expression {
+		s_node& node = Get($1);
+		node.next = $2;
+		$$ = Node(node);
+	}
+	| SIZEOF unary_expression {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		node.next = $2;
+		$$ = Node(node);
+	}
+	| SIZEOF '(' type_name ')' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		node.next = $3;
+		$$ = Node(node);
+	}
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
+	| '*' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
+	| '+' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
+	| '-' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
+	| '~' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
+	| '!' {
+		s_node node;
+		node.type = Token;
+		node.ltoken = $1;
+		$$ = Node(node);
+	}
 	;
 
 cast_expression
-	: unary_expression
-	| '(' type_name ')' cast_expression
+	: unary_expression {
+		dump($1,"unary_expression");
+	}
+	| '(' type_name ')' cast_expression {
+		dump($2,"(type_name) ..");
+		dump($4,".. cast_expression");
+		$$ = $4;
+	}
 	;
 
 multiplicative_expression
-	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
+	: cast_expression {
+		dump($1,"cast_expression");
+	}
+	| multiplicative_expression '*' cast_expression {
+		dump($1,"multiplicative_expression *");
+		dump($3,"* cast_expression");
+	}
+	| multiplicative_expression '/' cast_expression {
+		dump($1,"multiplicative_expression /");
+		dump($3,"/ cast_expression");
+	}
+	| multiplicative_expression '%' cast_expression {
+		dump($1,"multiplicative_expression %");
+		dump($3,"% cast_expression");
+	}
 	;
 
 additive_expression
-	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
+	: multiplicative_expression {
+		dump($1,"multiplicative_expression");
+	}
+	| additive_expression '+' multiplicative_expression {
+		dump($1,"additive_expression +");
+		dump($3,"+ multiplicative_expression");
+	}
+	| additive_expression '-' multiplicative_expression {
+		dump($1,"additive_expression +");
+		dump($3,"- multiplicative_expression");
+	}
 	;
 
 shift_expression
-	: additive_expression
-	| shift_expression LEFT_OP additive_expression
-	| shift_expression RIGHT_OP additive_expression
+	: additive_expression {
+		dump($1,"additive_expression");
+	}
+	| shift_expression LEFT_OP additive_expression {
+		dump($1,"shift_expression LEFT_OP");
+		dump($3,"LEFT_OP shift_expression");
+	}
+	| shift_expression RIGHT_OP additive_expression {
+		dump($1,"shift_expression RIGHT_OP");
+		dump($3,"RIGHT_OP shift_expression");
+	}
 	;
 
 relational_expression
-	: shift_expression
-	| relational_expression '<' shift_expression
-	| relational_expression '>' shift_expression
-	| relational_expression LE_OP shift_expression
-	| relational_expression GE_OP shift_expression
+	: shift_expression {
+		dump($1,"shift_expression");
+	}
+	| relational_expression '<' shift_expression {
+		dump($1,"relational_expression <");
+		dump($3,"< shift_expression");
+	}
+	| relational_expression '>' shift_expression {
+		dump($1,"relational_expression >");
+		dump($3,"> shift_expression");
+	}
+	| relational_expression LE_OP shift_expression {
+		dump($1,"relational_expression <=");
+		dump($3,"<= shift_expression");
+	}
+	| relational_expression GE_OP shift_expression {
+		dump($1,"relational_expression >=");
+		dump($3,">= shift_expression");
+	}
 	;
 
 equality_expression
-	: relational_expression
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
+	: relational_expression {
+		dump($1,"relational_expression");
+	}
+	| equality_expression EQ_OP relational_expression {
+		dump($1,"equality_expression EQ_OP");
+	}
+	| equality_expression NE_OP relational_expression {
+		dump($1,"equality_expression NE_OP");
+		dump($3,"NE_OP relational_expression");
+	}
 	;
 
 and_expression
-	: equality_expression
-	| and_expression '&' equality_expression
+	: equality_expression {
+		dump($1,"equality_expression");
+	}
+	| and_expression '&' equality_expression {
+		dump($1,"and_expression &");
+		dump($3,"& equality_expression");
+	}
 	;
 
 exclusive_or_expression
-	: and_expression
-	| exclusive_or_expression '^' and_expression
+	: and_expression {
+		dump($1,"and_expression");
+	}
+	| exclusive_or_expression '^' and_expression {
+		dump($1,"exclusive_or_expression ^");
+		dump($3,"^ and_expression");
+	}
 	;
 
 inclusive_or_expression
-	: exclusive_or_expression
-	| inclusive_or_expression '|' exclusive_or_expression
+	: exclusive_or_expression {
+		dump($1,"exclusive_or_expression");
+	}
+	| inclusive_or_expression '|' exclusive_or_expression {
+		dump($1,"inclusive_or_expression ..");
+		dump($3,".. exclusive_or_expression");
+	}
 	;
 
 logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression AND_OP inclusive_or_expression
+	: inclusive_or_expression {
+		dump($1,"inclusive_or_expression");
+	}
+	| logical_and_expression AND_OP inclusive_or_expression {
+		dump($1,"logical_and_expression ..");
+		dump($3,".. inclusive_or_expression");
+	}
 	;
 
 logical_or_expression
-	: logical_and_expression
-	| logical_or_expression OR_OP logical_and_expression
+	: logical_and_expression {
+		dump($1,"logical_and_expression");
+	}
+	| logical_or_expression OR_OP logical_and_expression {
+		dump($1,"logical_or_expression ..");
+		dump($3,"logical_and_expression ..");
+	}
 	;
 
 conditional_expression
-	: logical_or_expression
-	| logical_or_expression '?' expression ':' conditional_expression
+	: logical_or_expression {
+		dump($1,"logical_or_expression");
+	}
+	| logical_or_expression '?' expression ':' conditional_expression {
+		dump($1,"logical_or_expression ..");
+		dump($3,".. expression ..");
+		dump($5,".. conditional_expression");
+	}
 	;
 
 assignment_expression
-	: conditional_expression
-	| unary_expression assignment_operator assignment_expression
+	: conditional_expression {
+		$$ = $1;
+		dump($$,"conditional_expression");
+	}
+	| unary_expression assignment_operator assignment_expression {
+		dump($1,"conditional_expression ..");
+		dump($2,".. assignment_operator ..");
+		dump($3,".. assignment_expression");
+		$$ = 0;
+	}
 	;
 
 assignment_operator
@@ -274,7 +439,20 @@ declaration
 				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 					int nid = *it;
 					s_node& tnode = Get(nid);
-					register_type(tnode.symbol);
+					switch ( tnode.type ) {
+					case Ident :
+						register_type(tnode.symbol);
+						break;
+					case ArrayRef :
+						{
+							const s_node& anode = Get(tnode.next);
+							assert(anode.type == Ident);
+							register_type(anode.symbol);
+						}
+						break;
+					default :
+						assert(0);
+					}
 				}
 			}
 			$$ = $1;
@@ -399,7 +577,7 @@ storage_class_specifier
 		node.type = Typedef;
 		$$ = Node(node);
 		dump($$,"storage_class_specifier");
-std::cout << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
+std::cerr << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
 	}
 	| EXTERN {
 		$$ = 0;
@@ -454,7 +632,7 @@ type_specifier
 	}
 	| struct_or_union_specifier {
 		if ( $1 ) {
-			s_node& node = Get($1);
+//			s_node& node = Get($1);
 			$$ = $1;
 			dump($$,"struct_or_union_specifier");
 		} else	{
@@ -687,24 +865,88 @@ direct_declarator
 		$$ = $2;
 		dump($$,"(declarator)");
 	}
-	| direct_declarator '[' type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list ']'
-	| direct_declarator '[' assignment_expression ']'
-	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list '*' ']'
-	| direct_declarator '[' '*' ']'
-	| direct_declarator '[' ']'
+	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $3;
+		node.next3 = $4;
+		$$ = Node(node);
+	}
+	| direct_declarator '[' type_qualifier_list ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $3;
+		node.next3 = 0;
+		$$ = Node(node);
+	}
+	| direct_declarator '[' assignment_expression ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $3;
+		node.next3 = 0;
+		$$ = Node(node);
+	}
+	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $4;
+		node.next3 = $5;
+		$$ = Node(node);
+	}
+	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $3;
+		node.next3 = $5;
+		$$ = Node(node);
+	}
+	| direct_declarator '[' type_qualifier_list '*' ']' {
+		s_node node;
+		s_node node2;
+
+		node2.type = Token;
+		node2.ltoken = $4;
+
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = $3;
+		node.next3 = Node(node2);
+		$$ = Node(node);
+	}
+	| direct_declarator '[' '*' ']' {
+		s_node node;
+		s_node node2;
+
+		node2.type = Token;
+		node2.ltoken = $3;
+
+		node.type = ArrayRef;
+		node.next = $1;
+		node.next2 = Node(node2);
+		$$ = Node(node);
+	}
+	| direct_declarator '[' ']' {
+		s_node node;
+		node.type = ArrayRef;
+		node.next = $1;
+		$$ = Node(node);
+	}
 	| direct_declarator '(' parameter_type_list ')' {
-		$$ = 0;
+		$$ = $1;
+		dump($$,"direct_declarator '(' parameter_type_list ')'");
 	}
 	| direct_declarator '(' identifier_list ')' {
-//		dump($$,"direct_declarator '(' identifier_list ')'");
 		$$ = 0;
+		dump($$,"direct_declarator '(' identifier_list ')'");
 	}
 	| direct_declarator '(' ')' {
 		$$ = 0;
-//		dump($$,"direct_declarator '(' ')'");
+		dump($$,"direct_declarator '(' ')'");
 	}
 	;
 
@@ -753,17 +995,39 @@ abstract_declarator
 	;
 
 direct_abstract_declarator
-	: '(' abstract_declarator ')'
-	| '[' ']'
-	| '[' assignment_expression ']'
-	| direct_abstract_declarator '[' ']'
-	| direct_abstract_declarator '[' assignment_expression ']'
-	| '[' '*' ']'
-	| direct_abstract_declarator '[' '*' ']'
-	| '(' ')'
-	| '(' parameter_type_list ')'
-	| direct_abstract_declarator '(' ')'
-	| direct_abstract_declarator '(' parameter_type_list ')'
+	: '(' abstract_declarator ')' {
+		$$ = 0;
+	}
+	| '[' ']' {
+		$$ = 0;
+	}
+	| '[' assignment_expression ']' {
+		$$ = 0;
+	}
+	| direct_abstract_declarator '[' ']' {
+		$$ = 0;
+	}
+	| direct_abstract_declarator '[' assignment_expression ']' {
+		$$ = 0;
+	}
+	| '[' '*' ']' {
+		$$ = 0;
+	}
+	| direct_abstract_declarator '[' '*' ']' {
+		$$ = 0;
+	}
+	| '(' ')' {
+		$$ = 0;
+	}
+	| '(' parameter_type_list ')' {
+		$$ = 0;
+	}
+	| direct_abstract_declarator '(' ')' {
+		$$ = 0;
+	}
+	| direct_abstract_declarator '(' parameter_type_list ')' {
+		$$ = 0;
+	}
 	;
 
 initializer
@@ -937,9 +1201,10 @@ indent(int level) {
 static void
 dump(int lval,const char *desc) {
 	if ( lval <= 0 ) {
-		std::cout << "DUMP of node (" << (desc ? desc : "") << "):  null ("
+		std::cerr << "DUMP of node (" << (desc ? desc : "") << "):  null ("
 			<< lval << ");\n";
 	} else	{
+		std::cerr << "DUMP of node Get(" << lval << ")..\n";
 		s_node& node = Get(lval);
 		dump(node,desc,0);
 	}
@@ -949,17 +1214,17 @@ static void
 dump(s_node& node,const char *desc,int level) {
 
 	if ( desc )
-		std::cout << indent(level) << "DUMP of node (" << desc << "):\n";
-	else	std::cout << indent(level) << "DUMP of node:\n";
+		std::cerr << indent(level) << "DUMP of node (" << desc << "):\n";
+	else	std::cerr << indent(level) << "DUMP of node:\n";
 
-	std::cout 	<< indent(level) << "node.type = " << node.type << " ("
+	std::cerr 	<< indent(level) << "node.type = " << node.type << " ("
 			<< to_string(node.type) << ") {\n"
 			<< indent(level) << "  .symbol = " << node.symbol;
 			
 	if ( node.symbol > 0 ) {
 		std::string symbol = lex_revsym(node.symbol);
-		std::cout << " '" << symbol << "'\n";
-	} else	std::cout << "\n";
+		std::cerr << " '" << symbol << "'\n";
+	} else	std::cerr << "\n";
 
 	for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 		s_node& lnode = Get(*it);
@@ -972,7 +1237,7 @@ dump(s_node& node,const char *desc,int level) {
 		dump(next,"next",level+1);
 	}
 
-	std::cout << indent(level) << "}\n";
+	std::cerr << indent(level) << "}\n";
 }
 
 static const char *
@@ -981,6 +1246,12 @@ to_string(e_ntype type) {
 	switch ( type ) {
 	case None :
 		return "None";
+	case Token :
+		return "Token";
+	case Constant :
+		return "Constant";
+	case StringLit :
+		return "StringLit";
 	case Ident :
 		return "Ident";
 	case Typedef :
@@ -993,8 +1264,10 @@ to_string(e_ntype type) {
 		return "Union";
 	case List :
 		return "List";
-	default :
-		;
+	case ArrayRef :
+		return "ArrayRef";
+//	default :
+//		;
 	}
 	return "??";
 }
