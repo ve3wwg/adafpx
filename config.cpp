@@ -268,6 +268,10 @@ loadconfig() {
 			if ( strcmp(snode.name(),"struct") != 0 )
 				continue;
 
+			const std::string os = snode.attribute("os").value();
+			if ( os != "" && !match(os,platform) )
+				continue;		// Not this platform
+
 			s_config::s_structs::s_struct stype;
 
 			stype.genset = snode.attribute("genset").as_int();
