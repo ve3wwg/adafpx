@@ -84,11 +84,20 @@ struct s_config {
 	} section2;
 	
 	struct s_structs {
+		struct s_member {
+			std::string		name;			// Member name
+			unsigned		msize;			// Member size
+			int			union_struct;		// 1==struct
+			unsigned		moffset;		// Member offset
+			bool			msigned;		// Member is signed
+		};
 		struct s_struct {
 			int			genset;			// Struct genset #
 			std::string		c_name;			// C structure name
 			std::string		a_name;			// Name to use in Ada
 			std::vector<std::string> includes;
+			unsigned		size;			// Struct size in bytes
+			std::vector<s_member>	members;
 		};
 		std::vector<s_struct>		structvec;
 	} structs;
