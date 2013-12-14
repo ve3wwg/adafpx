@@ -246,18 +246,18 @@ ident_type(int symid) {
 
 	auto it = types.find(symid);
 	if ( it != types.end() ) {
-std::cout << "RETURN TYPE_NAME for '" << revsym[symid] << "'\n";
+std::cerr << "RETURN TYPE_NAME for '" << revsym[symid] << "'\n";
 		return TYPE_NAME;
 	}
 
-std::cout << "RETURN IDENTIFIER for '" << revsym[symid] << "'\n";
+std::cerr << "RETURN IDENTIFIER for '" << revsym[symid] << "'\n";
 	return IDENTIFIER;
 }
 
 void
 register_type(int symid) {
 	types.insert(symid);
-std::cout << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
+std::cerr << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
 }
 
 void
