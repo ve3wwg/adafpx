@@ -75,6 +75,9 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 	assert(node2.type == List);
 
+	c	<< "\tprintf(\"%u\\n\",(unsigned)(sizeof(struct " << yytarget << "))"
+		<< ");\n";
+
 	for ( auto it=node2.list.begin(); it != node2.list.end(); ++it ) {
 		s_node& node = Get(*it);
 		std::string member;
@@ -104,8 +107,21 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 	std::string recd;
 
-	while ( getline(c,recd) ) {
-		std::cout << "struct: " << yytarget << "." << recd << "\n";
+	if ( getline(c,recd) ) {
+		node.size = stoul(recd);
+
+		while ( getline(c,recd) ) {
+			std::vector<std::string> fields;
+			parse(fields,recd);
+			s_config::s_structs::s_member mem;
+
+			mem.name = fields[0];
+			mem.msize = stoul(fields[1]);
+			mem.union_struct = stoi(fields[2]);
+			mem.moffset = stoul(fields[3]);
+			mem.msigned = bool(stoi(fields[4]));
+			node.members.push_back(mem);
+		}
 	}
 
 	c.close();
