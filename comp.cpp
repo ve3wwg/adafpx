@@ -214,4 +214,22 @@ gcc_precomplex(int genset,const std::string& variation) {
 	return gcc_precompile(lexstr,genset,variation);
 }
 
+void
+parse(std::vector<std::string>& svec,const std::string s,const std::string delim) {
+	size_t spos = 0, npos;
+
+	svec.clear();
+	for ( npos = s.find_first_of(delim,spos); npos != std::string::npos; npos = s.find_first_of(delim,spos) ) {
+		size_t len = npos - spos;	// Length
+		std::string subs = s.substr(spos,len);
+		svec.push_back(subs);
+		spos = npos + 1;
+	}
+
+	if ( spos < s.size() ) {
+		std::string subs = s.substr(spos);
+		svec.push_back(subs);
+	}
+}
+
 // End comp.cpp

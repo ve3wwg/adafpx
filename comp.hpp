@@ -55,6 +55,8 @@ bool gcc_compile(std::fstream& fs,int genset);
 bool gcc_precompile(std::fstream& fs,int genset,const std::string& variation="");
 bool gcc_precomplex(int genset,const std::string& variation="");
 
+void parse(std::vector<std::string>& svec,const std::string s,const std::string delim="|");
+
 extern int yyparse();
 
 #endif // COMP_HPP
