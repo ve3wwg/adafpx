@@ -65,21 +65,20 @@ extern int yylex();
 %start translation_unit
 %%
 
-/* int open(const char *, int, ...) __asm("_" "open" ); */
-
-/* asm_clause
-	: ASM '(' asm_list ')'
-	;
-*/
-
 asm_list
 	: STRING_LITERAL
 	| asm_list STRING_LITERAL ;
 
 attribute_clause_list
-	: attribute_clause
-	| attribute_clause_list attribute_clause
-	| ;
+	: attribute_clause {
+		$$ = 0;
+	}
+	| attribute_clause_list attribute_clause {
+		$$ = 0;
+	}
+	| {
+		$$ = 0;
+	};
 
 attribute_clause
 	: ATTRIBUTE '(' '(' ')' ')'
@@ -252,19 +251,21 @@ constant_expression
 declaration
 	: declaration_specifiers ';' {
 		$$ = $1;
-		dump($$,"declaration_specifiers ';'");
+		if ( $$ )
+			dump($$,"declaration_specifiers ';'");
 	}
 	| attribute_clause declaration_specifiers ';' {
 		$$ = $2;
-		dump($$,"attr declaration_specifiers ';'");
+		if ( $$ )
+			dump($$,"attr declaration_specifiers ';'");
 	}
 	| declaration_specifiers init_declarator_list ';' {
-		if ( $1 != 0 ) {
+		if ( $1 ) {
 			s_node& decl = Get($1);
 
 			dump(decl,"declaration_specifiers");
 
-			if ( decl.type == Typedef ) {
+			if ( decl.type == Typedef && $2 != 0 ) {
 				s_node& node = Get($2);
 
 				decl.next = $2;
@@ -276,8 +277,10 @@ declaration
 					register_type(tnode.symbol);
 				}
 			}
+			$$ = $1;
+		} else	{
+			$$ = 0;
 		}
-		$$ = $1;
 	}
 	| attribute_clause declaration_specifiers init_declarator_list ';' {
 		if ( $2 != 0 ) {
@@ -296,9 +299,11 @@ declaration
 					register_type(dnode.symbol);	// Register this symbol as a type with lexer
 				}
 			}
+			$$ = $2;
+			dump($$,"attr declaration_specifiers init_declarator_list ';'");
+		} else	{
+			$$ = 0;
 		}
-		$$ = $2;
-		dump($$,"attr declaration_specifiers init_declarator_list ';'");
 	}
 	;
 
@@ -448,14 +453,15 @@ type_specifier
 		$$ = 0;
 	}
 	| struct_or_union_specifier {
-		s_node& node = Get($1);
-		$$ = $1;
-		dump($$,"struct_or_union_specifier");
+		if ( $1 ) {
+			s_node& node = Get($1);
+			$$ = $1;
+			dump($$,"struct_or_union_specifier");
+		} else	{
+			$$ = 0;
+		}
 	}
-	| enum_specifier {
-		$$ = $1;
-		dump($$,"enum_specifier");
-	}
+	| enum_specifier
 	| TYPE_NAME {
 		s_node node;
 		node.type = Type;
@@ -467,31 +473,42 @@ type_specifier
 
 struct_or_union_specifier
 	: struct_or_union IDENTIFIER '{' struct_declaration_list '}' attribute_clause_list {
-		assert($1);
-		assert($2);
-		assert($4);
-		s_node& node = Get($1);
-		node.symbol = $2;
-		node.next = $4;
-		$$ = $1;
-		dump($$,"struct_or_union IDENTIFIER '{' struct_declaration_list '}' attr");
-		if ( lex_revsym($2) == yytarget )
-			yytarget_struct = $$;
-
+		if ( $1 && $2 && $4 ) {
+			assert($1);
+			assert($2);
+			assert($4);
+			s_node& node = Get($1);
+			node.symbol = $2;
+			node.next = $4;
+			$$ = $1;
+			dump($$,"struct_or_union IDENTIFIER '{' struct_declaration_list '}' attr");
+			if ( lex_revsym($2) == yytarget )
+				yytarget_struct = $$;
+		} else	{
+			$$ = 0;
+		}
 	}
 	| struct_or_union '{' struct_declaration_list '}' attribute_clause_list {
-		s_node& node = Get($1);
-		node.symbol = 0;		// Anonymous struct/union
-		node.next = $3;
-		$$ = $1;
-		dump($$,"struct_or_union '{' struct_declaration_list '}' attribute_clause_list");
+		if ( $1 && $3 ) {
+			s_node& node = Get($1);
+			node.symbol = 0;		// Anonymous struct/union
+			node.next = $3;
+			$$ = $1;
+			dump($$,"struct_or_union '{' struct_declaration_list '}' attribute_clause_list");
+		} else	{
+			$$ = 0;
+		}
 	}
 	| struct_or_union IDENTIFIER {
-		s_node& node = Get($1);
-		node.symbol = $2;
-		node.next = 0;
-		$$ = $1;
-		dump($$,"struct_or_union IDENTIFIER");
+		if ( $1 && $2 ) {
+			s_node& node = Get($1);
+			node.symbol = $2;
+			node.next = 0;
+			$$ = $1;
+			dump($$,"struct_or_union IDENTIFIER");
+		} else	{
+			$$ = 0;
+		}
 	}
 	;
 
@@ -525,16 +542,24 @@ struct_declaration_list
 		}
 	}
 	| struct_declaration_list struct_declaration {
-		s_node& node = Get($1);
-		s_node& node2 = Get($2);
+		if ( $1 ) {
+			if ( $2 ) {
+				s_node& node = Get($1);
+				s_node& node2 = Get($2);
 
-		if ( node2.type != Type || !node.next ) {
-			node.list.push_back($2);
+				if ( node2.type != Type || !node.next ) {
+					node.list.push_back($2);
+				} else	{
+					node.list.push_back(node2.next);
+				}
+				$$ = $1;
+				dump($$,"struct_declaration_list struct_declaration");
+			} else	{
+				$$ = $2;
+			}
 		} else	{
-			node.list.push_back(node2.next);
+			$$ = $2;
 		}
-		$$ = $1;
-		dump($$,"struct_declaration_list struct_declaration");
 	}
 	;
 
