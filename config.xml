@@ -781,5 +781,10 @@
 				<include file="fcntl.h"/>
 			</includes>
 		</struct>
+		<struct name="utsname" ada="s_utsname" genset="530">
+			<includes>
+				<include file="sys/utsname.h"/>
+			</includes>
+		</struct>
 	</structs>
 </entities>
