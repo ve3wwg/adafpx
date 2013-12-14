@@ -729,7 +729,7 @@
 				<include file="fcntl.h"/>
 			</includes>
 		</struct>
-		<struct name="fstore" ada="s_fstore" genset="450">
+		<struct name="fstore" ada="s_fstore" genset="450" os="Darwin *">
 			<includes>
 				<include file="fcntl.h"/>
 			</includes>
@@ -770,9 +770,8 @@
 		</struct>
 		<struct name="tms" ada="s_tms" genset="510">
 			<includes>
-				<include file="sys/types.h"/>
+				<include file="sys/times.h" os="Linux *"/>
 				<include file="sys/times.h" os="Darwin *"/>
-				<include file="times.h" os="Linux *"/>
 			</includes>
 		</struct>
 		<struct name="radvisory" ada="s_radvisory" os="Darwin *" genset="520">
