@@ -11,15 +11,47 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "config.hpp"
 #include "comp.hpp"
 #include "glue.hpp"
 
+const std::string
+std_type(unsigned bytes,bool is_signed,unsigned array) {
+	std::stringstream s;
+
+	if ( !is_signed )
+		s << "u";
+	if ( bytes <= 1 ) {
+		s << "char";
+	} else	{
+		bytes /= (array < 1 ? 1 : array);
+		if ( bytes <= 1 ) {
+			s << "char";
+		} else	{
+			s << "int" << bytes * 8;
+		}
+	}
+
+	if ( array < 1 ) {
+		s << "_t";
+	} else	{
+		s << "_array(0.." << array-1 << ")";
+	}
+
+	return s.str();
+}
+
 static void
 emit_struct(s_config::s_structs::s_struct& node) {
-	std::fstream c;
+	std::fstream c, ads;
 	int genset = node.genset;
+
+	std::cout << "Genset ";
+	std::cout.width(4);
+	std::cout.fill('0');
+	std::cout << genset << " struct " << node.c_name << "\n";
 
 	if ( !gcc_open(c,node.genset) )
 		exit(2);
@@ -104,17 +136,17 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			}
 			break;
 		case Type :
-//		(lldb) p nnode
-//		(s_node) $0 = {
-//			type = ArrayRef
-//			symbol = 0
-//			ltoken = 0
-//			ptr = 0
-//			list = size=0 {}
-//			next = 652
-//			next2 = 653
-//			next3 = 0
-//		}
+			// (lldb) p nnode
+			// (s_node) $0 = {
+			// 	type = ArrayRef
+			// 	symbol = 0
+			// 	ltoken = 0
+			// 	ptr = 0
+			// 	list = size=0 {}
+			// 	next = 652
+			// 	next2 = 653
+			// 	next3 = 0
+			// }
 			{
 				s_node& nnode = Get(node.next);
 				switch ( nnode.type ) {
@@ -192,11 +224,63 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			mem.union_struct = stoi(fields[2]);
 			mem.moffset = stoul(fields[3]);
 			mem.msigned = bool(stoi(fields[4]));
+			mem.array = stoi(fields[5]);
 			node.members.push_back(mem);
 		}
 	}
 
 	c.close();
+
+	//////////////////////////////////////////////////////////////
+	// Generate Ada Structure
+	//////////////////////////////////////////////////////////////
+
+	if ( !gcc_open(ads,genset,".ads") )
+		exit(5);
+
+	ads 	<< "\n"
+		<< "    type " << node.a_name << " is\n"
+		<< "        record\n";
+
+	for ( auto it=node.members.begin(); it != node.members.end(); ++it ) {
+		const s_config::s_structs::s_member& member = *it;
+		std::stringstream s;
+
+		s << member.name << " :";
+		std::string fmt_name = s.str();
+		
+                ads << "            ";
+       		ads.width(32);
+		ads << std::left << fmt_name << " ";
+	
+		if ( !member.union_struct ) {
+			ads << std_type(member.msize,member.msigned,member.array);
+		} else	{
+			;
+		}
+		ads << ";\n";
+	}
+
+	ads	<< "        end record;\n\n"
+		<< "    for " << node.a_name << "'Size use " << node.size << "*8;\n\n"
+		<< "    for " << node.a_name << " use\n"
+		<< "        record\n";
+
+	for ( auto it=node.members.begin(); it != node.members.end(); ++it ) {
+		const s_config::s_structs::s_member& member = *it;
+		std::stringstream s;
+
+		s << member.name << " :";
+		std::string fmt_name = s.str();
+		
+                ads << "            ";
+       		ads.width(32);
+		ads << std::left << fmt_name << " at " << member.moffset << " range 0.." << member.msize*8-1 << ";\n";
+	}
+
+        ads     << "        end record;\n";
+
+	ads.close();
 }
 
 void
