@@ -90,6 +90,7 @@ struct s_config {
 			int			union_struct;		// 1==struct
 			unsigned		moffset;		// Member offset
 			bool			msigned;		// Member is signed
+			unsigned		array;			// Member is array [n]
 		};
 		struct s_struct {
 			int			genset;			// Struct genset #
