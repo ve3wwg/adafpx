@@ -87,6 +87,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	  << "#include <stdlib.h>\n"
 	  << "#include <string.h>\n";
 
+	std::unordered_map<std::string,std::string> typemap;
+
 	for ( auto it=node.includes.begin(); it != node.includes.end(); ++it ) {
 		const std::string& incl = *it;
 		if ( incl[0] != '.' )
@@ -133,6 +135,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				s_node& nnode = Get(node.next);
 				assert(nnode.type == Ident);
 				member = lex_revsym(nnode.symbol);
+				typemap[member] = lex_revsym(node.symbol);
 			}
 			break;
 		case Type :
@@ -225,6 +228,12 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			mem.moffset = stoul(fields[3]);
 			mem.msigned = bool(stoi(fields[4]));
 			mem.array = stoi(fields[5]);
+
+			auto it = typemap.find(mem.name);
+			if ( it != typemap.end() )
+				mem.tname = it->second;	// Named type/struct/union
+			else	mem.tname = "";
+
 			node.members.push_back(mem);
 		}
 	}
@@ -256,7 +265,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		if ( !member.union_struct ) {
 			ads << std_type(member.msize,member.msigned,member.array);
 		} else	{
-			;
+			ads << "s_" << member.tname;
 		}
 		ads << ";\n";
 	}
