@@ -85,6 +85,7 @@ struct s_config {
 	
 	struct s_structs {
 		struct s_member {
+			std::string		tname;			// Type name (if any)
 			std::string		name;			// Member name
 			unsigned		msize;			// Member size
 			int			union_struct;		// 1==struct
