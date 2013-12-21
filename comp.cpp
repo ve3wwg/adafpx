@@ -232,4 +232,31 @@ parse(std::vector<std::string>& svec,const std::string s,const std::string delim
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+// Convert a C name to an Acceptable Ada Name
+//////////////////////////////////////////////////////////////////////
+
+const std::string
+to_ada_name(const std::string& name) {
+	bool under = true, first = true;
+	std::stringstream s;
+	
+	for ( size_t x=0; x<name.size(); ++x, first=false ) {
+		char c = name[x];
+
+		if ( c == '_' ) {
+			if ( under ) {
+				s << "u";
+				if ( first )
+					s << "_";
+			} else	s << c;
+			under = true;
+		} else	{
+			under = false;
+			s << c;
+		}
+	}
+	return s.str();
+}
+
 // End comp.cpp
