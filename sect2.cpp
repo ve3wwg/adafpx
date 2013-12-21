@@ -132,9 +132,6 @@ emit_section2() {
 			adb << "       " << func.rname << " : " << func.returns << ";\n";
 		}
 
-		
-
-
 		adb	<< "    begin\n";
 
 		if ( func.rname != "" ) {
@@ -161,9 +158,11 @@ emit_section2() {
 		for ( auto oit=func.aargs.begin(); oit != func.aargs.end(); ++oit ) {
 			s_config::s_section2::s_func::s_aarg& arg = *oit;
 
-			if ( arg.io == "out" || arg.io == "inout" ) {
-				adb << "       " << arg.name << " := "
-				    << arg.from << ";\n";
+			if ( arg.from != "implied" ) {
+				if ( arg.io == "out" || arg.io == "inout" ) {
+					adb << "       " << arg.name << " := "
+					    << arg.from << ";\n";
+				}
 			}
 		}
 
