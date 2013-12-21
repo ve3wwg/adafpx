@@ -140,22 +140,34 @@ emit_section2() {
 				const s_config::s_section2::s_func::s_cases& centry = cit->second;
 
 				if ( centry.casevec.size() > 0 ) {
-					adb << "      case " << varname << " is\n";
+					std::vector<std::string> kvec;
 
 					for ( auto vit=centry.casevec.cbegin(); vit != centry.casevec.cend(); ++vit ) {
 						const std::string& the_case = *vit;
-						adb << "         when " << the_case << "=>\n"
-						    << "            null;\n";
+
+						auto mit = config.declared_macros.find(the_case);
+						if ( mit != config.declared_macros.end() )
+							kvec.push_back(the_case);
 					}
 
-					adb << "         when others =>\n"
-					    << "            Error := EINVAL;\n";
+					if ( kvec.size() > 0 ) {
+						adb << "      case " << varname << " is\n";
 
-					if ( centry.on_error != "" )
-						adb << "            " << centry.on_error << ";\n";
+						for ( auto vit=kvec.cbegin(); vit != kvec.cend(); ++vit ) {
+							const std::string& the_case = *vit;
+							adb << "         when " << the_case << "=>\n"
+							    << "            null;\n";
+						}
+	
+						adb << "         when others =>\n"
+						    << "            Error := EINVAL;\n";
 
-					adb << "            return;\n"
-					    << "      end case;\n";
+						if ( centry.on_error != "" )
+							adb << "            " << centry.on_error << ";\n";
+
+						adb << "            return;\n"
+						    << "      end case;\n";
+					}
 				}
 			}
 		}

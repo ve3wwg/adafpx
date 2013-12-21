@@ -147,7 +147,7 @@ emit_macros() {
 
 			s << ent.name << " :";
 
-			ads << "    ";
+			ads << "   ";
 			ads.width(20);
 			ads << std::left << s.str() << " constant ";
 
@@ -159,6 +159,8 @@ emit_macros() {
 			sprintf(vbuf,mset.format.c_str(),ent.value);
 
 			ads << vbuf << ";\n";
+
+			config.declared_macros.insert(ent.name);
 		}	
 
 		if ( mset.alternates.size() > 0 ) {
@@ -180,6 +182,8 @@ emit_macros() {
 				if ( mset.type != "" )
 					ads << mset.type;
 				ads << ":= " << name << ";\n";
+
+				config.declared_macros.insert(name);
 			}	
 		}
 

@@ -124,6 +124,8 @@ struct s_config {
 		};
 		std::vector<s_struct>		structvec;
 	} structs;
+
+	std::unordered_set<std::string> declared_macros;		// Known macro constants
 };
 
 extern s_config config;
