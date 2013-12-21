@@ -1,29 +1,3 @@
-struct_pref|tm.tm_gmtoff|long
-struct_pref|tm.tm_hour|int
-struct_pref|tm.tm_isdst|int
-struct_pref|tm.tm_mday|int
-struct_pref|tm.tm_min|int
-struct_pref|tm.tm_mon|int
-struct_pref|tm.tm_sec|int
-struct_pref|tm.tm_wday|int
-struct_pref|tm.tm_yday|int
-struct_pref|tm.tm_year|int
-struct_pref|tm.tm_zone|char
-
-struct|timespec|s_timespec|sys/types.h,fcntl.h,sys/stat.h
-struct|timeval|s_timeval|sys/resource.h
-struct|rusage|s_rusage|sys/resource.h
-struct|fbootstraptransfer|s_fbootstraptransfer|fcntl.h
-struct|flock|s_flock|fcntl.h
-struct|fstore|s_fstore|fcntl.h
-struct|log2phys|s_log2phys|fcntl.h,sys/types.h
-struct|stat|s_stat|sys/types.h,sys/stat.h,sys/param.h,sys/mount.h
-struct|tm|s_tm|time.h
-struct|iovec|s_iovec|sys/types.h,sys/uio.h,unistd.h
-struct|utimbuf|s_utimbuf|sys/types.h,sys/uio.h,unistd.h,utime.h
-struct|tms|s_tms|sys/types.h,sys/times.h
-struct|radvisory|s_radvisory|fcntl.h,sys/param.h,sys/stat.h
-
 adatype|type errno_t is new int_t'Base range 0 .. int_t'Last;
 adatype|type fd_t is new int_t'Base range -1 .. int_t'Last;
 adatype|type fcntl_t is new uint_t;
