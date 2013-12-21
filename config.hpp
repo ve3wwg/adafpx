@@ -50,6 +50,7 @@ struct s_config {
 	struct s_ada_types {
 		struct s_ada_type {
 			std::string	name;
+			std::string	type;
 			std::string	subtype;
 			std::string	range;
 		};

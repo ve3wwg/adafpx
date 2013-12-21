@@ -207,6 +207,7 @@ loadconfig() {
 			s_config::s_ada_types::s_ada_type decl;
 			decl.name    = tnode.attribute("name").value();
 			decl.subtype = tnode.attribute("subtype").value();
+			decl.type    = tnode.attribute("type").value();
 			decl.range   = tnode.attribute("range").value();
 
 			config.ada_types.adavec.push_back(decl);
