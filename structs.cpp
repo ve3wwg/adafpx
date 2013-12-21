@@ -12,10 +12,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
 #include "config.hpp"
 #include "comp.hpp"
 #include "glue.hpp"
+
+static std::unordered_map<std::string,std::string> c_ada_map;
 
 const std::string
 std_type(unsigned bytes,bool is_signed,unsigned array) {
@@ -223,6 +226,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			s_config::s_structs::s_member mem;
 
 			mem.name = fields[0];
+			mem.a_name = to_ada_name(mem.name);
 			mem.msize = stoul(fields[1]);
 			mem.union_struct = stoi(fields[2]);
 			mem.moffset = stoul(fields[3]);
@@ -255,7 +259,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		const s_config::s_structs::s_member& member = *it;
 		std::stringstream s;
 
-		s << member.name << " :";
+		s << member.a_name << " :";
 		std::string fmt_name = s.str();
 		
                 ads << "            ";
@@ -265,7 +269,10 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		if ( !member.union_struct ) {
 			ads << std_type(member.msize,member.msigned,member.array);
 		} else	{
-			ads << "s_" << member.tname;
+			auto cit = c_ada_map.find(member.tname); // Lookup C name
+			if ( cit != c_ada_map.end() ) 
+				ads << cit->second;		// Known Ada name
+			else	ads << "s_" << member.tname;	// Unknown
 		}
 		ads << ";\n";
 	}
@@ -279,7 +286,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		const s_config::s_structs::s_member& member = *it;
 		std::stringstream s;
 
-		s << member.name << " :";
+		s << member.a_name;
 		std::string fmt_name = s.str();
 		
                 ads << "            ";
@@ -294,6 +301,11 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 void
 emit_structs() {
+
+	for ( auto it=config.structs.structvec.begin(); it != config.structs.structvec.end(); ++it ) {
+		s_config::s_structs::s_struct& node = *it;
+		c_ada_map[node.c_name] = node.a_name;
+	}
 
 	for ( auto it=config.structs.structvec.begin(); it != config.structs.structvec.end(); ++it ) {
 		s_config::s_structs::s_struct& node = *it;
