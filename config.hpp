@@ -47,6 +47,16 @@ struct s_config {
 		std::unordered_map<std::string,s_sys_type> info;
 	} sys_types;
 
+	struct s_ada_types {
+		struct s_ada_type {
+			std::string	name;
+			std::string	subtype;
+			std::string	range;
+		};
+		int			genset;
+		std::vector<s_ada_type> adavec;
+	} ada_types;
+
 	struct s_section2 {
 		int				genset;		
 

@@ -185,6 +185,35 @@ loadconfig() {
 	}
 
 	//////////////////////////////////////////////////////////////
+	// Ada Types
+	//////////////////////////////////////////////////////////////
+	{
+		pugi::xml_node anode = doc.child("entities").child("ada_types");
+
+		config.ada_types.genset = anode.attribute("genset").as_int();
+		assert(config.ada_types.genset > 0);
+
+		for ( auto it=anode.begin(); it != anode.end(); ++it ) {
+			const pugi::xml_node& tnode = *it;
+
+			if ( strcmp(tnode.name(),"type") != 0 )
+				continue;
+
+			const std::string os = tnode.attribute("os").value();
+
+			if ( os !=  "" && !match(os,platform) )
+				continue;
+
+			s_config::s_ada_types::s_ada_type decl;
+			decl.name    = tnode.attribute("name").value();
+			decl.subtype = tnode.attribute("subtype").value();
+			decl.range   = tnode.attribute("range").value();
+
+			config.ada_types.adavec.push_back(decl);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////
 	// section2
 	//////////////////////////////////////////////////////////////
 	{

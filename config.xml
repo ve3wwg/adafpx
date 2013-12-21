@@ -41,6 +41,9 @@
 		<type name="ino64_t" os="Darwin 12.*.*"/>
 		<type name="ino64_t" os="Darwin 13.*.*"/>
 	</posix_types>
+	<ada_types genset="105">
+		<type name="fd_t" subtype="int_t" range="0..int_t'Max"/>
+	</ada_types>
 	<macro_constants>
 		<set type="errno_t" format="%ld" genset="110">
 			<includes>

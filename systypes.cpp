@@ -52,6 +52,21 @@ emit_sys_types() {
 
 		ads << "    for " << name << "'Size use " << node.size*8 << ";\n";
 	}
+
+	//////////////////////////////////////////////////////////////
+	// Spit out the Ada types
+	//////////////////////////////////////////////////////////////
+
+	if ( config.ada_types.adavec.size() > 0 )
+		ads << "\n";
+
+	for ( auto it=config.ada_types.adavec.begin(); it != config.ada_types.adavec.end(); ++it ) {
+		const s_config::s_ada_types::s_ada_type& atype = *it;
+		ads << "    subtype " << atype.name << " is " << atype.subtype;
+		if ( atype.range != "" )
+			ads << " range " << atype.range;
+		ads << ";\n";
+	}
 }
 
 // End systypes.cpp
