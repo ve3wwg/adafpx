@@ -32,12 +32,15 @@ struct s_config {
 		};
 		int				genset;
 		std::unordered_map<std::string,s_basic_type> info;
+		std::unordered_map<std::string,std::string> a2cmap;
+		std::unordered_map<int,std::string> sizemap;
 	} basic_types;
 
 	struct s_sys_types {
 		struct s_sys_type {
 			unsigned		size;		// Size in bytes of the type
 			bool			is_unsigned;	// True if the type is unsigned
+			std::string		subtype;	// Use this subtype
 		};
 		int				genset;
 		std::vector<std::string>	includes;
@@ -101,6 +104,7 @@ struct s_config {
 			std::vector<std::string> includes;
 			unsigned		size;			// Struct size in bytes
 			std::vector<s_member>	members;
+			std::unordered_map<std::string,std::string> prefs; // Preferred type name
 		};
 		std::vector<s_struct>		structvec;
 	} structs;

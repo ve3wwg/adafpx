@@ -143,6 +143,13 @@ loadconfig() {
 		}
 	}
 
+	// Build Ada to C name lookup map
+	for ( auto it=config.basic_types.info.begin(); it != config.basic_types.info.end(); ++it ) {
+		const std::string& c_name = it->first;
+		const s_config::s_basic_types::s_basic_type& btype = it->second;
+		config.basic_types.a2cmap[btype.ada] = c_name;
+	}
+
 	//////////////////////////////////////////////////////////////
 	// sys_types
 	//////////////////////////////////////////////////////////////
@@ -283,6 +290,21 @@ loadconfig() {
 			{
 				pugi::xml_node inode = snode.child("includes");
 				load_includes(stype.includes,inode);
+			}
+
+			{
+				pugi::xml_node pnode = snode.child("members");
+				// <member name="l_pid" pref="pid_t"/>
+
+				for ( auto pit=pnode.begin(); pit != pnode.end(); ++pit ) {
+					pugi::xml_node& mnode = *pit;
+					if ( strcmp(mnode.name(),"member") != 0 )
+						continue;
+					
+					const std::string& member = mnode.attribute("name").value();
+					const std::string& pref   = mnode.attribute("pref").value();
+					stype.prefs[member] = pref;
+				}
 			}
 
 			config.structs.structvec.push_back(stype);

@@ -20,6 +20,28 @@
 
 static std::unordered_map<std::string,std::string> c_ada_map;
 
+bool
+use_preferred_type(unsigned size,bool is_unsigned,const std::string pref_type) {
+	{
+		auto pit = config.sys_types.info.find(pref_type);
+		if ( pit != config.sys_types.info.end() ) {
+			const s_config::s_sys_types::s_sys_type& stype = pit->second;
+			if ( size == stype.size && is_unsigned == stype.is_unsigned )
+				return true;
+		}
+	}
+
+	// Try for a basic type
+	{
+		auto pit = config.basic_types.a2cmap.find(pref_type);
+		if ( pit == config.basic_types.a2cmap.end() )
+			return false;
+		const std::string& c_name = pit->second;
+		const s_config::s_basic_types::s_basic_type& btype = config.basic_types.info[c_name];
+		return btype.size == size;
+	}
+}
+
 const std::string
 std_type(unsigned bytes,bool is_signed,unsigned array) {
 	std::stringstream s;
@@ -267,7 +289,19 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		ads << std::left << fmt_name << " ";
 	
 		if ( !member.union_struct ) {
-			ads << std_type(member.msize,member.msigned,member.array);
+			std::string ada_type;
+
+			auto mit = node.prefs.find(member.name);
+			if ( mit != node.prefs.end() ) {
+				const std::string& pref_type = mit->second;
+
+				if ( use_preferred_type(member.msize,!member.msigned,pref_type) )
+					ada_type = pref_type;
+			}
+			if ( ada_type == "" )
+				ada_type = std_type(member.msize,member.msigned,member.array);
+
+			ads << ada_type;
 		} else	{
 			auto cit = c_ada_map.find(member.tname); // Lookup C name
 			if ( cit != c_ada_map.end() ) 

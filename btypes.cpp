@@ -69,23 +69,51 @@ emit_basic_types() {
 
 	ads << "\n";
 
-	for ( size_t x=1; x<=8; x *= 2 )
-		ads 	<< "    type int" << x*8 << "_t is range "
-			<< "-2**" << (x*8-1) << "..2**" << (x*8-1) << "-1;\n";
+	std::unordered_set<unsigned> tset;
+
+	for ( unsigned x=1; x<=8; x *= 2 ) {
+		auto it = config.basic_types.sizemap.find(x);
+		if ( it == config.basic_types.sizemap.end() ) {
+			ads 	<< "    type int" << x*8 << "_t is range "
+				<< "-2**" << (x*8-1) << "..2**" << (x*8-1) << "-1;\n";
+			tset.insert(x);
+		} else	{
+			const std::string& subtype = it->second;
+			ads	<< "    subtype int" << x*8 << "_t is " << subtype << "_t;\n";
+		}
+	}
+
+	if ( tset.size() > 0 ) {
+		ads << "\n";
+
+		for ( unsigned x=1; x<=8; x *= 2 ) {
+			if ( tset.find(x) != tset.end() ) 
+				ads	<< "    for int" << x*8 << "_t'Size use " << x*8 << ";\n";
+		}
+	}
+
 	ads << "\n";
+	tset.clear();
 
-	for ( size_t x=1; x<=8; x *= 2 )
-		ads	<< "    for int" << x*8 << "_t'Size use " << x*8 << ";\n";
+	for ( unsigned x=1; x<=8; x *= 2 ) {
+		auto it = config.basic_types.sizemap.find(x);
+		if ( it == config.basic_types.sizemap.end() ) {
+			ads 	<< "    type uint" << x*8 << "_t is mod 2**" << x*8 << ";\n";
+			tset.insert(x);
+		} else	{
+			const std::string& subtype = it->second;
+			ads	<< "    subtype uint" << x*8 << "_t is u" << subtype << "_t;\n";
+		}
+	}
 
-	ads << "\n";
+	if ( tset.size() > 0 ) {
+		ads << "\n";
 
-	for ( size_t x=1; x<=8; x *= 2 )
-		ads 	<< "    type uint" << x*8 << "_t is mod 2**" << x*8 << ";\n";
-
-	ads << "\n";
-
-	for ( size_t x=1; x<=8; x *= 2 )
-		ads	<< "    for uint" << x*8 << "_t'Size use " << x*8 << ";\n";
+		for ( unsigned x=1; x<=8; x *= 2 ) {
+			if ( tset.find(x) != tset.end() ) 
+				ads	<< "    for uint" << x*8 << "_t'Size use " << x*8 << ";\n";
+		}
+	}
 
 	ads << "\n";
 

@@ -64,6 +64,13 @@ comp_types() {
 
 		s_config::s_basic_types::s_basic_type& node = config.basic_types.info[name];
 		node.size = tsize;
+
+		auto it = config.basic_types.sizemap.find(node.size);
+		if ( it == config.basic_types.sizemap.end() ) {
+			if ( name == "long long" )
+				config.basic_types.sizemap[node.size] = "llong";
+			else	config.basic_types.sizemap[node.size] = name;
+		}
 	}		
 
 	fs.close();
@@ -129,6 +136,18 @@ comp_systypes() {
 		s_config::s_sys_types::s_sys_type& node = config.sys_types.info[name];
 		node.size = tsize;
 		node.is_unsigned = stoi(is_unsigned);
+
+		auto i = config.basic_types.sizemap.find(node.size);
+		if ( i != config.basic_types.sizemap.end() ) {
+			const std::string name = i->second;
+			if ( !node.is_unsigned )
+				node.subtype = name;
+			else	{
+				node.subtype = "u";
+				node.subtype += name;
+			}
+			node.subtype += "_t";
+		}
 	}		
 
 	fs.close();
