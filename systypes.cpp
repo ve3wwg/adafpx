@@ -62,9 +62,16 @@ emit_sys_types() {
 
 	for ( auto it=config.ada_types.adavec.begin(); it != config.ada_types.adavec.end(); ++it ) {
 		const s_config::s_ada_types::s_ada_type& atype = *it;
-		ads << "    subtype " << atype.name << " is " << atype.subtype;
-		if ( atype.range != "" )
-			ads << " range " << atype.range;
+
+		if ( atype.type == "" ) {
+			ads << "    subtype " << atype.name << " is " << atype.subtype;
+			if ( atype.range != "" )
+				ads << " range " << atype.range;
+		} else	{
+			ads << "    type " << atype.name << " is new " << atype.type;
+			if ( atype.range != "" )
+				ads << " range " << atype.range;
+		}
 		ads << ";\n";
 	}
 }
