@@ -425,6 +425,30 @@
 			<ada_arg name="Fd2" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
+		<func name="write" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Write" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Buffer(Buffer'First)'Address"/>
+			<c_arg name="count" type="size_t" from="Buffer'Length"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Buffer" io="in" type="uchar_array"/>
+			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="read" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Read" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Buffer(Buffer'First)'Address"/>
+			<c_arg name="count" type="size_t" from="Buffer'Length"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Buffer" io="out" type="uchar_array" from="implied"/>
+			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
 		<func name="exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit" inline="1">
 			<includes>
 				<include file="unistd.h"/>
