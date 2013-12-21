@@ -87,6 +87,7 @@ struct s_config {
 		struct s_member {
 			std::string		tname;			// Type name (if any)
 			std::string		name;			// Member name
+			std::string		a_name;			// Ada member name
 			unsigned		msize;			// Member size
 			int			union_struct;		// 1==struct
 			unsigned		moffset;		// Member offset
