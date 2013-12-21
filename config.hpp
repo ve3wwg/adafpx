@@ -93,6 +93,11 @@ struct s_config {
 			std::vector<s_carg>		cargs;
 			std::vector<s_aarg>		aargs;
 			std::vector<s_temp>		temps;
+			struct s_cases {
+				std::string		on_error;
+				std::vector<std::string> casevec;
+			};
+			std::unordered_map<std::string,s_cases> cases;
 		};
 		std::vector<s_func>		funcs;
 	} section2;

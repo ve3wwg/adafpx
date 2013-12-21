@@ -71,16 +71,16 @@ emit_section2() {
 				proto << " return " << func.returns;
 		}
 
-		ads << "    " << proto.str() << ";\n";
+		ads << "   " << proto.str() << ";\n";
 		if ( func.finline )
-			ads << "    pragma Inline(" << func.ada_name << ");\n\n";
+			ads << "   pragma Inline(" << func.ada_name << ");\n\n";
 
-		adb 	<< "    " << proto.str() << " is\n";
+		adb 	<< "   " << proto.str() << " is\n";
 
 		// C Function Declaration
 		if ( func.returns != "" )
-			adb << "       function " << binding_name;
-		else	adb << "       procedure " << binding_name;
+			adb << "      function " << binding_name;
+		else	adb << "      procedure " << binding_name;
 		if ( func.cargs.size() > 0 ) {
 			adb << "(";
 			bool f = true;
@@ -99,7 +99,7 @@ emit_section2() {
 		else	adb << ";\n";
 
 		//  pragma Import(C,UX_close,"close");
-		adb << "       pragma Import(C," << binding_name << ",\"" << func.c_name << "\");\n";
+		adb << "      pragma Import(C," << binding_name << ",\"" << func.c_name << "\");\n";
 
 		// Temporaries
 		for ( auto ait=func.aargs.begin(); ait != func.aargs.end(); ++ait ) {
@@ -112,7 +112,7 @@ emit_section2() {
 				s << "T" << arg.argno;
 				tempname = s.str();
 
-				adb << "       " << tempname << " : " << arg.type
+				adb << "      " << tempname << " : " << arg.type
 				    << " := " << arg.tempval << ";\n";
 			}
 		}
@@ -121,7 +121,7 @@ emit_section2() {
 		for ( auto t=func.temps.begin(); t != func.temps.end(); ++t ) {
 			s_config::s_section2::s_func::s_temp& temp = *t;
 
-			adb << "       " << temp.name << " : " << temp.type;
+			adb << "      " << temp.name << " : " << temp.type;
 			if ( temp.init != "" )
 				adb << " := " << temp.init;
 			adb << ";\n";
@@ -129,15 +129,41 @@ emit_section2() {
 
 		// Return value:
 		if ( func.rname != "" ) {
-			adb << "       " << func.rname << " : " << func.returns << ";\n";
+			adb << "      " << func.rname << " : " << func.returns << ";\n";
 		}
 
-		adb	<< "    begin\n";
+		adb	<< "   begin\n";
+
+		if ( func.cases.size() > 0 ) {
+			for ( auto cit=func.cases.cbegin(); cit != func.cases.cend(); ++cit ) {
+				const std::string varname = cit->first;
+				const s_config::s_section2::s_func::s_cases& centry = cit->second;
+
+				if ( centry.casevec.size() > 0 ) {
+					adb << "      case " << varname << " is\n";
+
+					for ( auto vit=centry.casevec.cbegin(); vit != centry.casevec.cend(); ++vit ) {
+						const std::string& the_case = *vit;
+						adb << "         when " << the_case << "=>\n"
+						    << "            null;\n";
+					}
+
+					adb << "         when others =>\n"
+					    << "            Error := EINVAL;\n";
+
+					if ( centry.on_error != "" )
+						adb << "            " << centry.on_error << ";\n";
+
+					adb << "            return;\n"
+					    << "      end case;\n";
+				}
+			}
+		}
 
 		if ( func.rname != "" ) {
-			adb << "       " << func.rname << " := " << binding_name;
+			adb << "      " << func.rname << " := " << binding_name;
 		} else	{
-			adb << "       " << binding_name;
+			adb << "      " << binding_name;
 		}
 
 		if ( func.cargs.size() > 0 ) {
@@ -160,13 +186,13 @@ emit_section2() {
 
 			if ( arg.from != "implied" ) {
 				if ( arg.io == "out" || arg.io == "inout" ) {
-					adb << "       " << arg.name << " := "
+					adb << "      " << arg.name << " := "
 					    << arg.from << ";\n";
 				}
 			}
 		}
 
-		adb	<< "    end " << func.ada_name << ";\n\n";
+		adb	<< "   end " << func.ada_name << ";\n\n";
 	}
 
 	ads.close();

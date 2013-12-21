@@ -356,6 +356,139 @@
 			<macro name="O_CLOEXEC" desc="Mark as close-on-exec"/>
 		</set>
 	</macro_constants>
+	<structs>
+		<struct name="timespec" ada="s_timespec" genset="400">
+			<includes>
+				<include file="fcntl.h"/>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<members>
+				<member name="tv_sec" pref="time_t"/>
+			</members>
+		</struct>
+		<struct name="timeval" ada="s_timeval" genset="410">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<members>
+				<member name="tv_sec" pref="time_t"/>
+			</members>
+		</struct>
+		<struct name="rusage" ada="s_rusage" genset="420">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+		</struct>
+		<struct name="fbootstraptransfer" ada="s_fbootstrap_transfer" os="Darwin *" genset="430">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="flock" ada="s_flock" genset="440">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+			<members>
+				<member name="l_type"   pref="short_t"/>
+				<member name="l_whence" pref="short_t"/>
+				<member name="l_pid"    pref="pid_t"/>
+				<member name="l_start"  pref="off_t"/>
+				<member name="l_len"    pref="off_t"/>
+			</members>
+		</struct>
+		<struct name="fstore" ada="s_fstore" genset="450" os="Darwin *">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="log2phys" ada="s_log2phys" os="Darwin *" genset="460">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+			<members>
+				<member name="l2p_contigbytes" pref="off_t"/>
+				<member name="l2p_devoffset" pref="off_t"/>
+			</members>
+		</struct>
+		<struct name="stat" ada="s_stat" genset="470">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
+			</includes>
+			<members>
+				<member name="st_dev" pref="dev_t"/>
+				<member name="st_mode" pref="mode_t"/>
+				<member name="st_nlink" pref="nlink_t"/>
+				<member name="st_ino" pref="ino_t"/>
+				<member name="st_uid" pref="uid_t"/>
+				<member name="st_gid" pref="gid_t"/>
+				<member name="st_rdev" pref="dev_t"/>
+				<member name="st_size" pref="off_t"/>
+				<member name="st_blocks" pref="blkcnt_t"/>
+				<member name="st_blksize" pref="blksize_t"/>
+			</members>
+		</struct>
+		<struct name="tm" ada="s_tm" genset="480">
+			<includes>
+				<include file="time.h"/>
+			</includes>
+			<members>
+				<member name="tm_gmtoff" pref="long_t"/>
+				<member name="tm_hour" pref="int_t"/>
+				<member name="tm_isdst" pref="int_t"/>
+				<member name="tm_mday" pref="int_t"/>
+				<member name="tm_min" pref="int_t"/>
+				<member name="tm_mon" pref="int_t"/>
+				<member name="tm_sec" pref="int_t"/>
+				<member name="tm_wday" pref="int_t"/>
+				<member name="tm_yday" pref="int_t"/>
+				<member name="tm_year" pref="int_t"/>
+			</members>
+		</struct>
+		<struct name="iovec" ada="s_iovec" genset="490">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+				<include file="utime.h"/>
+			</includes>
+		</struct>
+		<struct name="utimbuf" ada="s_utimbuf" genset="500">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+				<include file="utime.h"/>
+			</includes>
+		</struct>
+		<struct name="tms" ada="s_tms" genset="510">
+			<includes>
+				<include file="sys/times.h" os="Linux *"/>
+				<include file="sys/times.h" os="Darwin *"/>
+			</includes>
+			<members>
+				<member name="tms_utime" pref="clock_t"/>
+				<member name="tms_stime" pref="clock_t"/>
+				<member name="tms_cutime" pref="clock_t"/>
+				<member name="tms_cstime" pref="clock_t"/>
+			</members>
+		</struct>
+		<struct name="radvisory" ada="s_radvisory" os="Darwin *" genset="520">
+			<includes>
+				<include file="sys/param.h"/>
+				<include file="sys/stat.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+		</struct>
+		<struct name="utsname" ada="s_utsname" genset="530">
+			<includes>
+				<include file="sys/utsname.h"/>
+			</includes>
+		</struct>
+	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1">
 			<includes>
@@ -730,138 +863,21 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="C_Target" type="String" init="C_String(Target)"/>
 		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Dup_Fd" io="out" type="fd_t" from="fd_t(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Dup_Fd := -1">
+				<case name="F_DUPFD"/>
+				<case name="F_DUPFD_CLOEXEC"/>
+			</cases>
+		</func>
 	</section2>
-	<structs>
-		<struct name="timespec" ada="s_timespec" genset="400">
-			<includes>
-				<include file="fcntl.h"/>
-				<include file="sys/types.h"/>
-				<include file="sys/stat.h"/>
-			</includes>
-			<members>
-				<member name="tv_sec" pref="time_t"/>
-			</members>
-		</struct>
-		<struct name="timeval" ada="s_timeval" genset="410">
-			<includes>
-				<include file="sys/resource.h"/>
-			</includes>
-			<members>
-				<member name="tv_sec" pref="time_t"/>
-			</members>
-		</struct>
-		<struct name="rusage" ada="s_rusage" genset="420">
-			<includes>
-				<include file="sys/resource.h"/>
-			</includes>
-		</struct>
-		<struct name="fbootstraptransfer" ada="s_fbootstrap_transfer" os="Darwin *" genset="430">
-			<includes>
-				<include file="fcntl.h"/>
-			</includes>
-		</struct>
-		<struct name="flock" ada="s_flock" genset="440">
-			<includes>
-				<include file="fcntl.h"/>
-			</includes>
-			<members>
-				<member name="l_type"   pref="short_t"/>
-				<member name="l_whence" pref="short_t"/>
-				<member name="l_pid"    pref="pid_t"/>
-				<member name="l_start"  pref="off_t"/>
-				<member name="l_len"    pref="off_t"/>
-			</members>
-		</struct>
-		<struct name="fstore" ada="s_fstore" genset="450" os="Darwin *">
-			<includes>
-				<include file="fcntl.h"/>
-			</includes>
-		</struct>
-		<struct name="log2phys" ada="s_log2phys" os="Darwin *" genset="460">
-			<includes>
-				<include file="fcntl.h"/>
-			</includes>
-			<members>
-				<member name="l2p_contigbytes" pref="off_t"/>
-				<member name="l2p_devoffset" pref="off_t"/>
-			</members>
-		</struct>
-		<struct name="stat" ada="s_stat" genset="470">
-			<includes>
-				<include file="sys/types.h"/>
-				<include file="sys/stat.h"/>
-				<include file="sys/param.h"/>
-				<include file="sys/mount.h"/>
-			</includes>
-			<members>
-				<member name="st_dev" pref="dev_t"/>
-				<member name="st_mode" pref="mode_t"/>
-				<member name="st_nlink" pref="nlink_t"/>
-				<member name="st_ino" pref="ino_t"/>
-				<member name="st_uid" pref="uid_t"/>
-				<member name="st_gid" pref="gid_t"/>
-				<member name="st_rdev" pref="dev_t"/>
-				<member name="st_size" pref="off_t"/>
-				<member name="st_blocks" pref="blkcnt_t"/>
-				<member name="st_blksize" pref="blksize_t"/>
-			</members>
-		</struct>
-		<struct name="tm" ada="s_tm" genset="480">
-			<includes>
-				<include file="time.h"/>
-			</includes>
-			<members>
-				<member name="tm_gmtoff" pref="long_t"/>
-				<member name="tm_hour" pref="int_t"/>
-				<member name="tm_isdst" pref="int_t"/>
-				<member name="tm_mday" pref="int_t"/>
-				<member name="tm_min" pref="int_t"/>
-				<member name="tm_mon" pref="int_t"/>
-				<member name="tm_sec" pref="int_t"/>
-				<member name="tm_wday" pref="int_t"/>
-				<member name="tm_yday" pref="int_t"/>
-				<member name="tm_year" pref="int_t"/>
-			</members>
-		</struct>
-		<struct name="iovec" ada="s_iovec" genset="490">
-			<includes>
-				<include file="sys/types.h"/>
-				<include file="sys/uio.h"/>
-				<include file="unistd.h"/>
-				<include file="utime.h"/>
-			</includes>
-		</struct>
-		<struct name="utimbuf" ada="s_utimbuf" genset="500">
-			<includes>
-				<include file="sys/types.h"/>
-				<include file="sys/uio.h"/>
-				<include file="unistd.h"/>
-				<include file="utime.h"/>
-			</includes>
-		</struct>
-		<struct name="tms" ada="s_tms" genset="510">
-			<includes>
-				<include file="sys/times.h" os="Linux *"/>
-				<include file="sys/times.h" os="Darwin *"/>
-			</includes>
-			<members>
-				<member name="tms_utime" pref="clock_t"/>
-				<member name="tms_stime" pref="clock_t"/>
-				<member name="tms_cutime" pref="clock_t"/>
-				<member name="tms_cstime" pref="clock_t"/>
-			</members>
-		</struct>
-		<struct name="radvisory" ada="s_radvisory" os="Darwin *" genset="520">
-			<includes>
-				<include file="sys/param.h"/>
-				<include file="sys/stat.h"/>
-				<include file="fcntl.h"/>
-			</includes>
-		</struct>
-		<struct name="utsname" ada="s_utsname" genset="530">
-			<includes>
-				<include file="sys/utsname.h"/>
-			</includes>
-		</struct>
-	</structs>
 </entities>

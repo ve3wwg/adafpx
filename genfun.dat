@@ -1,5 +1,3 @@
-adatype|type errno_t is new int_t'Base range 0 .. int_t'Last;
-adatype|type fd_t is new int_t'Base range -1 .. int_t'Last;
 adatype|type fcntl_t is new uint_t;
 adatype|type omode_t is new uint_t;
 adatype|type amode_t is new uint_t;

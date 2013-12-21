@@ -289,6 +289,27 @@ loadconfig() {
 				}
 			}
 				
+			//////////////////////////////////////////////
+			// Load up optional case values
+			//////////////////////////////////////////////
+
+			pugi::xml_node cases = func.child("cases");
+			const std::string cases_name = cases.attribute("name").value();
+			const std::string on_error = cases.attribute("on_error").value();
+
+			if ( cases_name != "" ) {
+				s_config::s_section2::s_func::s_cases& centry = funcent.cases[cases_name];
+			
+				centry.on_error = on_error;
+				for ( auto cit=cases.begin(); cit != cases.end(); ++cit ) {
+					const pugi::xml_node& cnode = *cit;
+					if ( !strcmp(cnode.name(),"case") ) {
+						const std::string& the_case = cnode.attribute("name").value();
+						centry.casevec.push_back(the_case);
+					}
+				}
+			}
+
 			config.section2.funcs.push_back(funcent);
 		}
 	}
