@@ -1,2 +1,2 @@
-Need to configure preferred types for struct/union members, provided
-the signedness and type match.
+- functions involving structs.
+- C macro function replacements
