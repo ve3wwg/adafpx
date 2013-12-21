@@ -66,6 +66,8 @@ bool gcc_precomplex(int genset,const std::string& variation="");
 
 void parse(std::vector<std::string>& svec,const std::string s,const std::string delim="|");
 
+const std::string to_ada_name(const std::string& c_name);
+
 extern int yyparse();
 
 #endif // COMP_HPP
