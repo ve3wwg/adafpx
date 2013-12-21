@@ -354,6 +354,11 @@
 			<macro name="O_SYMLINK" desc="Allow open of symlinks"/>
 			<macro name="O_EVTONLY" desc="Descriptor requested for event notifications only"/>
 			<macro name="O_CLOEXEC" desc="Mark as close-on-exec"/>
+                        <macro name="O_NOCTTY"/>
+                        <macro name="O_ASYNC"/>
+                        <macro name="O_DIRECT"/>
+                        <macro name="O_NOATIME"/>
+                        <macro name="O_NONBLOCK"/>
 		</set>
 	</macro_constants>
 	<structs>
@@ -877,6 +882,39 @@
 			<cases name="Cmd" on_error="Dup_Fd := -1">
 				<case name="F_DUPFD"/>
 				<case name="F_DUPFD_CLOEXEC"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Flags" io="out" type="uint_t" from="uint_t(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Flags := 0">
+				<case name="F_GETFD"/>
+				<case name="F_GETFL"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Flags" type="ulong_t" from="Flags"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Flags" io="in" type="ulong_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_SETFD"/>
+				<case name="F_SETFL"/>
 			</cases>
 		</func>
 	</section2>
