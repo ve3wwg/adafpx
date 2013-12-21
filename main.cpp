@@ -45,6 +45,7 @@ main(int argc,char **argv) {
 	system("cp 0005.ads ./staging/.");
 	system("cp 0005.adb ./staging/.");
 	system("cp 0060.ads ./staging/.");
+	system("cp 8000.ads ./staging/.");
 	system("cp 9999.ads ./staging/.");
 	system("cp 9999.adb ./staging/.");
 
