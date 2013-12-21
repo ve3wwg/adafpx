@@ -31,31 +31,75 @@ emit_basic_types() {
 	ads << "\n";
 
 	for ( auto it=config.basic_types.info.begin(); it != config.basic_types.info.end(); ++it ) {
-		const std::string& name = it->first;
 		s_config::s_basic_types::s_basic_type& node = it->second;
 
-		if ( name != "char" ) {
-			ads 	<< "    type "
-				<< node.ada << " is range -2**" << (node.size*8 - 1)
-				<< " .. "
-				<< "2**" << (node.size*8 - 1) << "-1;\n";
-		} else	{
-			ads 	<< "    type "
-				<< node.ada << " is range 0"
-				<< " .. "
-				<< "2**" << (node.size*8) << "-1;\n";
-		}
+		ads 	<< "    type "
+			<< node.ada << " is range -2**" << (node.size*8 - 1)
+			<< " .. "
+			<< "2**" << (node.size*8 - 1) << "-1;\n";
 	}
 
+	ads << "\n";
+
 	for ( auto it=config.basic_types.info.begin(); it != config.basic_types.info.end(); ++it ) {
-		const std::string& name = it->first;
+		s_config::s_basic_types::s_basic_type& node = it->second;
+		ads << "    for " << node.ada << "'Size use " << node.size*8 << ";\n";
+	}
+
+	ads << "\n";
+
+	for ( auto it=config.basic_types.info.begin(); it != config.basic_types.info.end(); ++it ) {
 		s_config::s_basic_types::s_basic_type& node = it->second;
 
-		if ( name != "char" ) {
-			ads 	<< "    type u"
-				<< node.ada << " is mod 2**" << (node.size*8)
-				<< ";\n";
-		}
+		ads 	<< "    type u"
+			<< node.ada << " is mod 2**" << (node.size*8)
+			<< ";\n";
+	}
+
+	ads << "\n";
+
+	for ( auto it=config.basic_types.info.begin(); it != config.basic_types.info.end(); ++it ) {
+		s_config::s_basic_types::s_basic_type& node = it->second;
+		ads << "    for u" << node.ada << "'Size use " << node.size*8 << ";\n";
+	}
+
+	//////////////////////////////////////////////////////////////
+	// Emit the standard int types
+	//////////////////////////////////////////////////////////////
+
+	ads << "\n";
+
+	for ( size_t x=1; x<=8; x *= 2 )
+		ads 	<< "    type int" << x*8 << "_t is range "
+			<< "-2**" << (x*8-1) << "..2**" << (x*8-1) << "-1;\n";
+	ads << "\n";
+
+	for ( size_t x=1; x<=8; x *= 2 )
+		ads	<< "    for int" << x*8 << "_t'Size use " << x*8 << ";\n";
+
+	ads << "\n";
+
+	for ( size_t x=1; x<=8; x *= 2 )
+		ads 	<< "    type uint" << x*8 << "_t is mod 2**" << x*8 << ";\n";
+
+	ads << "\n";
+
+	for ( size_t x=1; x<=8; x *= 2 )
+		ads	<< "    for uint" << x*8 << "_t'Size use " << x*8 << ";\n";
+
+	ads << "\n";
+
+        ads << "    type uchar_array is array(uint_t range <>) of uchar_t;\n";
+
+	ads << "\n";
+
+	//////////////////////////////////////////////////////////////
+	// Array types
+	//////////////////////////////////////////////////////////////
+
+	for ( size_t x=1; x<=8; x *= 2 ) {
+		ads << "    type int" << x*8 << "_array is array(uint_t range <>) of int" << x*8 << "_t;\n";
+		ads << "    type uint" << x*8 << "_array is array(uint_t range <>) of uint" << x*8 << "_t;\n";
 	}
 }
 
