@@ -51,7 +51,6 @@ main(int argc,char **argv) {
 	comp_macros();
 	comp_types();
 	comp_systypes();
-//	comp_funcs();
 
 	emit_basic_types();
 	emit_sys_types();
