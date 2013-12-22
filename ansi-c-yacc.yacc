@@ -60,7 +60,7 @@ extern int yylex();
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%token ATTRIBUTE ASM
+%token ATTRIBUTE ASM ASM2
 
 %start translation_unit
 %%
@@ -68,6 +68,9 @@ extern int yylex();
 asm_list
 	: STRING_LITERAL
 	| asm_list STRING_LITERAL ;
+
+asm2_statement
+	: ASM2 '(' STRING_LITERAL ':' STRING_LITERAL '(' IDENTIFIER ')' ')' ';';
 
 attribute_clause_list
 	: attribute_clause {
@@ -1064,6 +1067,7 @@ statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
+	| asm2_statement
 	;
 
 labeled_statement

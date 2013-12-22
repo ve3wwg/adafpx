@@ -102,11 +102,13 @@ static int structunion = 0;
 
 "__attribute__"		{ count(); return(ATTRIBUTE); }
 "__asm"			{ count(); return(ASM); }
+"__asm__"		{ count(); return(ASM2); }
 "__restrict"		{ count(); return(RESTRICT); }
 "__restrict__"		{ count(); return(RESTRICT); }
 "__extension__"		{ count(); }
 "__const"		{ count(); return(CONST); }
 "__inline"		{ count(); return(INLINE); }
+"__inline__"		{ count(); return(INLINE); }	/* Mac OSX */
 
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
