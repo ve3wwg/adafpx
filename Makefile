@@ -31,6 +31,8 @@ run:
 atest::	cglue.o
 	gnatmake -Wall atest.adb -o atest -largs cglue.o -lstdc++
 
+atest.o: posix.ads posix.adb posix.o
+
 retest:
 	rm -f cglue.o atest atest.o 
 	$(MAKE) -$(MAKEFLAGS) atest
