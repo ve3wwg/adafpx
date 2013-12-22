@@ -6,8 +6,29 @@
 -- This is generated source code. Edit at your own risk.
 
 package body Posix is
+   
+   function C_Last(C_String: String) return Natural is
+   begin
+      for X in C_String'Range loop
+         if Character'Pos(C_String(X)) = 0 then
+            return Natural(X-1);
+         end if;
+      end loop;
+      return C_String'Last;
+   end C_Last;
 
    function To_Count(Status: ssize_t) return Natural is
+   begin
+      if Status <= 0 then
+         return 0;
+      else
+         return Natural(Status);
+      end if;
+   end To_Count;
+
+   pragma Inline(To_Count);
+
+   function To_Count(Status: int_t) return Natural is
    begin
       if Status <= 0 then
          return 0;
@@ -96,4 +117,3 @@ package body Posix is
    end Neg_PID;
 
    pragma Inline(Neg_PID);
-
