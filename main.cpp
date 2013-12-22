@@ -17,6 +17,7 @@
 #include "utils.hpp"
 #include "ansi-c-yacc.hpp"
 #include "comp.hpp"
+#include "config.hpp"
 
 #include <iostream>
 #include <istream>
@@ -29,6 +30,8 @@ main(int argc,char **argv) {
 
 	if ( argc > 1 )
 		yydebug = 1;
+
+	config.gcc_options += "-D__USE_GNU";
 
 	platform = uts_platform();
 	version = uts_version();
