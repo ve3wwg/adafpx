@@ -1029,5 +1029,25 @@
 				<case name="F_UNLCK"/>
 			</cases>
 		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Path" type="System.Address" from="Path'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Path" io="out" type="String" from="implied"/>
+			<ada_arg name="Last" io="out" type="Natural" from="C_Last(Path)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Last := Path'First-1">
+				<case name="F_GETPATH"/>
+			</cases>
+			<prechecks on_error="Last := Path'First-1; Error := EINVAL">
+				<precheck cond="Path'Length >= MAXPATHLEN"/>
+			</prechecks>
+		</func>
 	</section2>
 </entities>
