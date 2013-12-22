@@ -37,6 +37,29 @@ emit_section2() {
 		s_config::s_section2::s_func& func = *it;
 		std::stringstream proto;
 		std::string binding_name = "UX_";
+		bool skip = false;
+
+		if ( func.cases.size() > 0 ) {
+			skip = true;		// For now
+
+			for ( auto cit=func.cases.cbegin(); skip && cit != func.cases.cend(); ++cit ) {
+				const std::string varname = cit->first;
+				const s_config::s_section2::s_func::s_cases& centry = cit->second;
+
+				if ( centry.casevec.size() > 0 ) {
+					for ( auto vit=centry.casevec.cbegin(); skip && vit != centry.casevec.cend(); ++vit ) {
+						const std::string& the_case = *vit;
+
+						auto mit = config.declared_macros.find(the_case);
+						if ( mit != config.declared_macros.end() )
+							skip = false;
+					}
+				}
+			}
+		}
+
+		if ( skip )
+			continue;			// No cases are define macro names
 
 		binding_name += func.c_name;		// Default internal c binding name
 
