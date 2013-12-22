@@ -170,6 +170,8 @@
 			<macro name="F_SETFL"/>
 			<macro name="F_GETOWN"/>
 			<macro name="F_SETOWN"/>
+                        <macro name="F_GETSIG"/>
+                        <macro name="F_SETSIG"/>
 			<macro name="F_GETPATH"/>
 			<macro name="F_PREALLOCATE"/>
 			<macro name="F_SETSIZE"/>
@@ -188,6 +190,14 @@
 			<macro name="F_SETLKW"/>
 			<macro name="F_ALLOCATECONTIG"/>
 			<macro name="F_ALLOCATEALL"/>
+		</set>
+                <set type="" genset="125" os="Linux *">
+			<includes>
+				<include file="fcntl.h"/>
+			</includes>
+			<macro name="F_RDLCK"/>
+			<macro name="F_WRLCK"/>
+			<macro name="F_UNLCK"/>
 		</set>
 		<set type="" genset="130">
 			<includes>
@@ -915,6 +925,108 @@
 			<cases name="Cmd">
 				<case name="F_SETFD"/>
 				<case name="F_SETFL"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<c_arg name="Flock" type="System.Address" from="Flock'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Flock" io="in out" type="s_flock" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_GETLK"/>
+				<case name="F_SETLK"/>
+				<case name="F_SETLKW"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="PID" io="out" type="pid_t" from="Pos_PID(Status)"/>
+			<ada_arg name="GPID" io="out" type="pid_t" from="Neg_PID(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="PID := 0; GPID := 0">
+				<case name="F_GETOWN"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="PID" type="long_t" from="long_t(PID)"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_SETOWN"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Sig" io="out" type="sig_t" from="sig_t(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Sig := 0">
+				<case name="F_GETSIG"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Sig" type="long_t" from="long_t(Sig)"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Sig" io="in" type="sig_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Sig := 0">
+				<case name="F_SETSIG"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Opt" type="uint_t" from="Opt"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Opt" io="in" type="uint_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_SETLEASE"/>
+			</cases>
+			<cases name="Opt">
+				<case name="F_RDLCK"/>
+				<case name="F_WRLCK"/>
+				<case name="F_UNLCK"/>
 			</cases>
 		</func>
 	</section2>
