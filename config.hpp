@@ -12,6 +12,8 @@
 #include <unordered_set>
 
 struct s_config {
+	std::string				gcc_options;
+
 	std::unordered_set<std::string>		builtins;
 
 	struct s_macro_set {
