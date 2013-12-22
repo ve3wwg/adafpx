@@ -75,3 +75,25 @@ package body Posix is
       return C_String;
    end Ada_String;
 
+   function Pos_PID(Status: int_t) return pid_t is
+   begin
+      if Status >= 0 then
+         return pid_t(Status);
+      else
+         return 0;
+      end if;
+   end Pos_PID;
+
+   pragma Inline(Pos_PID);
+
+   function Neg_PID(Status: int_t) return pid_t is
+   begin
+      if Status < 0 then
+         return pid_t(-Status);
+      else
+         return 0;
+      end if;
+   end Neg_PID;
+
+   pragma Inline(Neg_PID);
+
