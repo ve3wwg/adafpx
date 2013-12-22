@@ -31,6 +31,10 @@ run:
 atest::	cglue.o
 	gnatmake -Wall atest.adb -o atest -largs cglue.o -lstdc++
 
+retest:
+	rm -f cglue.o atest atest.o 
+	$(MAKE) -$(MAKEFLAGS) atest
+
 clean:
 	rm -f *.o core 
 
