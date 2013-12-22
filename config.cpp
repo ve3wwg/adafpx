@@ -290,6 +290,24 @@ loadconfig() {
 			}
 				
 			//////////////////////////////////////////////
+			// Load optional pre-checks
+			//////////////////////////////////////////////
+			{
+				pugi::xml_node prechecks = func.child("prechecks");
+
+				if ( !strcmp(prechecks.name(),"prechecks") ) {
+					funcent.on_error = prechecks.attribute("on_error").value();
+					for ( auto pit=prechecks.begin(); pit != prechecks.end(); ++pit ) {
+						const pugi::xml_node& pnode = *pit;
+						if ( !strcmp(pnode.name(),"precheck") ) {
+							const std::string& cond = pnode.attribute("cond").value();
+							funcent.prechecks.push_back(cond);
+						}
+					}
+				}
+			}
+
+			//////////////////////////////////////////////
 			// Load up optional case values
 			//////////////////////////////////////////////
 

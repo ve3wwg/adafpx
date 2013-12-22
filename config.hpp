@@ -99,6 +99,8 @@ struct s_config {
 				std::string		on_error;
 				std::vector<std::string> casevec;
 			};
+			std::vector<std::string> 	prechecks;
+			std::string			on_error;
 			std::unordered_map<std::string,s_cases> cases;
 		};
 		std::vector<s_func>		funcs;

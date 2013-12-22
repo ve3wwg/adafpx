@@ -157,6 +157,18 @@ emit_section2() {
 
 		adb	<< "   begin\n";
 
+		// Insert pre-checks
+		if ( func.prechecks.size() > 0 ) {
+			for ( auto pit=func.prechecks.cbegin(); pit != func.prechecks.cend(); ++pit ) {
+				const std::string& cond = *pit;
+				adb << "      if not ( " << cond << " ) then\n"
+				    << "         " << func.on_error << ";\n"
+				    << "         return;\n"
+				    << "      end if;\n";
+			}
+		}
+
+		// Insert case & when checks
 		if ( func.cases.size() > 0 ) {
 			for ( auto cit=func.cases.cbegin(); cit != func.cases.cend(); ++cit ) {
 				const std::string varname = cit->first;
