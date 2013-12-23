@@ -1049,5 +1049,102 @@
 				<precheck cond="Path'Length >= MAXPATHLEN"/>
 			</prechecks>
 		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="FSstore" type="System.Address" from="FStore'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="FStore" io="in out" type="s_fstore" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_PREALLOCATE"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Arg" type="long_t" from="Arg"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Arg" io="in" type="long_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_SETSIZE"/>
+				<case name="F_RDAHEAD"/>                    
+				<case name="F_NOCACHE"/>
+				<case name="F_SETNOSIGPIPE"/>                            
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl_Get" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Arg" io="out" type="long_t" from="long_t(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd" on_error="Arg := 0">
+				<case name="F_GETNOSIGPIPE"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Radvisory" type="System.Address" from="Radvisory'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Radvisory" io="in" type="s_radvisory"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_RDADVISE"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+                        <c_arg name="Arg" type="System.Address" from="Arg'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Arg" io="in out" type="s_log2phys"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_LOG2PHYS"/>
+				<case name="F_LOG2PHYS_EXT"/>
+			</cases>
+		</func>
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="fcntl.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<cases name="Cmd">
+				<case name="F_FULLFSYNC"/>
+			</cases>
+		</func>
 	</section2>
 </entities>
