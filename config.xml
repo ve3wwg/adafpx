@@ -177,8 +177,6 @@
 			<macro name="F_SETSIZE"/>
 			<macro name="F_RDADVISE"/>
 			<macro name="F_RDAHEAD"/>
-			<macro name="F_READBOOTSTRAP"/>
-			<macro name="F_WRITEBOOTSTRAP"/>
 			<macro name="F_NOCACHE"/>
 			<macro name="F_LOG2PHYS"/>
 			<macro name="F_LOG2PHYS_EXT"/>
@@ -393,11 +391,6 @@
 		<struct name="rusage" ada="s_rusage" genset="420">
 			<includes>
 				<include file="sys/resource.h"/>
-			</includes>
-		</struct>
-		<struct name="fbootstraptransfer" ada="s_fbootstrap_transfer" os="Darwin *" genset="430">
-			<includes>
-				<include file="fcntl.h"/>
 			</includes>
 		</struct>
 		<struct name="flock" ada="s_flock" genset="440">
