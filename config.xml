@@ -1433,5 +1433,27 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
+		<func name="pipe" return="int_t" ada_type="procedure" rname="R" ada_name="Pipe" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fds" type="System.Address" from="T'Address"/>
+			<ada_arg name="Read_Fd" io="out" type="fd_t" from="T(0)"/>
+			<ada_arg name="Write_Fd" io="out" type="fd_t" from="T(1)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="T" type="fd_array(0..1)" init="(0,0)"/>
+		</func>
+		<func name="pipe2" return="int_t" ada_type="procedure" rname="R" ada_name="Pipe2" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fds" type="System.Address" from="T'Address"/>
+			<c_arg name="flags" type="uint_t" from="Flags"/>
+			<ada_arg name="Flags" io="in" type="uint_t"/>
+			<ada_arg name="Read_Fd" io="out" type="fd_t" from="T(0)"/>
+			<ada_arg name="Write_Fd" io="out" type="fd_t" from="T(1)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="T" type="fd_array(0..1)" init="(0,0)"/>
+		</func>
 	</section2>
 </entities>
