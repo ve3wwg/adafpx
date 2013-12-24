@@ -117,3 +117,87 @@ package body Posix is
    end Neg_PID;
 
    pragma Inline(Neg_PID);
+
+   function Argv_Length(Argvs: String) return Natural is
+      Count : Natural := 0;   
+   begin
+      for X in Argvs'Range loop
+         if Character'Pos(Argvs(x)) = 0 then
+            Count := Count + 1;
+         end if;
+      end loop;
+      return Count + 1;
+   end Argv_Length;
+
+   function Argv_Length(Argv: argv_array) return Natural is
+      use System;
+   begin
+      for X in Argv'Range loop
+         if Argv(X) = System.Null_Address then
+            return X - Argv'First;
+         end if;
+      end loop;
+      return Argv'Length;
+   end Argv_Length;
+
+   procedure Find_Nul(S: String; X: out Natural; Found: out Boolean) is
+   begin
+      for Y in S'Range loop
+         if Character'Pos(S(Y)) = 0 then
+            X := Y;
+            Found := True;
+         end if;
+      end loop;
+      X := S'Last;
+      Found := False;
+   end Find_Nul;
+
+   function To_Argv(Argvs: String) return argv_array is
+      Count : constant Natural := Argv_Length(Argvs);
+      X :     Natural := Argvs'First;
+      Y :     Natural;
+      Found : Boolean;
+   begin
+      declare
+         Argv :  argv_array(0..Count-1);
+         Arg_X : Natural := Argv'First;
+      begin
+         while X <= Argvs'Last loop
+            Find_Nul(Argvs(X..Argv'Last),Y,Found);
+            exit when not Found;
+            Argv(Arg_X) := Argvs(X)'Address;
+            Arg_X       := Arg_X + 1;
+            X           := Y + 1;
+         end loop;
+         Argv(Arg_X) := System.Null_Address;
+         return Argv;
+      end;
+   end To_Argv;
+
+   procedure To_Argv(Argvs: String; Argv: out argv_array) is
+      Count : Natural := Argv_Length(Argvs);
+      Arg_X : Natural := Argv'First;
+      C :     Natural := 0;
+      X :     Natural := Argvs'First;
+      Y :     Natural;
+      Found : Boolean;
+   begin
+      pragma Assert(Argv'Length>1);
+
+      if Count > Argv'Length then
+         Count := Argv'Length - 1;
+      end if;
+
+      while C < Count and X <= Argvs'Last loop
+          Find_Nul(Argvs(X..Argv'Last),Y,Found);
+          exit when not Found;
+          Argv(Arg_X) := Argvs(X)'Address;
+          Arg_X       := Arg_X + 1;
+          X           := Y + 1;
+          C           := C + 1;
+      end loop;
+
+      Argv(Arg_X) := System.Null_Address;
+
+   end To_Argv;
+
