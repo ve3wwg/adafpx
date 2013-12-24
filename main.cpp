@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <istream>
+#include <sstream>
 
 int
 main(int argc,char **argv) {
@@ -45,12 +46,20 @@ main(int argc,char **argv) {
 
 	system("rm -fr ./staging");
 	mkdir("./staging",0777);
-	system("cp 0005.ads ./staging/.");
-	system("cp 0005.adb ./staging/.");
-	system("cp 0060.ads ./staging/.");
-	system("cp 8000.ads ./staging/.");
-	system("cp 9999.ads ./staging/.");
-	system("cp 9999.adb ./staging/.");
+
+	//////////////////////////////////////////////////////////////
+	// Copy out canned portions of code to staging directory
+	//////////////////////////////////////////////////////////////
+	{
+		for ( auto it=config.copies.begin(); it != config.copies.end(); ++it ) {
+			const std::string filename = *it;
+			std::stringstream ss;
+
+			ss << "cp " << filename << " ./staging/.";
+			const std::string cmd = ss.str();
+			system(cmd.c_str());
+		}
+	}
 
 	comp_macros();
 	comp_types();
