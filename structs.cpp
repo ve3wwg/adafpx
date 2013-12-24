@@ -140,12 +140,14 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	for ( auto it=node2.list.begin(); it != node2.list.end(); ++it ) {
 		s_node& node = Get(*it);
 		std::string member;
+		unsigned ptr = 0;
 		bool struct_member = node.type == Struct;
 		bool array_ref = false;
 
 		switch ( node.type ) {
 		case Ident :
 			member = lex_revsym(node.symbol);
+			ptr = node.ptr;
 			break;
 		case ArrayRef :
 			{
@@ -161,6 +163,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				assert(nnode.type == Ident);
 				member = lex_revsym(nnode.symbol);
 				typemap[member] = lex_revsym(node.symbol);
+				ptr = node.ptr;
 			}
 			break;
 		case Type :
@@ -180,6 +183,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				switch ( nnode.type ) {
 				case Ident :
 					member = lex_revsym(nnode.symbol);
+					ptr = node.ptr;
 					break;
 				case ArrayRef :
 					{
@@ -210,15 +214,16 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		}
 
 		if ( !array_ref ) {
-			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|0\\n\",\n"
+			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|0|"
+				<< ptr
+				<< "\\n\",\n"
 				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
 				<< "\t\toffsetof(" << member << "),\n";
-	
 			if ( !struct_member )
 				c << "\t\ttest_struct." << member << " <= 0 ? 1 : 0);\n";
 			else	c << "\t\t0);\n";
 		} else	{
-			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|%u\\n\",\n"
+			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|%u|0\\n\",\n"
 				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
 				<< "\t\toffsetof(" << member << "),\n";
 	
@@ -254,6 +259,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			mem.moffset = stoul(fields[3]);
 			mem.msigned = bool(stoi(fields[4]));
 			mem.array = stoi(fields[5]);
+			mem.ptr = stoi(fields[6]);
 
 			auto it = typemap.find(mem.name);
 			if ( it != typemap.end() )
@@ -298,8 +304,12 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				if ( use_preferred_type(member.msize,!member.msigned,pref_type) )
 					ada_type = pref_type;
 			}
-			if ( ada_type == "" )
-				ada_type = std_type(member.msize,member.msigned,member.array);
+			if ( !member.ptr ) {
+				if ( ada_type == "" )
+					ada_type = std_type(member.msize,member.msigned,member.array);
+			} else	{
+				ada_type = "System.Address";
+			}
 
 			ads << ada_type;
 		} else	{
