@@ -5,6 +5,7 @@
 		<copy name="0060.ads"/>
 		<copy name="0600.ads"/>
 		<copy name="8000.ads"/>
+		<copy name="9900.ads"/>
 		<copy name="9999.ads"/>
 		<copy name="9999.adb"/>
 	</copies>
