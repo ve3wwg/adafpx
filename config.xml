@@ -1,4 +1,13 @@
 <entities>
+	<copies>
+		<copy name="0005.ads"/>
+		<copy name="0005.adb"/>
+		<copy name="0060.ads"/>
+		<copy name="0600.ads"/>
+		<copy name="8000.ads"/>
+		<copy name="9999.ads"/>
+		<copy name="9999.adb"/>
+	</copies>
 	<builtin_types>
 		<builtin type="__builtin_va_list" os="Darwin *"/>
 	</builtin_types>
@@ -456,14 +465,6 @@
 				<member name="tm_year" pref="int_t"/>
 			</members>
 		</struct>
-		<struct name="iovec" ada="s_iovec" genset="490">
-			<includes>
-				<include file="sys/types.h"/>
-				<include file="sys/uio.h"/>
-				<include file="unistd.h"/>
-				<include file="utime.h"/>
-			</includes>
-		</struct>
 		<struct name="utimbuf" ada="s_utimbuf" genset="500">
 			<includes>
 				<include file="sys/types.h"/>
@@ -495,6 +496,16 @@
 			<includes>
 				<include file="sys/utsname.h"/>
 			</includes>
+		</struct>
+		<struct name="iovec" ada="s_iovec" genset="540">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<members>
+				<member name="iov_len" pref="size_t"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -578,6 +589,20 @@
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
+		<func name="pwrite" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PWrite" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Buffer(Buffer'First)'Address"/>
+			<c_arg name="count" type="size_t" from="Buffer'Length"/>
+			<c_arg name="offset" type="off_t" from="Offset"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Buffer" io="in" type="uchar_array"/>
+			<ada_arg name="Offset" io="in" type="off_t"/>
+			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
 		<func name="read" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Read" inline="1">
 			<includes>
 				<include file="unistd.h"/>
@@ -587,6 +612,20 @@
 			<c_arg name="count" type="size_t" from="Buffer'Length"/>
 			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Buffer" io="out" type="uchar_array" from="implied"/>
+			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="pread" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PRead" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Buffer(Buffer'First)'Address"/>
+			<c_arg name="count" type="size_t" from="Buffer'Length"/>
+			<c_arg name="offset" type="off_t" from="Offset"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Buffer" io="out" type="uchar_array" from="implied"/>
+			<ada_arg name="Offset" io="in" type="off_t"/>
 			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
@@ -1138,6 +1177,34 @@
 			<cases name="Cmd">
 				<case name="F_FULLFSYNC"/>
 			</cases>
+		</func>
+		<func name="readv" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readv" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="IOV" type="System.Address" from="IOV(IOV'First)'Address"/>
+			<c_arg name="Count" type="int_t" from="IOV'Length"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="IOV" io="in" type="s_iovec_array"/>
+			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="writev" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Writev" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/uio.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="Fd" type="fd_t" from="Fd"/>
+			<c_arg name="IOV" type="System.Address" from="IOV(IOV'First)'Address"/>
+			<c_arg name="Count" type="int_t" from="IOV'Length"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="IOV" io="in" type="s_iovec_array"/>
+			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
 	</section2>
 </entities>
