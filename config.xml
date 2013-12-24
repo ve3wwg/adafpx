@@ -1157,7 +1157,7 @@
                         <c_arg name="Arg" type="System.Address" from="Arg'Address"/>
 			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
-			<ada_arg name="Arg" io="in out" type="s_log2phys"/>
+			<ada_arg name="Arg" io="in out" type="s_log2phys" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<cases name="Cmd">
 				<case name="F_LOG2PHYS"/>
@@ -1205,6 +1205,35 @@
 			<ada_arg name="IOV" io="in" type="s_iovec_array"/>
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+		</func>
+		<func name="wait3" return="pid_t" ada_type="procedure" rname="R" ada_name="Wait3" inline="1">
+			<includes>
+				<include file="sys/wait.h"/>
+			</includes>
+			<c_arg name="stat_loc" type="System.Address" from="S'Address"/>
+			<c_arg name="options" type="uint_t" from="Options"/>
+			<c_arg name="rusage" type="System.Address" from="Rusage'Address"/>
+			<ada_arg name="PID" io="out" type="pid_t" from="R"/>
+			<ada_arg name="Options" io="in" type="uint_t"/>
+			<ada_arg name="Status" io="out" type="int_t" from="S"/>
+			<ada_arg name="Rusage" io="out" type="s_rusage" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="S" type="int_t" init="0"/>
+		</func>
+		<func name="wait4" return="pid_t" ada_type="procedure" rname="R" ada_name="Wait4" inline="1" os="Darwin *">
+			<includes>
+				<include file="sys/wait.h"/>
+			</includes>
+			<c_arg name="pid" type="pid_t" from="PID"/>
+			<c_arg name="stat_loc" type="System.Address" from="S'Address"/>
+			<c_arg name="options" type="uint_t" from="Options"/>
+			<c_arg name="rusage" type="System.Address" from="Rusage'Address"/>
+			<ada_arg name="PID" io="in out" type="pid_t" from="R"/>
+			<ada_arg name="Options" io="in" type="uint_t"/>
+			<ada_arg name="Status" io="out" type="int_t" from="S"/>
+			<ada_arg name="Rusage" io="out" type="s_rusage" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="S" type="int_t" init="0"/>
 		</func>
 	</section2>
 </entities>
