@@ -14,7 +14,8 @@
 struct s_config {
 	std::string				gcc_options;
 
-	std::unordered_set<std::string>		builtins;
+	std::unordered_set<std::string>		copies;		// Files to be copied
+	std::unordered_set<std::string>		builtins;	// Builtin types
 
 	struct s_macro_set {
 		int				genset;
@@ -116,6 +117,7 @@ struct s_config {
 			unsigned		moffset;		// Member offset
 			bool			msigned;		// Member is signed
 			unsigned		array;			// Member is array [n]
+			unsigned		ptr;			// Pointer count
 		};
 		struct s_struct {
 			int			genset;			// Struct genset #

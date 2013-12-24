@@ -62,6 +62,21 @@ loadconfig() {
 	}
 
 	{
+		pugi::xml_node bnode = doc.child("entities").child("copies");
+		for ( auto it=bnode.begin(); it != bnode.end(); ++it ) {
+			pugi::xml_node& builtin = *it;
+			if ( strcmp(builtin.name(),"copy") != 0 )
+				continue;
+			const std::string filename = builtin.attribute("name").value();
+			std::string os   = builtin.attribute("os").value();
+			if ( os == "" )
+				os = "*";
+			if ( match(os,platform) )
+				config.copies.insert(filename);
+		}
+	}
+
+	{
 		pugi::xml_node bnode = doc.child("entities").child("builtin_types");
 		for ( auto it=bnode.begin(); it != bnode.end(); ++it ) {
 			pugi::xml_node& builtin = *it;
