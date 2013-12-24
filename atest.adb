@@ -5,4 +5,5 @@ procedure ATest is
     Error : errno_t;
 begin
     Close(5,Error);
+    pragma Unreferenced(Error);
 end ATest;
