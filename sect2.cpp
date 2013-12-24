@@ -248,7 +248,7 @@ emit_section2() {
 			s_config::s_section2::s_func::s_aarg& arg = *oit;
 
 			if ( arg.from != "implied" ) {
-				if ( arg.io == "out" || arg.io == "inout" ) {
+				if ( arg.io == "out" || arg.io == "in out" ) {
 					adb << "      " << arg.name << " := "
 					    << arg.from << ";\n";
 				}
