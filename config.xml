@@ -1236,5 +1236,53 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="S" type="int_t" init="0"/>
 		</func>
+		<func name="execve" return="int_t" ada_type="procedure" rname="R" ada_name="Execve" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="argv" type="System.Address" from="Argv'Address"/>
+			<c_arg name="envp" type="System.Address" from="Env'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Argv" io="in" type="argv_array"/>
+			<ada_arg name="Env" io="in" type="argv_array"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="stat" return="int_t" ada_type="procedure" rname="R" ada_name="Stat" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="fstat" return="int_t" ada_type="procedure" rname="R" ada_name="FStat" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="lstat" return="int_t" ada_type="procedure" rname="R" ada_name="LStat" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
 	</section2>
 </entities>
