@@ -1,21 +1,3 @@
-proc|entry|Rmdir|rmdir|
-proc|arg|0|Path|String|in|0|Path|*|
-proc|arg|1|Error|errno_t|out|||retval|ER
-
-proc|entry|Pipe|pipe|
-proc|arg|0|Read_Fd|fd_t|out|0|F|*F'Address|
-proc|arg|1|Write_Fd|fd_t|out||||
-proc|arg|2|Error|errno_t|out|||retval|ER
-proc|arg|800|F|int_array(0..1) := ( -1, -1 )|x||||
-proc|arg|900|Read_Fd|int_t|x|||fd_t(F(0))|RV
-proc|arg|901|Write_Fd|int_t|x|||fd_t(F(1))|RV
-
-proc|entry|Times|times|
-proc|arg|0|Buffer|s_tms|out|0|Buffer|*T'Address|
-proc|arg|1|Error|errno_t|out|||retval|ER
-proc|arg|800|T|s_tms|x||||
-proc|arg|900|Buffer|s_tms|x|||T|RV
-
 proc|entry|Signal|signal|
 proc|arg|0|Sig|int_t|in|0|Sig|int_t|
 proc|arg|1|Proc|sigproc_t|in|1|Proc|sigproc_t|

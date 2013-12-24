@@ -78,6 +78,17 @@ package body Posix is
 
    pragma Inline(C_Error);
 
+   function C_Error(Ret_Val: clock_t) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val >= 0 then
+         return 0;
+      else
+         return c_errno;
+      end if;
+   end C_Error;
+
    function C_String(Ada_String: String) return String is
       T : String(Ada_String'First..Ada_String'Last+1);
    begin
@@ -201,3 +212,11 @@ package body Posix is
 
    end To_Argv;
 
+   function To_Clock(Ticks: clock_t) return clock_t is
+   begin
+        if Ticks >= 0 then
+            return Ticks;
+        else
+            return 0;
+        end if;
+   end To_Clock;

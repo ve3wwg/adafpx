@@ -1455,5 +1455,14 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="T" type="fd_array(0..1)" init="(0,0)"/>
 		</func>
+		<func name="times" return="clock_t" ada_type="procedure" rname="R" ada_name="Times" inline="1">
+			<includes>
+				<include file="sys/times.h"/>
+			</includes>
+			<c_arg name="buf" type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Buf" io="out" type="s_tms" from="implied"/>
+                        <ada_arg name="Ticks" io="out" type="clock_t" from="To_Clock(R)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 	</section2>
 </entities>
