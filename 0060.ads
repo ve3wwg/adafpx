@@ -3,4 +3,5 @@
     type fcntl_t is new int_t;
     type whence_t is new int_t;
     type mntflags_t is new int_t;
-    type amode_t is new short_t;
+    type amode_t is new uint_t;
+    type ptrace_t is new int_t;
