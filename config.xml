@@ -1121,7 +1121,7 @@
 				<case name="F_SETNOSIGPIPE"/>                            
 			</cases>
 		</func>
-		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl_Get" inline="1" os="Darwin *">
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl2" inline="1" os="Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
@@ -1463,6 +1463,26 @@
 			<ada_arg name="Buf" io="out" type="s_tms" from="implied"/>
                         <ada_arg name="Ticks" io="out" type="clock_t" from="To_Clock(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="signal" return="sig_t" ada_type="procedure" rname="R" ada_name="Signal" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg name="sig" type="sig_t" from="Sig"/>
+			<c_arg name="func" type="sigproc_t" from="Handler"/>
+			<ada_arg name="Sig" io="in" type="sig_t"/>
+                        <ada_arg name="Handler" io="in" type="sigproc_t"/>
+			<ada_arg name="Prior_Action" io="out" type="sig_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="acct" return="int_t" ada_type="procedure" rname="R" ada_name="Acct">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="file" type="System.Address" from="P'Address"/>
+			<ada_arg name="File" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(File)"/>
 		</func>
 	</section2>
 </entities>
