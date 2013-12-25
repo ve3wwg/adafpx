@@ -835,6 +835,9 @@ function_specifier
 	: INLINE {
 		$$ = 0;
 	}
+	| INLINE attribute_clause_list {
+		$$ = 0;
+	}
 	;
 
 declarator
