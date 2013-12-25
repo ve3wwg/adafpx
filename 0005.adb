@@ -82,10 +82,23 @@ package body Posix is
       function c_errno return errno_t;
       pragma Import(C,c_errno,"c_errno");
    begin
-      if Ret_Val >= 0 then
-         return 0;
-      else
+      pragma Warnings(Off,"condition is always False");
+      if Ret_Val < 0 or  else Ret_Val = clock_t'Last then
          return c_errno;
+      else
+         return 0;
+      end if;
+      pragma Warnings(On,"condition is always False");
+   end C_Error;
+
+   function C_Error(Ret_Val: sig_t) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val = SIG_ERR then
+         return c_errno;
+      else
+         return 0;
       end if;
    end C_Error;
 
@@ -214,9 +227,12 @@ package body Posix is
 
    function To_Clock(Ticks: clock_t) return clock_t is
    begin
-        if Ticks >= 0 then
-            return Ticks;
-        else
+        pragma Warnings(Off,"condition is always False");
+        if Ticks < 0 or else Ticks = clock_t'Last then
             return 0;
+        else
+            return Ticks;
         end if;
+        pragma Warnings(On,"condition is always False");
    end To_Clock;
+
