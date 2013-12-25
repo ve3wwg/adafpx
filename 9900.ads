@@ -8,6 +8,7 @@ private
    function C_Error(Ret_Val: ssize_t) return errno_t;
    function C_Error(PID: pid_t) return errno_t;
    function C_Error(Ret_Val: sig_t) return errno_t;
+   function C_Error(Ret_Val: mode_t) return errno_t;
    function Pos_PID(Status: int_t) return pid_t;
    function Neg_PID(Status: int_t) return pid_t;
    function To_Clock(Ticks: clock_t) return clock_t;

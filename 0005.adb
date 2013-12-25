@@ -102,6 +102,19 @@ package body Posix is
       end if;
    end C_Error;
 
+   function C_Error(Ret_Val: mode_t) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      pragma Warnings(Off);
+      if Ret_Val < 0 or else Ret_Val = mode_t'Last then
+         return c_errno;
+      else
+         return 0;
+      end if;
+      pragma Warnings(On);
+   end C_Error;
+
    function C_String(Ada_String: String) return String is
       T : String(Ada_String'First..Ada_String'Last+1);
    begin

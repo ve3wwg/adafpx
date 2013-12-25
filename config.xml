@@ -33,6 +33,7 @@
 			<include file="sys/ptrace.h"/>
 			<include file="sys/param.h"/>
 			<include file="signal.h"/>
+			<include file="sys/resource.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -50,6 +51,8 @@
 		<type name="clock_t"/>
 		<type name="ino64_t" os="Darwin 12.*.*"/>
 		<type name="ino64_t" os="Darwin 13.*.*"/>
+		<type name="sigset_t"/>
+		<type name="rlim_t"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -378,6 +381,27 @@
                         <macro name="O_NOATIME"/>
                         <macro name="O_NONBLOCK"/>
 		</set>
+		<set type="rlimkind_t" genset="240" format="16#%08X#">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<macro name="RLIMIT_CORE"/>
+			<macro name="RLIMIT_CPU"/>
+			<macro name="RLIMIT_DATA"/>
+			<macro name="RLIMIT_FSIZE"/>
+			<macro name="RLIMIT_MEMLOCK"/>
+			<macro name="RLIMIT_NOFILE"/>
+			<macro name="RLIMIT_NPROC"/>
+			<macro name="RLIMIT_RSS"/>
+			<macro name="RLIMIT_STACK"/>
+		</set>
+		<set type="rwho_t" genset="250" format="%d">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<macro name="RUSAGE_SELF"/>
+			<macro name="RUSAGE_CHILDREN"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" ada="s_timespec" genset="400">
@@ -392,11 +416,16 @@
 		</struct>
 		<struct name="timeval" ada="s_timeval" genset="410">
 			<includes>
-				<include file="sys/resource.h"/>
+				<include file="sys/time.h"/>
 			</includes>
 			<members>
 				<member name="tv_sec" pref="time_t"/>
 			</members>
+		</struct>
+		<struct name="timezone" ada="s_timezone" genset="415">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
 		</struct>
 		<struct name="rusage" ada="s_rusage" genset="420">
 			<includes>
@@ -510,6 +539,15 @@
 			</includes>
 			<members>
 				<member name="iov_len" pref="size_t"/>
+			</members>
+		</struct>
+		<struct name="rlimit" ada="s_rlimit" genset="550">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<members>
+				<member name="rlim_cur" pref="rlim_t"/>
+				<member name="rlim_max" pref="rlim_t"/>
 			</members>
 		</struct>
 	</structs>
@@ -1484,5 +1522,129 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(File)"/>
 		</func>
+		<func name="umask" return="mode_t" ada_type="procedure" rname="R" ada_name="UMask">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="cmask" type="mode_t" from="CMask"/>
+			<ada_arg name="CMask" io="in" type="mode_t"/>
+			<ada_arg name="OMask" io="out" type="mode_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="chroot" return="int_t" ada_type="procedure" rname="R" ada_name="Chroot">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="dirname" type="System.Address" from="P'Address"/>
+			<ada_arg name="Dirname" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Dirname)"/>
+		</func>
+		<func name="setsid" return="pid_t" ada_type="procedure" rname="R" ada_name="Setsid">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<ada_arg name="PID" io="out" type="pid_t" from="R"/>
+		</func>
+		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="sigmask" type="System.Address" from="Sigmask'Address"/>
+			<ada_arg name="Sigmask" io="in" type="sigset_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set" type="System.Address" from="Set'Address"/>
+			<ada_arg name="Set" io="out" type="sigset_t" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="gethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Gethostname">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="name" type="System.Address" from="Name'Address"/>
+			<c_arg   name="namelen" type="int_t" from="Name'Length"/>
+			<ada_arg name="Name" io="out" type="String" from="implied"/>
+                        <ada_arg name="Last" io="out" type="Natural" from="C_Last(Name)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Sethostname">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="name" type="System.Address" from="Name'Address"/>
+			<c_arg   name="namelen" type="int_t" from="Name'Length"/>
+			<ada_arg name="Name" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Getrlimit">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<c_arg   name="resource" type="rlimkind_t" from="Resource"/>
+			<c_arg   name="rlp" type="System.Address" from="Rlimit'Address"/>
+			<ada_arg name="Resource" io="in" type="rlimkind_t"/>
+			<ada_arg name="Rlimit" io="out" type="s_rlimit" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="setrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Setrlimit">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<c_arg   name="resource" type="rlimkind_t" from="Resource"/>
+			<c_arg   name="rlp" type="System.Address" from="Rlimit'Address"/>
+			<ada_arg name="Resource" io="in" type="rlimkind_t"/>
+			<ada_arg name="Rlimit" io="in" type="s_rlimit"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getrusage" return="int_t" ada_type="procedure" rname="R" ada_name="Getrusage">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<c_arg   name="who" type="rwho_t" from="Who"/>
+			<c_arg   name="r_usage" type="System.Address" from="R_Usage'Address"/>
+			<ada_arg name="Who" io="in" type="rwho_t"/>
+			<ada_arg name="R_Usage" io="out" type="s_rusage" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg   name="tp" type="System.Address" from="Time'Address"/>
+			<c_arg   name="tzp" type="System.Address" from="Time_Zone'Address"/>
+			<ada_arg name="Time" io="out" type="s_timeval" from="implied"/>
+			<ada_arg name="Time_Zone" io="out" type="s_timezone" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg   name="tp" type="System.Address" from="Time'Address"/>
+			<c_arg   name="tzp" type="System.Address" from="Time_Zone'Address"/>
+			<ada_arg name="Time" io="in" type="s_timeval"/>
+			<ada_arg name="Time_Zone" io="in" type="s_timezone"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg   name="tp" type="System.Address" from="Time'Address"/>
+			<c_arg   name="tzp" type="System.Address" from="System.Null_Address"/>
+			<ada_arg name="Time" io="in" type="s_timeval"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+
+		<!-- Outstanding functions:
+			sigaction
+		-->
+
 	</section2>
 </entities>
