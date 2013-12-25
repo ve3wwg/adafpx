@@ -14,7 +14,7 @@ include Makefile.incl
 #	$(FLEX) -d --outfile=$*.cpp $<
 
 .cpp.o:
-	$(CXX) -c -Wall $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
+	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
 
 all:	main run atest
 

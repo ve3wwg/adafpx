@@ -37,7 +37,6 @@ static void dump(int lval,const char *desc);
 
 static int Node(s_node& node);
 s_node& Get(int nno);
-static int Append(s_node& node,int nodeno);
 
 std::string yytarget;
 int yytarget_struct = 0;
@@ -1175,23 +1174,6 @@ Get(int nno) {
 	auto it = nodemap.find(nno);
 	assert(it != nodemap.end());
 	return it->second;
-}
-
-static int
-Append(int tonode,int nodeno) {
-
-	assert(tonode > 0);
-
-	for (;;) {
-		s_node& node = Get(tonode);
-		if ( node.next == 0 ) {
-			node.next = nodeno;
-			break;
-		}
-		tonode = node.next;
-	}
-
-	return tonode;			// Returns node that it was added to
 }
 
 std::string
