@@ -46,6 +46,7 @@ struct s_node {
 
 extern std::string yytarget;
 extern int yytarget_struct;
+extern int yacc_dump;
 
 unsigned lex_lineno();
 int lex_token();

@@ -18,6 +18,7 @@
 #include "config.hpp"
 
 std::fstream lexstr;
+std::string source_file;		// Current C file being parsed
 
 static bool end_of_line = false;
 static unsigned lno = 1;
@@ -57,15 +58,18 @@ comp_input() {
 	if ( end_of_line ) {
 		++lno;
 		end_of_line = false;
-std::cerr << "Line # " << lno << "\n";
+		if ( yacc_dump )
+			std::cerr << "Line # " << lno << "\n";
 	}
 
 	if ( !lexstr.is_open() ) {
-std::cerr << "  returned EOF(1);\n";		
+		if ( yacc_dump )
+			std::cerr << "  returned EOF(1);\n";		
 		return EOF;
 	} else if ( !lexstr.good() ) {
 		lexstr.close();
-std::cerr << "  returned EOF(2);\n";		
+		if ( yacc_dump )
+			std::cerr << "  returned EOF(2);\n";		
 		return EOF;
 	}
 
@@ -78,6 +82,7 @@ std::cerr << "  returned EOF(2);\n";
 
 bool
 lex_open(int genset,const std::string& suffix) {
+	
 	comp_input_reset();
 	return gcc_open(lexstr,genset,suffix);
 }
@@ -95,6 +100,8 @@ gcc_open(std::fstream& fs,int genset,const std::string& suffix) {
 		path = s.str();
 	}
 	
+	source_file = path;
+
 	fs.open(path.c_str(),std::fstream::out);
 	if ( fs.fail() ) {
 		std::cerr << strerror(errno) << ": opening " << path << " for write.\n";
@@ -205,7 +212,8 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 		return false;
 	}
 
-std::cerr << "PARSING: " << outpath << "\n";
+	if ( yacc_dump )
+		std::cerr << "PARSING: " << outpath << "\n";
 	return true;
 }
 

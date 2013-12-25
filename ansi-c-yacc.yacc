@@ -30,6 +30,7 @@
 static void yyerror(char const *s);
 
 unsigned lex_lineno();
+int yacc_dump = 0;
 
 static const char *to_string(e_ntype type);
 static void dump(s_node& node,const char *desc=0,int level=0);
@@ -579,7 +580,6 @@ storage_class_specifier
 		node.type = Typedef;
 		$$ = Node(node);
 		dump($$,"storage_class_specifier");
-std::cerr << "Storage_Class_Specifier $$ = " << $$ << " node.type = " << Get($$).type << "\n";
 	}
 	| EXTERN {
 		$$ = 0;
@@ -1145,10 +1145,12 @@ declaration_list
 extern char yytext[];
 extern int column;
 
+extern std::string source_file;
+
 void
 yyerror(char const *s) {
 
-	std::cerr << "Error in line " << lex_lineno() << ": " << s << "\n";
+	std::cerr << source_file << ":" << lex_lineno() << ": " << s << "\n";
 	exit(13);
 }
 
@@ -1186,6 +1188,10 @@ indent(int level) {
 
 static void
 dump(int lval,const char *desc) {
+
+	if ( !yacc_dump )
+		return;
+
 	if ( lval <= 0 ) {
 		std::cerr << "DUMP of node (" << (desc ? desc : "") << "):  null ("
 			<< lval << ");\n";
@@ -1198,6 +1204,9 @@ dump(int lval,const char *desc) {
 
 static void
 dump(s_node& node,const char *desc,int level) {
+
+	if ( !yacc_dump )
+		return;
 
 	if ( desc )
 		std::cerr << indent(level) << "DUMP of node (" << desc << "):\n";

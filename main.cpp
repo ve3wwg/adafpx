@@ -23,24 +23,79 @@
 #include <istream>
 #include <sstream>
 
+extern char *optarg;
+extern int optind;
+extern int optopt;
+extern int opterr;
+extern int optreset;
+
+static void
+usage(const char *cmd) {
+	std::cout
+		<< "Usage: " << cmd << "[-d] [-g opt] [-Ddefine] [-I path] [-p] [-h]\n"
+		<< "where:\n"
+		<< "  -d            Enables lexical/yacc debug output\n"
+		<< "  -y            Enable dump of yacc nodes\n"
+		<< "  -g opt        Pass 'opt' to gcc\n"
+		<< "  -D define     gcc macro declare option\n"
+		<< "  -I path       gcc include path\n"
+		<< "  -p            Just show platform details and exit\n"
+		<< "  -h            This help info and exit.\n";
+}
+
 int
 main(int argc,char **argv) {
+	std::stringstream opt_gcc;
 	std::string platform, version, machine;
+	bool opt_show_platform = false;
 	int ltoken;
+	char optch;
 	extern int yydebug;
 
-	if ( argc > 1 )
-		yydebug = 1;
+	config.debug = false;
 
-	config.gcc_options += "-D__USE_GNU";
+	while ( (optch = getopt(argc,argv,"dyI:D:g:ph")) != -1) {
+		switch ( optch ) {
+		case 'd' :
+			yydebug = 1;
+			config.debug = true;
+			break;
+		case 'y' :
+			yacc_dump = 1;
+			break;
+		case 'g' :
+			opt_gcc << optarg << " ";
+			break;
+		case 'D' :
+			opt_gcc << "-D" << optarg << " ";
+			break;
+		case 'I' :
+			opt_gcc << "-I" << optarg << " ";
+			break;
+		case 'p' :
+			opt_show_platform = true;
+			break;
+		case 'h' :
+		default:
+			usage(argv[0]);
+			exit(optch == 'h' ? 0 : 1);
+		}
+        }
+
+        config.gcc_options = opt_gcc.str();
 
 	platform = uts_platform();
 	version = uts_version();
 	machine = uts_machine();
 
-	std::cout << "Platform: " << platform << "\n"
-		<< "Machine:  " << machine << "\n"
-		<< "Version:  " << version << "\n";
+	std::cout
+		<< "Platform:    " << platform << "\n"
+		<< "Machine:     " << machine << "\n"
+		<< "Version:     " << version << "\n"
+		<< "gcc options: " << config.gcc_options << "\n";
+
+	if ( opt_show_platform )
+		exit(0);
 
 	loadconfig();
 

@@ -49,6 +49,7 @@ static int reg_sym(const char *text);
 static int ident_type(int symid);
 
 extern unsigned lex_lineno();
+extern int yacc_dump;
 
 static int structunion = 0;
 
@@ -248,18 +249,21 @@ ident_type(int symid) {
 
 	auto it = types.find(symid);
 	if ( it != types.end() ) {
-std::cerr << "RETURN TYPE_NAME for '" << revsym[symid] << "'\n";
+		if ( yacc_dump )
+			std::cerr << "RETURN TYPE_NAME for '" << revsym[symid] << "'\n";
 		return TYPE_NAME;
 	}
 
-std::cerr << "RETURN IDENTIFIER for '" << revsym[symid] << "'\n";
+	if ( yacc_dump )
+		std::cerr << "RETURN IDENTIFIER for '" << revsym[symid] << "'\n";
 	return IDENTIFIER;
 }
 
 void
 register_type(int symid) {
 	types.insert(symid);
-std::cerr << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
+	if ( yacc_dump )
+		std::cerr << "*** Type " << symid << " registered with lexer (" << revsym[symid] << ") ***\n";
 }
 
 void

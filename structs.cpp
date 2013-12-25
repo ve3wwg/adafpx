@@ -98,7 +98,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	yytarget_struct = 0;
 	yyparse();
 
-	std::cerr << "GOT STRUCT '" << yytarget << "' ID := " << yytarget_struct << "\n";
+	if ( yacc_dump )
+		std::cerr << "GOT STRUCT '" << yytarget << "' ID := " << yytarget_struct << "\n";
 
 	if ( yytarget_struct <= 0 ) {
 		std::cerr << "struct " << yytarget << " is unknown? (Genset " << genset << ")\n";
