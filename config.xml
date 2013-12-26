@@ -402,6 +402,12 @@
 			<macro name="RUSAGE_SELF"/>
 			<macro name="RUSAGE_CHILDREN"/>
 		</set>
+		<set type="" genset="260" format="%d">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<macro name="NGROUPS_MAX"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" ada="s_timespec" genset="400">
@@ -1513,7 +1519,7 @@
 			<ada_arg name="Prior_Action" io="out" type="sig_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="acct" return="int_t" ada_type="procedure" rname="R" ada_name="Acct">
+		<func name="acct" return="int_t" ada_type="procedure" rname="R" ada_name="Acct" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1522,7 +1528,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(File)"/>
 		</func>
-		<func name="umask" return="mode_t" ada_type="procedure" rname="R" ada_name="UMask">
+		<func name="umask" return="mode_t" ada_type="procedure" rname="R" ada_name="UMask" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/stat.h"/>
@@ -1532,7 +1538,7 @@
 			<ada_arg name="OMask" io="out" type="mode_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="chroot" return="int_t" ada_type="procedure" rname="R" ada_name="Chroot">
+		<func name="chroot" return="int_t" ada_type="procedure" rname="R" ada_name="Chroot" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1541,13 +1547,13 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Dirname)"/>
 		</func>
-		<func name="setsid" return="pid_t" ada_type="procedure" rname="R" ada_name="Setsid">
+		<func name="setsid" return="pid_t" ada_type="procedure" rname="R" ada_name="Setsid" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
 			<ada_arg name="PID" io="out" type="pid_t" from="R"/>
 		</func>
-		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend">
+		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -1555,7 +1561,7 @@
 			<ada_arg name="Sigmask" io="in" type="sigset_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending">
+		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -1563,7 +1569,7 @@
 			<ada_arg name="Set" io="out" type="sigset_t" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="gethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Gethostname">
+		<func name="gethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Gethostname" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1573,7 +1579,7 @@
                         <ada_arg name="Last" io="out" type="Natural" from="C_Last(Name)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="sethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Sethostname">
+		<func name="sethostname" return="int_t" ada_type="procedure" rname="R" ada_name="Sethostname" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1582,7 +1588,7 @@
 			<ada_arg name="Name" io="in" type="String"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Getrlimit">
+		<func name="getrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Getrlimit" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -1592,7 +1598,7 @@
 			<ada_arg name="Rlimit" io="out" type="s_rlimit" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Setrlimit">
+		<func name="setrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Setrlimit" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -1602,7 +1608,7 @@
 			<ada_arg name="Rlimit" io="in" type="s_rlimit"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getrusage" return="int_t" ada_type="procedure" rname="R" ada_name="Getrusage">
+		<func name="getrusage" return="int_t" ada_type="procedure" rname="R" ada_name="Getrusage" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -1612,7 +1618,7 @@
 			<ada_arg name="R_Usage" io="out" type="s_rusage" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday">
+		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
@@ -1622,7 +1628,7 @@
 			<ada_arg name="Time_Zone" io="out" type="s_timezone" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday">
+		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
@@ -1632,7 +1638,7 @@
 			<ada_arg name="Time_Zone" io="in" type="s_timezone"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday">
+		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
@@ -1641,9 +1647,29 @@
 			<ada_arg name="Time" io="in" type="s_timeval"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-
+		<func name="getgroups" return="int_t" ada_type="procedure" rname="R" ada_name="Getgroups" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="gidsetsize" type="int_t" from="Grouplist'Length"/>
+			<c_arg   name="grouplist" type="System.Address" from="Grouplist'Address"/>
+			<ada_arg name="Grouplist" io="out" type="gid_array" from="implied"/>
+			<ada_arg name="Count" io="out" type="Natural" from="To_Count(R)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="setgroups" return="int_t" ada_type="procedure" rname="R" ada_name="Setgroups" inline="1">
+			<includes>
+				<include file="sys/param.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="ngroups" type="int_t" from="Grouplist'Length"/>
+			<c_arg   name="grouplist" type="System.Address" from="Grouplist'Address"/>
+			<ada_arg name="Grouplist" io="in" type="gid_array"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<!-- Outstanding functions:
 			sigaction
+			initgroups
 		-->
 
 	</section2>
