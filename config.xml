@@ -664,6 +664,19 @@
 			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
+		<func name="readlink" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readlink" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="buf" type="System.Address" from="Buffer'Address"/>
+			<c_arg name="bufsiz" type="size_t" from="Buffer'Length"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Buffer" io="out" type="String" from="implied"/>
+			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
 		<func name="pread" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PRead" inline="1">
 			<includes>
 				<include file="unistd.h"/>
@@ -1667,9 +1680,22 @@
 			<ada_arg name="Grouplist" io="in" type="gid_array"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="symlink" return="int_t" ada_type="procedure" rname="R" ada_name="Symlink" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="path1" type="System.Address" from="P1'Address"/>
+			<c_arg   name="path2" type="System.Address" from="P2'Address"/>
+			<ada_arg name="Path1" io="in" type="String"/>
+			<ada_arg name="Path2" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P1" type="String" init="C_String(Path1)"/>
+			<temp name="P2" type="String" init="C_String(Path2)"/>
+		</func>
 		<!-- Outstanding functions:
 			sigaction
 			initgroups
+			select
 		-->
 
 	</section2>
