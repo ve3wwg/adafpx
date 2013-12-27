@@ -512,6 +512,55 @@
 			<macro name="PRIO_PGRP"/>
 			<macro name="PRIO_USER"/>
 		</set>
+		<set genset="295" format="16#%08X#">
+			<includes>
+				<include file="sys/vfs.h"/>
+			</includes>
+			<macro name="ADFS_SUPER_MAGIC"/>
+			<macro name="AFFS_SUPER_MAGIC"/>
+			<macro name="BEFS_SUPER_MAGIC"/>
+			<macro name="BFS_MAGIC"/>
+			<macro name="CIFS_MAGIC_NUMBER"/>
+			<macro name="CODA_SUPER_MAGIC"/>
+			<macro name="COH_SUPER_MAGIC"/>
+			<macro name="CRAMFS_MAGIC"/>
+			<macro name="DEVFS_SUPER_MAGIC"/>
+			<macro name="EFS_SUPER_MAGIC"/>
+			<macro name="EXT_SUPER_MAGIC"/>
+			<macro name="EXT2_OLD_SUPER_MAGIC"/>
+			<macro name="EXT2_SUPER_MAGIC"/>
+			<macro name="EXT3_SUPER_MAGIC"/>
+			<macro name="HFS_SUPER_MAGIC"/>
+			<macro name="HPFS_SUPER_MAGIC"/>
+			<macro name="HUGETLBFS_MAGIC"/>
+			<macro name="ISOFS_SUPER_MAGIC"/>
+			<macro name="JFFS2_SUPER_MAGIC"/>
+			<macro name="JFS_SUPER_MAGIC"/>
+			<macro name="MINIX_SUPER_MAGIC"/>
+			<macro name="MINIX_SUPER_MAGIC2"/>
+			<macro name="MINIX2_SUPER_MAGIC"/>
+			<macro name="MINIX2_SUPER_MAGIC2"/>
+			<macro name="MSDOS_SUPER_MAGIC"/>
+			<macro name="NCP_SUPER_MAGIC"/>
+			<macro name="NFS_SUPER_MAGIC"/>
+			<macro name="NTFS_SB_MAGIC"/>
+			<macro name="OPENPROM_SUPER_MAGIC"/>
+			<macro name="PROC_SUPER_MAGIC"/>
+			<macro name="QNX4_SUPER_MAGIC"/>
+			<macro name="REISERFS_SUPER_MAGIC"/>
+			<macro name="ROMFS_MAGIC"/>
+			<macro name="SMB_SUPER_MAGIC"/>
+			<macro name="SYSV2_SUPER_MAGIC"/>
+			<macro name="SYSV4_SUPER_MAGIC"/>
+			<macro name="TMPFS_MAGIC"/>
+			<macro name="UDF_SUPER_MAGIC"/>
+			<macro name="UFS_MAGIC"/>
+			<macro name="USBDEVICE_SUPER_MAGIC"/>
+			<macro name="VXFS_SUPER_MAGIC"/>
+			<macro name="XENIX_SUPER_MAGIC"/>
+			<macro name="XFS_SUPER_MAGIC"/>
+			<macro name="_XIAFS_SUPER_MAGIC"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -670,6 +719,19 @@
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
 			</includes>
+		</struct>
+		<struct name="__fsid_t" ada="fsid_t" genset="581">
+			<includes>
+				<include file="sys/vfs.h"/>
+			</includes>
+		</struct>
+		<struct name="statfs" ada="s_statfs" genset="582">
+			<includes>
+				<include file="sys/vfs.h"/>
+			</includes>
+			<members>
+				<member name="f_fsid" pref="fsid_t" struct="2"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -1995,6 +2057,27 @@
 			<ada_arg name="Which" io="in" type="int_t"/>
 			<ada_arg name="Who"   io="in" type="id_t"/>
 			<ada_arg name="Prior" io="in" type="int_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="statfs" return="int_t" ada_type="procedure" rname="R" ada_name="Statfs" inline="1">
+			<includes>
+				<include file="sys/vfs.h"/>
+			</includes>
+			<c_arg   name="path"  type="System.Address" from="P'Address"/>
+			<c_arg   name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Path"  io="in" type="String"/>
+			<ada_arg name="Buf"   io="out" type="s_statfs" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="fstatfs" return="int_t" ada_type="procedure" rname="R" ada_name="FStatfs" inline="1">
+			<includes>
+				<include file="sys/vfs.h"/>
+			</includes>
+			<c_arg   name="fd"    type="fd_t" from="Fd"/>
+			<c_arg   name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Fd"    io="in" type="Fd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_statfs" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 
