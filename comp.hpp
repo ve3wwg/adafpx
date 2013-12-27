@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 
 enum e_ntype {
 	None = 0,
@@ -47,6 +48,9 @@ struct s_node {
 extern std::string yytarget;
 extern int yytarget_struct;
 extern int yacc_dump;
+extern std::unordered_map<std::string,int> typedefs;
+
+extern void dump(int lval,const char *desc);
 
 unsigned lex_lineno();
 int lex_token();
