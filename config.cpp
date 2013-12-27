@@ -123,6 +123,11 @@ loadconfig() {
 		if ( nname != "set" )
 			continue;
 
+		const std::string os = snode.attribute("os").value();
+
+		if ( os != "" && !match(os,platform) )
+			continue;
+
 		s_config::s_macro_set mset;
 
 		mset.genset = snode.attribute("genset").as_int();
