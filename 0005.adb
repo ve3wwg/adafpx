@@ -7,6 +7,12 @@
 
 package body Posix is
    
+   function "="(L,R : DIR) return Boolean is
+      use System;
+   begin
+      return System.Address(L) = System.Address(R);
+   end "=";
+
    function C_Last(C_String: String) return Natural is
    begin
       for X in C_String'Range loop
@@ -40,6 +46,17 @@ package body Posix is
    pragma Inline(To_Count);
 
    function C_Error(Ret_Val: int_t) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val >= 0 then
+         return 0;
+      else
+         return c_errno;
+      end if;
+   end C_Error;
+
+   function C_Error(Ret_Val: long_t) return errno_t is
       function c_errno return errno_t;
       pragma Import(C,c_errno,"c_errno");
    begin
@@ -113,6 +130,17 @@ package body Posix is
          return 0;
       end if;
       pragma Warnings(On);
+   end C_Error;
+
+   function C_Error(Ret_Val: DIR) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val /= Null_DIR then
+         return 0;
+      else
+         return c_errno;
+      end if;
    end C_Error;
 
    function C_String(Ada_String: String) return String is
