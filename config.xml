@@ -408,6 +408,21 @@
 			</includes>
 			<macro name="NGROUPS_MAX"/>
 		</set>
+		<set type="" genset="270" format="16#%04X#">
+			<macro name="PROT_NONE" desc="Pages may not be accessed."/>
+			<macro name="PROT_READ" desc="Pages may be read."/>
+			<macro name="PROT_WRITE" desc="Pages may be written."/>
+			<macro name="PROT_EXEC" desc="Pages may be executed."/>
+		</set>
+		<set type="" genset="280" format="16#%04X#">
+                        <macro name="MAP_ANON" desc="Map anonymous memory"/>
+                        <macro name="MAP_FILE" desc="Mapped from a regular file"/>
+                        <macro name="MAP_FIXED" desc="Do not permit the system to select a different address"/>
+                        <macro name="MAP_HASSEMAPHORE" desc="Notify the kernel that the region may contain semaphore"/>
+                        <macro name="MAP_PRIVATE" desc="Modifications are private (copy-on-write)"/>
+                        <macro name="MAP_SHARED" desc="Modifications are shared"/>
+                        <macro name="MAP_NOCACHE" desc="Pages in this mapping are not retained in the kernel's cache"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" ada="s_timespec" genset="400">
@@ -1813,6 +1828,25 @@
 			<ada_arg name="Directory" io="in" type="DIR"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="mmap" return="System.Address" ada_type="procedure" rname="R" ada_name="MMap" inline="1">
+			<includes>
+				<include file="sys/mmap.h"/>
+			</includes>
+			<c_arg   name="addr"  type="System.Address" from="Addr"/>
+			<c_arg   name="len"   type="size_t" from="Len"/>
+			<c_arg	 name="prot"  type="uint_t" from="Prot"/>
+			<c_arg	 name="flags" type="uint_t" from="Flags"/>
+			<c_arg	 name="fd"    type="fd_t"   from="Fd"/>
+			<c_arg	 name="offset" type="off_t" from="Offset"/>
+			<ada_arg name="Addr"  io="in out"  type="System.Address" from="R"/>
+			<ada_arg name="Len"   io="in"  type="size_t"/>
+			<ada_arg name="Prot"  io="in"  type="uint_t"/>
+			<ada_arg name="Flags" io="in"  type="uint_t"/>
+			<ada_arg name="Fd"    io="in"  type="fd_t"/>
+			<ada_arg name="Offset" io="in"  type="off_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+
 		<!-- Outstanding functions:
 			sigaction
 			initgroups

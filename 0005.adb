@@ -143,6 +143,18 @@ package body Posix is
       end if;
    end C_Error;
 
+   function C_Error(Ret_Val: System.Address) return errno_t is
+      use System;
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val /= Null_Address then
+         return 0;
+      else
+         return c_errno;
+      end if;
+   end C_Error;
+
    function C_String(Ada_String: String) return String is
       T : String(Ada_String'First..Ada_String'Last+1);
    begin
