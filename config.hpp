@@ -74,6 +74,7 @@ struct s_config {
 			std::string			returns;	// returns=
 			bool				finline;	// inline=
 			std::vector<std::string>	includes;
+			std::vector<std::string>	use_clauses;
 
 			struct s_carg {
 				std::string		name;		// name=

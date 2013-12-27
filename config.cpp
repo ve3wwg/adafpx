@@ -48,6 +48,30 @@ load_includes(std::vector<std::string>& vec,pugi::xml_node& inode) {
 	}
 }
 
+static void
+load_use_clauses(std::vector<std::string>& vec,pugi::xml_node& inode) {
+	std::unordered_set<std::string> useset;
+	bool load_default = true;
+
+	for ( auto iit = inode.begin(); iit != inode.end(); ++iit ) {		
+		pugi::xml_node & usenode = *iit;
+		std::string os = usenode.attribute("os").value();
+		const std::string use_clause = usenode.attribute("name").value();
+			
+		if ( os == "" )
+			os = "*";
+
+		if ( useset.find(use_clause) != useset.end() )
+			continue;		// Already have this one
+
+		if ( match(os,platform) ) {
+			vec.push_back(use_clause);
+		} else if ( os == "default" && load_default ) {
+			vec.push_back(use_clause);
+		}
+	}
+}
+
 void
 loadconfig() {
 	pugi::xml_document doc;
@@ -267,6 +291,11 @@ loadconfig() {
 			{
 				pugi::xml_node inode = func.child("includes");
 				load_includes(funcent.includes,inode);
+			}
+
+			{
+				pugi::xml_node unode = func.child("use_clauses");
+				load_use_clauses(funcent.use_clauses,unode);
 			}
 
 			unsigned acnt = 0;
