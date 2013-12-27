@@ -116,6 +116,12 @@ emit_section2() {
 
 		adb 	<< "   " << proto.str() << " is\n";
 
+		// Use clauses
+		for ( auto uit=func.use_clauses.begin(); uit != func.use_clauses.end(); ++uit ) {
+			const std::string& use_clause = *uit;
+			adb << "      use " << use_clause << ";\n";
+		}
+
 		// C Function Declaration
 		if ( func.returns != "" )
 			adb << "      function " << binding_name;
