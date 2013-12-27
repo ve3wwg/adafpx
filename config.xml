@@ -1804,7 +1804,15 @@
 			<ada_arg name="Pos" io="in" type="long_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-
+		<func name="closedir" return="int_t" ada_type="procedure" rname="R" ada_name="Closedir" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<c_arg   name="dirp" type="DIR" from="Directory"/>
+			<ada_arg name="Directory" io="in" type="DIR"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<!-- Outstanding functions:
 			sigaction
 			initgroups
