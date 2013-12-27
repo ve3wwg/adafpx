@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 #include <stdio.h>
 #include <assert.h>
@@ -34,10 +35,11 @@ int yacc_dump = 0;
 
 static const char *to_string(e_ntype type);
 static void dump(s_node& node,const char *desc=0,int level=0);
-static void dump(int lval,const char *desc);
 
 static int Node(s_node& node);
 s_node& Get(int nno);
+
+std::unordered_map<std::string,int> typedefs;
 
 std::string yytarget;
 int yytarget_struct = 0;
@@ -428,23 +430,30 @@ declaration
 			dump($$,"attr declaration_specifiers ';'");
 	}
 	| declaration_specifiers init_declarator_list ';' {
+		dump($1,"$1 of declaration_specifiers init_declarator_list ';'");
+		dump($2,"$2 of declaration_specifiers init_declarator_list ';'");
 		if ( $1 ) {
 			s_node& decl = Get($1);
-
-			dump(decl,"declaration_specifiers");
-
 			if ( decl.type == Typedef && $2 != 0 ) {
 				s_node& node = Get($2);
-
-				decl.next = $2;
-				dump(decl,"init_declarator_list");
 
 				for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 					int nid = *it;
 					s_node& tnode = Get(nid);
 					switch ( tnode.type ) {
 					case Ident :
-						register_type(tnode.symbol);
+						{
+							register_type(tnode.symbol);
+							const std::string& new_type = lex_revsym(tnode.symbol);
+							typedefs[new_type] = $1;
+							if ( decl.next ) {
+								s_node& decl_type = Get(decl.next);
+								const std::string& decl_name = lex_revsym(decl_type.symbol);
+								auto fi = typedefs.find(decl_name);
+								if ( fi != typedefs.end() )
+									typedefs[new_type] = fi->second;
+							}
+						}
 						break;
 					case ArrayRef :
 						{
@@ -503,14 +512,25 @@ declaration_specifiers
 
 			node1.next = $2;
 			dump(node1,"storage_class_specifier declaration_specifiers");
+			dump($1,"$1: storage_class_specifier");
+			dump($2,"$2: declaration_specifiers");
+			$$ = $1;
 		}
-		dump($1,"storage_class_specifier");
+		dump($$,"storage_class_specifier");
 	}
 	| type_specifier {
-		$$ = 0;		// Ignore these
+		dump($1,"type_specifier");
+		$$ = $1;
 	}
 	| type_specifier declaration_specifiers {
-		$$ = $2;
+		if ( $1 ) {
+			s_node& node1 = Get($1);
+			node1.next2 = $2;
+			$$ = $1;
+			dump($$,"type_specifier declaration_specifiers");
+		} else	{
+			$$ = $2;
+		}
 		dump($$,"type_specifier declaration_specifiers");
 	}
 	| type_qualifier {
@@ -634,9 +654,8 @@ type_specifier
 	}
 	| struct_or_union_specifier {
 		if ( $1 ) {
-//			s_node& node = Get($1);
 			$$ = $1;
-			dump($$,"struct_or_union_specifier");
+			dump($$,"(((struct_or_union_specifier)))");
 		} else	{
 			$$ = 0;
 		}
@@ -832,10 +851,7 @@ type_qualifier
 	;
 
 function_specifier
-	: INLINE {
-		$$ = 0;
-	}
-	| INLINE attribute_clause_list {
+	: INLINE attribute_clause_list {
 		$$ = 0;
 	}
 	;
@@ -1164,6 +1180,7 @@ void
 parser_reset() {
 	nodeno = 0;
 	nodemap.clear();
+	typedefs.clear();
 	yytarget.clear();
 	yytarget_struct = 0;
 }
@@ -1189,7 +1206,7 @@ indent(int level) {
 	return s;
 }
 
-static void
+void
 dump(int lval,const char *desc) {
 
 	if ( !yacc_dump )
