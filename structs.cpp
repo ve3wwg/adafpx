@@ -72,6 +72,7 @@ static void
 emit_struct(s_config::s_structs::s_struct& node) {
 	std::fstream c, ads;
 	int genset = node.genset;
+	bool as_typedef = false;
 
 	std::cout << "Genset ";
 	std::cout.width(4);
@@ -102,8 +103,24 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		std::cerr << "GOT STRUCT '" << yytarget << "' ID := " << yytarget_struct << "\n";
 
 	if ( yytarget_struct <= 0 ) {
-		std::cerr << "struct " << yytarget << " is unknown? (Genset " << genset << ")\n";
-		exit(3);
+		auto it = typedefs.find(yytarget);
+		if ( it == typedefs.end() ) {
+			std::cerr << "struct " << yytarget << " is unknown? (Genset " << genset << ")\n";
+			exit(3);
+		}
+		int nodeno = it->second;
+		s_node& node = Get(nodeno);
+		yytarget_struct = node.next;
+		s_node& snode = Get(node.next);
+		if ( snode.type != Struct ) {
+			std::cerr << "struct " << yytarget << " is unknown? (Genset " << genset << ")\n";
+			exit(3);
+		}
+		as_typedef = true;		// Do not name this as struct <whatever>
+		if ( yacc_dump ) {
+			std::cerr << "Found defn of " << yytarget << " as node " << nodeno << "\n";
+			dump(nodeno,yytarget.c_str());
+		}
 	}
 
 	if ( !gcc_open(c,++genset) )
@@ -124,9 +141,13 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 	c	<< "\n"
 		<< "#define offsetof(member) (unsigned) (((char*)&test_struct.member) - ((char*)&test_struct))\n"
-	 	<< "\n"
-		<< "static struct " << yytarget << " test_struct;\n\n"
-		<< "int main(int argc,char **argv) {\n"
+	 	<< "\n";
+
+	if ( !as_typedef )
+		c << "static struct " << yytarget << " test_struct;\n\n";
+	else	c << "static " << yytarget << " test_struct;\n\n";
+
+	c	<< "int main(int argc,char **argv) {\n"
 		<< "\n"
 		<< "\tmemset(&test_struct,0xFF,sizeof test_struct);\n\n";
 
@@ -135,7 +156,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 	assert(node2.type == List);
 
-	c	<< "\tprintf(\"%u\\n\",(unsigned)(sizeof(struct " << yytarget << "))"
+	c	<< "\tprintf(\"%u\\n\",(unsigned)(sizeof(test_struct))"
 		<< ");\n";
 
 	for ( auto it=node2.list.begin(); it != node2.list.end(); ++it ) {
