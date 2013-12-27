@@ -416,6 +416,10 @@ loadconfig() {
 					
 					const std::string& member = mnode.attribute("name").value();
 					const std::string& pref   = mnode.attribute("pref").value();
+					const std::string& stru   = mnode.attribute("struct").value();
+
+					if ( stru != "" )
+						stype.is_struct[member] = stoi(stru);
 					stype.prefs[member] = pref;
 				}
 			}

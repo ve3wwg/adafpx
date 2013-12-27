@@ -129,6 +129,7 @@ struct s_config {
 			unsigned		size;			// Struct size in bytes
 			std::vector<s_member>	members;
 			std::unordered_map<std::string,std::string> prefs; // Preferred type name
+			std::unordered_map<std::string,int> is_struct;  // Treat member as a struct
 		};
 		std::vector<s_struct>		structvec;
 	} structs;
