@@ -42,6 +42,7 @@
 		<type name="uid_t"/>
 		<type name="gid_t"/>
 		<type name="pid_t"/>
+		<type name="id_t"/>
 		<type name="time_t"/>
 		<type name="dev_t"/>
 		<type name="nlink_t"/>
@@ -502,6 +503,14 @@
 			<macro name="SC_AVPHYS_PAGES" alt="_SC_AVPHYS_PAGES"/>
 			<macro name="SC_NPROCESSORS_CONF" alt="_SC_NPROCESSORS_CONF"/>
 			<macro name="SC_NPROCESSORS_ONLN" alt="_SC_NPROCESSORS_ONLN"/>
+		</set>
+		<set genset="292">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<macro name="PRIO_PROCESS"/>
+			<macro name="PRIO_PGRP"/>
+			<macro name="PRIO_USER"/>
 		</set>
 	</macro_constants>
 	<structs>
@@ -1945,9 +1954,51 @@
 			<ada_arg name="Parm"  io="out" type="long_t"  from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="truncate" return="int_t" ada_type="procedure" rname="R" ada_name="Truncate" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="name"  type="System.Address" from="N'Address"/>
+			<c_arg   name="len"  type="off_t" from="Len"/>
+			<ada_arg name="Name"  io="in" type="String"/>
+			<ada_arg name="Len"   io="in" type="off_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="N" type="String" init="C_String(Name)"/>
+		</func>
+		<func name="ftruncate" return="int_t" ada_type="procedure" rname="R" ada_name="FTruncate" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="fd"  type="fd_t" from="Fd"/>
+			<c_arg   name="len"  type="off_t" from="Len"/>
+			<ada_arg name="Fd"    io="in" type="fd_t"/>
+			<ada_arg name="Len"   io="in" type="off_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Getpriority" inline="1">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<c_arg   name="which" type="int_t" from="Which"/>
+			<c_arg   name="who"   type="id_t" from="Who"/>
+			<ada_arg name="Which" io="in" type="int_t"/>
+			<ada_arg name="Who"   io="in" type="id_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="setpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Setpriority" inline="1">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<c_arg   name="which" type="int_t" from="Which"/>
+			<c_arg   name="who"   type="id_t" from="Who"/>
+			<c_arg   name="prior" type="int_t" from="Prior"/>
+			<ada_arg name="Which" io="in" type="int_t"/>
+			<ada_arg name="Who"   io="in" type="id_t"/>
+			<ada_arg name="Prior" io="in" type="int_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 
 		<!-- Outstanding functions:
-
 			sigaction
 			initgroups
 			select
