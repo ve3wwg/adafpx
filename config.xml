@@ -51,7 +51,7 @@
 		<type name="clock_t"/>
 		<type name="ino64_t" os="Darwin 12.*.*"/>
 		<type name="ino64_t" os="Darwin 13.*.*"/>
-		<type name="sigset_t"/>
+		<type name="sigset_t" os="Darwin *"/>
 		<type name="rlim_t"/>
 	</posix_types>
 	<ada_types genset="105">
@@ -555,6 +555,11 @@
 				<member name="rlim_cur" pref="rlim_t"/>
 				<member name="rlim_max" pref="rlim_t"/>
 			</members>
+		</struct>
+		<struct name="sigset_t" ada="sigset_t" genset="560" os="Linux *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
 		</struct>
 	</structs>
 	<section2 genset="700">
