@@ -160,20 +160,20 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		<< ");\n";
 
 	for ( auto it=node2.list.begin(); it != node2.list.end(); ++it ) {
-		s_node& node = Get(*it);
+		s_node& znode = Get(*it);
 		std::string member;
 		unsigned ptr = 0;
-		bool struct_member = node.type == Struct;
+		bool struct_member = znode.type == Struct;
 		bool array_ref = false;
 
-		switch ( node.type ) {
+		switch ( znode.type ) {
 		case Ident :
-			member = lex_revsym(node.symbol);
-			ptr = node.ptr;
+			member = lex_revsym(znode.symbol);
+			ptr = znode.ptr;
 			break;
 		case ArrayRef :
 			{
-				s_node& anode = Get(node.next);
+				s_node& anode = Get(znode.next);
 				assert(anode.type == Ident);
 				member = lex_revsym(anode.symbol);
 			}
@@ -181,11 +181,11 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			break;
 		case Struct :
 			{
-				s_node& nnode = Get(node.next);
+				s_node& nnode = Get(znode.next);
 				assert(nnode.type == Ident);
 				member = lex_revsym(nnode.symbol);
-				typemap[member] = lex_revsym(node.symbol);
-				ptr = node.ptr;
+				typemap[member] = lex_revsym(znode.symbol);
+				ptr = znode.ptr;
 			}
 			break;
 		case Type :
@@ -201,11 +201,11 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			// 	next3 = 0
 			// }
 			{
-				s_node& nnode = Get(node.next);
+				s_node& nnode = Get(znode.next);
 				switch ( nnode.type ) {
 				case Ident :
 					member = lex_revsym(nnode.symbol);
-					ptr = node.ptr;
+					ptr = znode.ptr;
 					break;
 				case ArrayRef :
 					{
@@ -234,6 +234,10 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		default :
 			assert(0);
 		}
+
+		if ( node.is_struct.find(member) != node.is_struct.end() ) {
+			struct_member = node.is_struct[member];
+		}                
 
 		if ( !array_ref ) {
 			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|0|"
@@ -306,8 +310,15 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		<< "      record\n";
 
 	for ( auto it=node.members.begin(); it != node.members.end(); ++it ) {
-		const s_config::s_structs::s_member& member = *it;
+		s_config::s_structs::s_member& member = *it;
 		std::stringstream s;
+
+		if ( node.is_struct.find(member.name) != node.is_struct.end() ) {
+			member.union_struct = node.is_struct[member.name];
+			if ( member.tname == "" ) {
+				member.tname = node.prefs[member.name];
+			}
+		}
 
 		s << member.a_name << " :";
 		std::string fmt_name = s.str();
@@ -338,7 +349,9 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			auto cit = c_ada_map.find(member.tname); // Lookup C name
 			if ( cit != c_ada_map.end() ) 
 				ads << cit->second;		// Known Ada name
-			else	ads << "s_" << member.tname;	// Unknown
+			else if ( member.union_struct == 2 )
+				ads << member.tname;		// Cheat from config.xml
+			else 	ads << "s_" << member.tname;	// Unknown
 		}
 		ads << ";\n";
 	}
