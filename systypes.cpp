@@ -35,10 +35,10 @@ emit_sys_types() {
 		s_config::s_sys_types::s_sys_type& node = it->second;
 
 		if ( node.is_unsigned ) {
-			ads 	<< "    type "
+			ads 	<< "   type "
 				<< name << " is mod 2**" << node.size*8 << ";\n";
 		} else	{
-			ads 	<< "    type "
+			ads 	<< "   type "
 				<< name << " is range -2**" << (node.size*8-1) << " .. "
 				<< "2**" << (node.size*8-1) << "-1;\n";
 		}
@@ -50,7 +50,7 @@ emit_sys_types() {
 		const std::string& name = it->first;
 		s_config::s_sys_types::s_sys_type& node = it->second;
 
-		ads << "    for " << name << "'Size use " << node.size*8 << ";\n";
+		ads << "   for " << name << "'Size use " << node.size*8 << ";\n";
 	}
 
 	//////////////////////////////////////////////////////////////
@@ -64,11 +64,11 @@ emit_sys_types() {
 		const s_config::s_ada_types::s_ada_type& atype = *it;
 
 		if ( atype.type == "" ) {
-			ads << "    subtype " << atype.name << " is " << atype.subtype;
+			ads << "   subtype " << atype.name << " is " << atype.subtype;
 			if ( atype.range != "" )
 				ads << " range " << atype.range;
 		} else	{
-			ads << "    type " << atype.name << " is new " << atype.type;
+			ads << "   type " << atype.name << " is new " << atype.type;
 			if ( atype.range != "" )
 				ads << " range " << atype.range;
 		}

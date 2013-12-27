@@ -302,8 +302,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		exit(5);
 
 	ads 	<< "\n"
-		<< "    type " << node.a_name << " is\n"
-		<< "        record\n";
+		<< "   type " << node.a_name << " is\n"
+		<< "      record\n";
 
 	for ( auto it=node.members.begin(); it != node.members.end(); ++it ) {
 		const s_config::s_structs::s_member& member = *it;
@@ -312,7 +312,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		s << member.a_name << " :";
 		std::string fmt_name = s.str();
 		
-                ads << "            ";
+                ads << "         ";
        		ads.width(32);
 		ads << std::left << fmt_name << " ";
 	
@@ -343,10 +343,10 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		ads << ";\n";
 	}
 
-	ads	<< "        end record;\n\n"
-		<< "    for " << node.a_name << "'Size use " << node.size << "*8;\n\n"
-		<< "    for " << node.a_name << " use\n"
-		<< "        record\n";
+	ads	<< "      end record;\n\n"
+		<< "   for " << node.a_name << "'Size use " << node.size << "*8;\n\n"
+		<< "   for " << node.a_name << " use\n"
+		<< "      record\n";
 
 	for ( auto it=node.members.begin(); it != node.members.end(); ++it ) {
 		const s_config::s_structs::s_member& member = *it;
@@ -355,12 +355,12 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		s << member.a_name;
 		std::string fmt_name = s.str();
 		
-                ads << "            ";
+                ads << "         ";
        		ads.width(32);
 		ads << std::left << fmt_name << " at " << member.moffset << " range 0.." << member.msize*8-1 << ";\n";
 	}
 
-        ads     << "        end record;\n";
+        ads     << "      end record;\n";
 
 	ads.close();
 }
