@@ -512,7 +512,7 @@
 			<macro name="PRIO_PGRP"/>
 			<macro name="PRIO_USER"/>
 		</set>
-		<set genset="295" format="16#%08X#">
+		<set genset="295" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/vfs.h"/>
 			</includes>
@@ -720,14 +720,29 @@
 				<include file="dirent.h"/>
 			</includes>
 		</struct>
-		<struct name="__fsid_t" ada="fsid_t" genset="581">
+		<struct name="__fsid_t" ada="fsid_t" genset="581" os="Linux *">
 			<includes>
 				<include file="sys/vfs.h"/>
 			</includes>
 		</struct>
-		<struct name="statfs" ada="s_statfs" genset="582">
+		<struct name="fsid_t" ada="fsid_t" genset="581" os="Darwin *">
+                        <includes>
+                                <include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
+			</includes>
+		</struct>
+		<struct name="statfs" ada="s_statfs" genset="583" os="Linux *">
 			<includes>
 				<include file="sys/vfs.h"/>
+			</includes>
+			<members>
+				<member name="f_fsid" pref="fsid_t" struct="2"/>
+			</members>
+		</struct>
+		<struct name="statfs" ada="s_statfs" genset="583" os="Darwin *">
+			<includes>
+				<include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<members>
 				<member name="f_fsid" pref="fsid_t" struct="2"/>
