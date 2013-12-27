@@ -1942,6 +1942,7 @@
 			</includes>
 			<c_arg   name="name"  type="sysc_t" from="Name"/>
 			<ada_arg name="Name"  io="in"  type="sysc_t"/>
+			<ada_arg name="Parm"  io="out" type="long_t"  from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 
