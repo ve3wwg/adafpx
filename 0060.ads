@@ -11,3 +11,7 @@
     type sigproc_t is access procedure(Sig : int_t);
     pragma Convention(C,sigproc_t);
     
+    type DIR is new System.Address;
+    Null_DIR : constant DIR := DIR(System.Null_Address);
+    function "="(L,R : DIR) return Boolean;
+
