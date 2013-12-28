@@ -613,6 +613,18 @@
 			<macro name="ITIMER_VIRTUAL"/>
 			<macro name="ITIMER_PROF"/>
 		</set>
+		<set type="ipccmd_t" genset="310" format="16#%08X#">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<macro name="IPC_STAT"/>
+			<macro name="IPC_SET"/>
+			<macro name="IPC_RMID"/>
+			<macro name="IPC_INFO"/>
+			<macro name="MSG_STAT" os="Linux *"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -808,6 +820,27 @@
 		<struct name="sysinfo" ada="s_sysinfo" genset="587" os="Linux *">
 			<includes>
 				<include file="sys/sysinfo.h"/>
+			</includes>
+		</struct>
+		<struct name="ipc_perm" ada="s_ipc_perm" genset="590">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+		</struct>
+		<struct name="msqid_ds" ada="s_msqid_ds" genset="593">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+		</struct>
+		<struct name="msginfo" ada="s_msginfo" genset="595" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
 			</includes>
 		</struct>
 	</structs>
@@ -2324,7 +2357,73 @@
 			<ada_arg name="Info"  io="out" type="s_sysinfo" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msqid" type="int_t" from="Msqid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Msqid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_msqid_ds" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_STAT"/>
+				<case name="MSG_STAT"/>
+			</cases>
+		</func>
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msqid" type="int_t" from="Msqid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Msqid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_msginfo" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_INFO"/>
+				<case name="MSG_INFO"/>
+			</cases>
+		</func>
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Set" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msqid" type="int_t" from="Msqid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Msqid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="in" type="s_msqid_ds"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_SET"/>
+				<case name="IPC_RMID"/>
+			</cases>
+		</func>
+<!--
+	msgget(2)
+	msgrcv(2)
+	msgsnd(2)
+	semctl(2)
+	semget(2)
+	semop(2)
+	semtimedop(2)
+	shmat(2)
+	shmctl(2)
+	shmdt(2)
+	shmget(2)
+-->
 		<!-- Outstanding functions:
 			setlogmasl : Linux - needs LOGS_MASK(pri) macro
 			sigaction
