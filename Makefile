@@ -16,6 +16,9 @@ include Makefile.incl
 .cpp.o:
 	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
 
+.c.o:
+	$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(INCL) $< -o $*.o
+
 all:	main run atest
 
 OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \
@@ -28,8 +31,16 @@ main:	ansi-c-lex.cpp ansi-c-yacc.cpp $(OBJS)
 run:
 	./main
 
-atest::	cglue.o
-	gnatmake -Wall atest.adb -o atest -largs cglue.o -lstdc++
+atest::	libadafpx.a
+	gnatmake -Wall atest.adb -o atest -largs libadafpx.a -lstdc++
+
+libadafpx.a: adafpx.o
+	ar r libadafpx.a adafpx.o
+
+adafpx.c: posix.ads posix.adb
+	cat cglue.c staging/*.cc >adafpx.c
+
+adafpx.o: adafpx.c
 
 atest.o: posix.ads posix.adb posix.o
 
@@ -41,7 +52,7 @@ clean:
 	rm -f *.o core 
 
 clobber: clean
-	rm -fr ./staging
+	rm -fr ./staging adafpx.c
 	rm -f b~* *.ali
 	rm -f ansi-c-lex.cpp ansi-c-yacc.cpp ansi-c-yacc.hpp errs.t main core*
 	rm -f posix.ads posix.adb
