@@ -71,8 +71,12 @@ struct s_config {
 			std::string			ada_name;	// ada_name=
 			std::string			rname;		// rname=
 			std::string			type;		// type="procedure"
-			std::string			returns;	// returns=
+			std::string			returns;	// returns= (C function)
+			std::string			ada_return;	// ada_return=
+			std::string			ada_rfrom;	// ada_return_from=
 			bool				finline;	// inline=
+			std::string			bind_prefix;	// "UX_" or prefix=
+			std::string			macro;		// macro= if any
 			std::vector<std::string>	includes;
 			std::vector<std::string>	use_clauses;
 

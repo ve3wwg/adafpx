@@ -284,15 +284,21 @@ loadconfig() {
 			funcent.c_name = func.attribute("name").value();
 			funcent.alt_name = func.attribute("altname").value();
 			funcent.ada_name = func.attribute("ada_name").value();
+			funcent.type     = func.attribute("ada_type").value();
+			if ( funcent.type == "" )
+				funcent.type = "procedure";
 
 			if ( funcent.ada_name == "" )
 				funcent.ada_name = funcent.c_name;
 
 			funcent.rname = func.attribute("rname").value();
 			funcent.finline = func.attribute("inline").as_int();
-			funcent.type = func.attribute("type").value();
 			funcent.returns = func.attribute("return").value();
-
+			funcent.type = func.attribute("ada_type").value();
+			funcent.ada_return = func.attribute("ada_return").value();
+			funcent.ada_rfrom  = func.attribute("ada_return_from").value();
+			funcent.bind_prefix = func.attribute("prefix").value();
+			funcent.macro = func.attribute("macro").value();
 			{
 				pugi::xml_node inode = func.child("includes");
 				load_includes(funcent.includes,inode);
