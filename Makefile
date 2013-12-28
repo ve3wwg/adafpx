@@ -32,7 +32,7 @@ run:
 	./main
 
 atest::	libadafpx.a
-	gnatmake -Wall atest.adb -o atest -largs libadafpx.a -lstdc++
+	gnatmake -Wall atest.adb -o atest -largs libadafpx.a
 
 libadafpx.a: adafpx.o
 	ar r libadafpx.a adafpx.o
