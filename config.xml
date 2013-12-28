@@ -561,6 +561,50 @@
 			<macro name="XFS_SUPER_MAGIC"/>
 			<macro name="_XIAFS_SUPER_MAGIC"/>
 		</set>
+		<set type="logopt_t" genset="300" format="16#%08X#">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<macro name="LOG_CONS"/>
+			<macro name="LOG_NDELAY"/>
+			<macro name="LOG_PERROR"/>
+			<macro name="LOG_PID"/>
+		</set>
+		<set type="logfac_t" genset="305" format="16#%08X#">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<macro name="LOG_EMERG"/>
+			<macro name="LOG_ALERT"/>
+			<macro name="LOG_CRIT"/>
+			<macro name="LOG_ERR"/>
+			<macro name="LOG_WARNING"/>
+			<macro name="LOG_NOTICE"/>
+			<macro name="LOG_INFO"/>
+			<macro name="LOG_DEBUG"/>
+			<!-- -->
+			<macro name="LOG_AUTH"/>
+			<macro name="LOG_AUTHPRIV"/>
+			<macro name="LOG_CRON"/>
+			<macro name="LOG_DAEMON"/>
+			<macro name="LOG_FTP"/>
+			<macro name="LOG_KERN"/>
+			<macro name="LOG_LPR"/>
+			<macro name="LOG_MAIL"/>
+			<macro name="LOG_NEWS"/>
+			<macro name="LOG_SECURITY"/>
+			<macro name="LOG_SYSLOG"/>
+			<macro name="LOG_USER"/>
+			<macro name="LOG_UUCP"/>
+			<macro name="LOG_LOCAL0"/>
+			<macro name="LOG_LOCAL1"/>
+			<macro name="LOG_LOCAL2"/>
+			<macro name="LOG_LOCAL3"/>
+			<macro name="LOG_LOCAL4"/>
+			<macro name="LOG_LOCAL5"/>
+			<macro name="LOG_LOCAL6"/>
+			<macro name="LOG_LOCAL7"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -2095,8 +2139,46 @@
 			<ada_arg name="Buf"   io="out" type="s_statfs" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="closelog" ada_type="procedure" ada_name="CloseLog" inline="1">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+		</func>
+		<func name="openlog" ada_type="procedure" ada_name="OpenLog" inline="1">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<c_arg   name="ident"  type="System.Address" from="N'Address"/>
+			<c_arg   name="logopt" type="logopt_t" from="Log_Option"/>
+			<c_arg   name="facility" type="logfac_t" from="Facility"/>
+			<ada_arg name="Ident"      io="in" type="String"/>
+			<ada_arg name="Log_Option" io="in" type="logopt_t"/>
+			<ada_arg name="Facility"   io="in" type="logfac_t"/>
+			<temp name="N" type="String" init="C_String(Ident)"/>
+		</func>
+		<func name="setlogmask" return="uint_t" rname="R" ada_type="procedure" ada_name="Setlogmask" inline="1">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<c_arg   name="maskpri"  type="uint_t" from="Mask_Pri"/>
+			<ada_arg name="Mask_Pri" io="in out" type="uint_t" from="R"/>
+		</func>
+		<func name="syslog" ada_type="procedure" ada_name="Syslog">
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<c_arg   name="priority" type="int_t" from="Priority"/>
+			<c_arg   name="format"   type="System.Address" from="Fmt'Address"/>
+			<c_arg   name="msg"      type="System.Address" from="Msg'Address"/>
+			<ada_arg name="Priority" io="in" type="int_t"/>
+			<ada_arg name="Message"  io="in" type="String"/>
+                        <temp name="F" type="constant String" init="('%','s',Ada.Characters.Latin_1.LF)"/>
+			<temp name="Fmt" type="String" init="C_String(F)"/>
+			<temp name="Msg" type="String" init="C_String(Message)"/>
+		</func>
 
 		<!-- Outstanding functions:
+			setlogmasl : Linux - needs LOGS_MASK(pri) macro
 			sigaction
 			initgroups
 			select
