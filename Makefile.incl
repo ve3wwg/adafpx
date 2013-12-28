@@ -9,5 +9,6 @@ CSTD	?= -std=c++0x
 OPTZ	?= -O0 -g
 
 CXX	= g++
+CC	= gcc
 
 # End Makefile.incl
