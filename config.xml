@@ -805,6 +805,11 @@
 				<include file="sys/time.h"/>
 			</includes>
 		</struct>
+		<struct name="sysinfo" ada="s_sysinfo" genset="587">
+			<includes>
+				<include file="sys/sysinfo.h"/>
+			</includes>
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1">
@@ -2292,6 +2297,14 @@
 			</includes>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="sysinfo" return="int_t" ada_type="procedure" rname="R" ada_name="Sysinfo" inline="1">
+			<includes>
+				<include file="sys/sysinfo.h"/>
+			</includes>
+			<c_arg   name="info"  type="System.Address" from="Info'Address"/>
+			<ada_arg name="Info"  io="out" type="s_sysinfo" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 
 		<!-- Outstanding functions:
 			setlogmasl : Linux - needs LOGS_MASK(pri) macro
@@ -2300,6 +2313,7 @@
 			select
 			reboot : Linux
 			scandir(3) : Linux
+			vm86plus_struct : Linux i386
 		-->
 	</section2>
 	<macro_funcs>
