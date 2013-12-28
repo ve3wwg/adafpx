@@ -242,14 +242,14 @@ emit_struct(s_config::s_structs::s_struct& node) {
 		if ( !array_ref ) {
 			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|0|"
 				<< ptr
-				<< "\\n\",\n"
+				<< "|S\\n\",\n"
 				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
 				<< "\t\toffsetof(" << member << "),\n";
 			if ( !struct_member )
 				c << "\t\ttest_struct." << member << " <= 0 ? 1 : 0);\n";
 			else	c << "\t\t0);\n";
 		} else	{
-			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|%u|0\\n\",\n"
+			c	<< "\tprintf(\"" << member << "|%lu|" << int(struct_member) << "|%u|%u|%u|0|A\\n\",\n"
 				<< "\t\t(unsigned long)sizeof test_struct." << member << ",\n"
 				<< "\t\toffsetof(" << member << "),\n";
 	
@@ -277,6 +277,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			std::vector<std::string> fields;
 			parse(fields,recd);
 			s_config::s_structs::s_member mem;
+			bool is_array = false;
 
 			mem.name = fields[0];
 			mem.a_name = to_ada_name(mem.name);
@@ -286,13 +287,15 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			mem.msigned = bool(stoi(fields[4]));
 			mem.array = stoi(fields[5]);
 			mem.ptr = stoi(fields[6]);
+			is_array = fields[7] == "A";
 
 			auto it = typemap.find(mem.name);
 			if ( it != typemap.end() )
 				mem.tname = it->second;	// Named type/struct/union
 			else	mem.tname = "";
 
-			node.members.push_back(mem);
+			if ( !is_array || (is_array && mem.array > 0 ) )
+				node.members.push_back(mem);
 		}
 	}
 
