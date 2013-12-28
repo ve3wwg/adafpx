@@ -5,6 +5,8 @@
 --
 -- This is generated source code. Edit at your own risk.
 
+with Ada.Characters.Latin_1;
+
 package body Posix is
    
    function "="(L,R : DIR) return Boolean is
