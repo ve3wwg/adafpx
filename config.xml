@@ -2297,6 +2297,14 @@
 			</includes>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="uname" return="int_t" ada_type="procedure" rname="R" ada_name="Uname" inline="1">
+			<includes>
+				<include file="sys/utsname.h"/>
+			</includes>
+			<c_arg   name="names" type="System.Address" from="Names'Address"/>
+			<ada_arg name="Names" io="out" type="s_utsname" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<func name="sysinfo" return="int_t" ada_type="procedure" rname="R" ada_name="Sysinfo" inline="1">
 			<includes>
 				<include file="sys/sysinfo.h"/>
