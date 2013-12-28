@@ -606,6 +606,9 @@
 			<macro name="LOG_LOCAL7"/>
 		</set>
 		<set type="itim_t" genset="307" format="16#%08X#">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
 			<macro name="ITIMER_REAL"/>
 			<macro name="ITIMER_VIRTUAL"/>
 			<macro name="ITIMER_PROF"/>
