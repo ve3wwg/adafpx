@@ -2258,6 +2258,17 @@
 			<c_arg   name="maskpri"  type="uint_t" from="Mask_Pri"/>
 			<ada_arg name="Mask_Pri" io="in out" type="uint_t" from="R"/>
 		</func>
+		<func name="LOG_MASK" return="uint_t" rname="R" ada_type="function" ada_name="LOG_MASK" 
+		 ada_return="uint_t" ada_return_from="R" prefix="adafpx_macro_"
+		 macro="unsigned adafpx_macro_LOG_MASK(int p) { return LOG_MASK(p); }"
+		 inline="1" os="Linux *"
+		>
+			<includes>
+				<include file="syslog.h"/>
+			</includes>
+			<c_arg   name="pri"  type="int_t" from="Priority"/>
+			<ada_arg name="Priority" io="in" type="int_t"/>
+		</func>
 		<func name="syslog" ada_type="procedure" ada_name="Syslog">
 			<includes>
 				<include file="syslog.h"/>
