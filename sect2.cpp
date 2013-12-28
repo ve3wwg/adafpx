@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <unordered_set>
 
 #include "glue.hpp"
 #include "comp.hpp"
@@ -19,7 +20,8 @@
 void
 emit_section2() {
 	char sgenset[32];
-	std::fstream ads, adb;
+	std::fstream ads, adb, cc;
+	std::unordered_set<std::string> inclset;
 
 	sprintf(sgenset,"%04d",config.section2.genset);
 
@@ -69,10 +71,7 @@ emit_section2() {
 		if ( func.alt_name != "" )
 			binding_name = func.alt_name;
 
-		proto << func.type;
-		if ( func.type != "function" )
-			proto << "procedure " << func.ada_name;
-		else	proto << "function " << func.ada_name;
+		proto << func.type << " " << func.ada_name;
 
 		if ( func.aargs.size() > 0 ) {
 			proto << "(";
@@ -94,7 +93,7 @@ emit_section2() {
 			}
 			proto << ")";
 			if ( func.type == "function" )
-				proto << " return " << func.returns;
+				proto << " return " << func.ada_return;
 		}
 
 		//////////////////////////////////////////////////////
@@ -144,7 +143,8 @@ emit_section2() {
 		else	adb << ";\n";
 
 		//  pragma Import(C,UX_close,"close");
-		adb << "      pragma Import(C," << binding_name << ",\"" << func.c_name << "\");\n";
+		adb << "      pragma Import(C," << binding_name << ",\""
+                    << func.bind_prefix << func.c_name << "\");\n";
 
 		// Temporaries
 		for ( auto ait=func.aargs.begin(); ait != func.aargs.end(); ++ait ) {
@@ -261,11 +261,41 @@ emit_section2() {
 			}
 		}
 
+		// Function return value
+		if ( func.type == "function" ) {
+			adb << "      return " << func.ada_rfrom << ";\n";
+		}
+
 		adb	<< "   end " << func.ada_name << ";\n\n";
+
+		//////////////////////////////////////////////////////
+		// Check if a macro must be emitted
+		//////////////////////////////////////////////////////
+
+		if ( func.macro != "" ) {
+			if ( !cc.is_open() && !gcc_open(cc,config.section2.genset,".cc") )
+				exit(3);
+
+			for ( auto it=func.includes.begin(); it != func.includes.end(); ++it ) {
+				const std::string& incl = *it;
+
+				if ( inclset.find(incl) == inclset.end() ) {
+					if ( incl[0] != '.' )
+						cc << "#include <" << incl << ">\n";
+					else	cc << "#include \"" << incl << "\"\n";
+					inclset.insert(incl);
+				}
+			}
+
+			cc << "\n"
+			   << func.macro << "\n\n";
+		}
+
 	}
 
 	ads.close();
 	adb.close();
+	cc.close();
 }
 
 // End sect2.cpp
