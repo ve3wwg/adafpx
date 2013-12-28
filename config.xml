@@ -1581,6 +1581,83 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
+		<func name="S_ISREG" rname="R" return="int_t" ada_type="function" ada_name="S_ISREG" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISREG(mode_t m) { return S_ISREG(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISDIR" rname="R" return="int_t" ada_type="function" ada_name="S_ISDIR" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISDIR(mode_t m) { return S_ISDIR(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISCHR" rname="R" return="int_t" ada_type="function" ada_name="S_ISCHR" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISCHR(mode_t m) { return S_ISCHR(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISBLK" rname="R" return="int_t" ada_type="function" ada_name="S_ISBLK" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISBLK(mode_t m) { return S_ISBLK(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISFIFO" rname="R" return="int_t" ada_type="function" ada_name="S_ISFIFO" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISFIFO(mode_t m) { return S_ISFIFO(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISLNK" rname="R" return="int_t" ada_type="function" ada_name="S_ISLNK" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISLNK(mode_t m) { return S_ISLNK(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
+		<func name="S_ISSOCK" rname="R" return="int_t" ada_type="function" ada_name="S_ISSOCK" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_S_ISSOCK(mode_t m) { return S_ISSOCK(m); }" inline="1">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/stat.h"/>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg   name="m"    type="mode_t"  from="Mode"/>
+			<ada_arg name="Mode" io="in" type="mode_t"/>
+		</func>
 		<func name="setuid" return="int_t" ada_type="procedure" rname="R" ada_name="Setuid" inline="1">
 			<includes>
 				<include file="unistd.h"/>
@@ -2185,6 +2262,7 @@
 			reboot : Linux
 			scandir(3) : Linux
 		-->
-
 	</section2>
+	<macro_funcs>
+	</macro_funcs>
 </entities>
