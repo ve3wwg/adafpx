@@ -2286,17 +2286,13 @@
 			<ada_arg name="Cur_Value" io="in" type="s_itimerval"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-<!--
-	   struct itimerval {
-	       struct timeval it_interval; /* next value */
-	       struct timeval it_value;	   /* current value */
-	   };
+		<func name="vhangup" return="int_t" ada_type="procedure" rname="R" ada_name="VHangup" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 
-	   struct timeval {
-	       long tv_sec;		   /* seconds */
-	       long tv_usec;		   /* microseconds */
-	   };
--->
 		<!-- Outstanding functions:
 			setlogmasl : Linux - needs LOGS_MASK(pri) macro
 			sigaction
