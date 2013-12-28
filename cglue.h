@@ -6,11 +6,7 @@
 #ifndef CGLUE_H
 #define CGLUE_H
 
-extern "C" {
-
-	int c_errno();
-
-}
+int c_errno();
 
 #endif // CGLUE_H
 
