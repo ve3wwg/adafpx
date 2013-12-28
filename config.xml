@@ -605,6 +605,11 @@
 			<macro name="LOG_LOCAL6"/>
 			<macro name="LOG_LOCAL7"/>
 		</set>
+		<set type="itim_t" genset="307" format="16#%08X#">
+			<macro name="ITIMER_REAL"/>
+			<macro name="ITIMER_VIRTUAL"/>
+			<macro name="ITIMER_PROF"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -791,6 +796,11 @@
 			<members>
 				<member name="f_fsid" pref="fsid_t" struct="2"/>
 			</members>
+		</struct>
+		<struct name="itimerval" ada="s_itimerval" genset="585">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -2253,7 +2263,37 @@
 			<temp name="Fmt" type="String" init="C_String(F)"/>
 			<temp name="Msg" type="String" init="C_String(Message)"/>
 		</func>
+		<func name="getitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Getitimer" inline="1">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg   name="which"  type="itim_t" from="Which"/>
+			<c_arg   name="curr"   type="System.Address" from="Cur_Value'Address"/>
+			<ada_arg name="Which"  io="in" type="itim_t"/>
+			<ada_arg name="Cur_Value" io="out" type="s_itimerval" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="setitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Setitimer" inline="1">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg   name="which"  type="itim_t" from="Which"/>
+			<c_arg   name="curr"   type="System.Address" from="Cur_Value'Address"/>
+			<ada_arg name="Which"  io="in" type="itim_t"/>
+			<ada_arg name="Cur_Value" io="in" type="s_itimerval"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+<!--
+	   struct itimerval {
+	       struct timeval it_interval; /* next value */
+	       struct timeval it_value;	   /* current value */
+	   };
 
+	   struct timeval {
+	       long tv_sec;		   /* seconds */
+	       long tv_usec;		   /* microseconds */
+	   };
+-->
 		<!-- Outstanding functions:
 			setlogmasl : Linux - needs LOGS_MASK(pri) macro
 			sigaction

@@ -12,6 +12,7 @@
    type sysc_t is new int_t;    
    type logopt_t is new uint_t;
    type logfac_t is new uint_t;
+   type itim_t is new uint_t;
 
    type sigproc_t is access procedure(Sig : int_t);
    pragma Convention(C,sigproc_t);
