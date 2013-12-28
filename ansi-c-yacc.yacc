@@ -584,7 +584,7 @@ init_declarator
 		$$ = $1;
 		dump($$,"declarator attr attr_list");
 	}
-	| declarator ASM '(' asm_list ')' {
+	| declarator ASM '(' asm_list ')' attribute_clause_list {
 		$$ = $1;
 		dump($$,"declarator ASM (...)");
 	}
@@ -885,6 +885,9 @@ direct_declarator
 	| '(' declarator ')' {
 		$$ = $2;
 		dump($$,"(declarator)");
+	}
+	| '(' '^' ')' {
+		$$ = 0;
 	}
 	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
 		s_node node;
