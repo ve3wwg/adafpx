@@ -162,6 +162,13 @@ emit_section2() {
 			}
 		}
 
+		// Declaration text
+		for ( auto t=func.decls.begin(); t != func.decls.end(); ++t ) {
+			const std::string& declaration = *t;
+
+			adb << "      " << declaration << "\n";
+		}
+
 		// Temporary variables
 		for ( auto t=func.temps.begin(); t != func.temps.end(); ++t ) {
 			s_config::s_section2::s_func::s_temp& temp = *t;
