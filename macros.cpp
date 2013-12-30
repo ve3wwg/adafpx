@@ -144,8 +144,14 @@ emit_macros() {
 		for ( auto sit=svec.begin(); sit != svec.end(); ++sit ) {
 			const s_msort& ent = *sit;
 			std::stringstream s;
+			std::string ada_name;
 
-			s << ent.name << " :";
+			auto ait = mset.ada_name.find(ent.name);
+			if ( ait == mset.ada_name.end() )
+				ada_name = ent.name;
+			else	ada_name = ait->second;
+
+			s << ada_name << " :";
 
 			ads << "   ";
 			ads.width(20);
@@ -160,7 +166,7 @@ emit_macros() {
 
 			ads << vbuf << ";\n";
 
-			config.declared_macros.insert(ent.name);
+			config.declared_macros.insert(ada_name);
 		}	
 
 		if ( mset.alternates.size() > 0 ) {
