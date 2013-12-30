@@ -24,6 +24,7 @@ struct s_config {
 		std::string			format;
 		std::vector<std::string>	includes;
 		std::vector<std::string> 	macros;
+		std::unordered_map<std::string,std::string> ada_name;
 		std::unordered_map<std::string,std::string> alternates;
 		std::unordered_map<std::string,long> values;
 	};
@@ -106,6 +107,7 @@ struct s_config {
 				std::string		on_error;
 				std::vector<std::string> casevec;
 			};
+			std::vector<std::string>	decls;
 			std::vector<std::string> 	prechecks;
 			std::string			on_error;
 			std::unordered_map<std::string,s_cases> cases;

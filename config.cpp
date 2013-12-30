@@ -154,8 +154,12 @@ loadconfig() {
 			if ( strcmp(mnode.name(),"macro") != 0 )
 				continue;
 
-			std::string macro_name = mnode.attribute("name").value();
+			const std::string macro_name = mnode.attribute("name").value();
+			const std::string ada_name = mnode.attribute("ada_name").value();
 			mset.macros.push_back(macro_name);
+
+			if ( ada_name != "" )
+				mset.ada_name[macro_name] = ada_name;
 
 			const std::string alt = mnode.attribute("alt").value();
 			if ( alt != "" )
@@ -341,6 +345,8 @@ loadconfig() {
 					temp.type = anode.attribute("type").value();
 					temp.init = anode.attribute("init").value();
 					funcent.temps.push_back(temp);
+				} else if ( nname == "declare" ) {
+					funcent.decls.push_back(anode.attribute("text").value());
 				}
 			}
 				
