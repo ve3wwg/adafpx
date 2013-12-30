@@ -3,7 +3,7 @@
 		<copy name="0005.ads"/>
 		<copy name="0005.adb"/>
 		<copy name="0060.ads"/>
-		<copy name="0600.ads"/>
+		<copy name="0690.ads"/>
 		<copy name="8000.ads"/>
 		<copy name="9900.ads"/>
 		<copy name="9999.ads"/>
@@ -54,6 +54,7 @@
 		<type name="ino64_t" os="Darwin 13.*.*"/>
 		<type name="sigset_t" os="Darwin *"/>
 		<type name="rlim_t"/>
+		<type name="key_t" os="Linux *"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -618,12 +619,34 @@
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
 				<include file="sys/msg.h"/>
+				<include file="sys/sem.h"/>
 			</includes>
 			<macro name="IPC_STAT"/>
 			<macro name="IPC_SET"/>
 			<macro name="IPC_RMID"/>
 			<macro name="IPC_INFO"/>
 			<macro name="MSG_STAT" os="Linux *"/>
+			<macro name="GETALL"  ada_name="IPC_GETALL"/>
+			<macro name="GETNCNT" ada_name="IPC_GETNCNT"/>
+			<macro name="GETPID"  ada_name="IPC_GETPID"/>
+			<macro name="GETVAL"  ada_name="IPC_GETVAL"/>
+			<macro name="GETZCNT" ada_name="IPC_GETZCNT"/>
+			<macro name="SETALL"  ada_name="IPC_SETALL"/>
+			<macro name="SETVAL"  ada_name="IPC_SETVAL"/>
+		</set>
+		<set type="" genset="315" format="16#%08X#">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<macro name="IPC_PRIVATE"/>
+			<macro name="IPC_PRIVATE"/>
+			<macro name="IPC_CREAT"/>
+			<macro name="IPC_EXCL"/>
+			<macro name="IPC_NOWAIT"/>
+			<macro name="MSG_NOERROR"/>
+			<macro name="MSG_EXCEPT"/>
 		</set>
 	</macro_constants>
 	<structs>
@@ -835,12 +858,35 @@
 				<include file="sys/ipc.h"/>
 				<include file="sys/msg.h"/>
 			</includes>
+			<members>
+				<member name="msg_stime" pref="time_t"/>
+				<member name="msg_rtime" pref="time_t"/>
+				<member name="msg_ctime" pref="time_t"/>
+			</members>
 		</struct>
 		<struct name="msginfo" ada="s_msginfo" genset="595" os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
 				<include file="sys/msg.h"/>
+			</includes>
+		</struct>
+		<struct name="semid_ds" ada="s_semid_ds" genset="600" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<members>
+				<member name="sem_otime" pref="time_t"/>
+				<member name="sem_ctime" pref="time_t"/>
+			</members>
+		</struct>
+		<struct name="seminfo" ada="s_seminfo" genset="603" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
 			</includes>
 		</struct>
 	</structs>
@@ -2411,10 +2457,267 @@
 				<case name="IPC_RMID"/>
 			</cases>
 		</func>
+		<func name="msgget" return="int_t" ada_type="procedure" rname="R" ada_name="Msgget" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="key"   type="key_t" from="Key"/>
+			<c_arg   name="msgflg" type="uint_t" from="Msgflg"/>
+			<ada_arg name="Key"   io="in" type="key_t"/>
+			<ada_arg name="Msgflg" io="in" type="uint_t"/>
+			<ada_arg name="Msqqid" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="msgsnd" return="int_t" ada_type="procedure" rname="R" ada_name="Msgsnd" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msgqid" type="int_t" from="Msgqid"/>
+			<c_arg   name="msgp"   type="System.Address" from="Msgr'Address"/>
+			<c_arg   name="msgsz"  type="size_t" from="Msg'Length"/>
+			<c_arg   name="msgflg" type="uint_t" from="Msgflg"/>
+			<ada_arg name="Msgqid" io="in" type="int_t"/>
+			<ada_arg name="Msgtyp" io="in" type="long_t"/>
+			<ada_arg name="Msg"    io="in" type="uchar_array"/>
+			<ada_arg name="Msgflg" io="in" type="uint_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<declare text="type Msgr_Type is"/>
+			<declare text="   record"/>
+			<declare text="      Mtype :   long_t;"/>
+			<declare text="      Mtext :   uchar_array(0..Msg'Length-1);" />
+			<declare text="   end record;"/>
+			<declare text="Msgr : Msgr_Type := ( Msgtyp, Msg );" />
+		</func>
+		<func name="msgrcv" return="int_t" ada_type="procedure" rname="R" ada_name="Msgrcv" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msgqid" type="int_t" from="Msgqid"/>
+			<c_arg   name="msgp"   type="System.Address" from="Msgr'Address"/>
+			<c_arg   name="msgsz"  type="size_t" from="Msg'Length"/>
+			<c_arg   name="msgtyp" type="long_t" from="Msgtyp"/>
+			<c_arg   name="msgflg" type="uint_t" from="Msgflg"/>
+			<ada_arg name="Msgqid" io="in" type="int_t"/>
+			<ada_arg name="Msgtyp" io="in out" type="long_t" from="Msgr.Mtype"/>
+			<ada_arg name="Msg"    io="out" type="uchar_array" from="Msgr.Mtext"/>
+			<ada_arg name="Msgflg" io="in" type="uint_t"/>
+			<ada_arg name="Msglen" io="out" type="Natural" from="To_Count(R)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<declare text="type Msgr_Type is"/>
+			<declare text="   record"/>
+			<declare text="      Mtype :   long_t;"/>
+			<declare text="      Mtext :   uchar_array(0..Msg'Length-1);" />
+			<declare text="   end record;"/>
+			<declare text="Msgr : Msgr_Type;" />
+		</func>
+		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<c_arg   name="semid" type="int_t" from="Semid"/>
+			<c_arg	 name="semnum" type="int_t" from="0"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Semid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_semid_ds" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_STAT"/>
+				<case name="SEM_STAT"/>
+			</cases>
+		</func>
+		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Set" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<c_arg   name="msqid" type="int_t" from="Semid"/>
+			<c_arg	 name="semnum" type="int_t" from="0"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Semid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="in" type="s_semid_ds"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_SET"/>
+				<case name="IPC_RMID"/>
+			</cases>
+		</func>
+		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="semid" type="int_t" from="Semid"/>
+			<c_arg	 name="semnum" type="int_t" from="0"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Semid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_seminfo" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_INFO"/>
+				<case name="SEM_INFO"/>
+			</cases>
+		</func>
+		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<c_arg   name="semid" type="int_t" from="Semid"/>
+			<c_arg	 name="semnum" type="int_t" from="0"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Semid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="ushort_array" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<declare text="-- Warning: First find out how many semaphore values will be returned"/>
+			<declare text="--          so that you can be sure how large Buf should be!"/>
+			<cases name="Cmd">
+				<case name="IPC_GETALL"/>
+			</cases>
+		</func>
+
 <!--
-	msgget(2)
-	msgrcv(2)
-	msgsnd(2)
+       #include <sys/types.h>
+       #include <sys/ipc.h>
+       #include <sys/sem.h>
+
+       int semctl(int semid, int semnum, int cmd, ...);
+
+DESCRIPTION
+       semctl()	 performs  the	control	 operation  specified  by  cmd	on the
+       semaphore set identified by semid, or on	 the  semnum-th	 semaphore  of
+       that set.  (The semaphores in a set are numbered starting at 0.)
+
+       This  function  has  three  or  four arguments, depending on cmd.  When
+       there are four, the fourth has the type union semun.  The calling  pro-
+       gram must define this union as follows:
+
+	   union semun {
+	       int		val;	/* Value for SETVAL */
+	       struct semid_ds *buf;	/* Buffer for IPC_STAT, IPC_SET */
+	       unsigned short  *array;	/* Array for GETALL, SETALL */
+	       struct seminfo  *__buf;	/* Buffer for IPC_INFO
+					   (Linux-specific) */
+	   };
+
+       The semid_ds data structure is defined in <sys/sem.h> as follows:
+
+	   struct semid_ds {
+	       struct ipc_perm sem_perm;  /* Ownership and permissions */
+	       time_t	       sem_otime; /* Last semop time */
+	       time_t	       sem_ctime; /* Last change time */
+	       unsigned short  sem_nsems; /* No. of semaphores in set */
+	   };
+
+       The  ipc_perm structure is defined in <sys/ipc.h> as follows (the high-
+       lighted fields are settable using IPC_SET):
+
+	   struct ipc_perm {
+	       key_t	      __key; /* Key supplied to semget(2) */
+	       uid_t	      uid;   /* Effective UID of owner */
+	       gid_t	      gid;   /* Effective GID of owner */
+	       uid_t	      cuid;  /* Effective UID of creator */
+	       gid_t	      cgid;  /* Effective GID of creator */
+	       unsigned short mode;  /* Permissions */
+	       unsigned short __seq; /* Sequence number */
+	   };
+
+       Valid values for cmd are:
+
+
+       GETALL	 Return semval (i.e., the current value) for all semaphores of
+		 the set into arg.array.  The argument semnum is ignored.  The
+		 calling  process  must	 have read permission on the semaphore
+		 set.
+
+       GETNCNT	 The system call returns the value of semncnt (i.e., the  num-
+		 ber  of  processes waiting for the value of this semaphore to
+		 increase) for the semnum-th semaphore of the set  (i.e.,  the
+		 number of processes waiting for an increase of semval for the
+		 semnum-th semaphore of the set).  The	calling	 process  must
+		 have read permission on the semaphore set.
+
+       GETPID	 The system call returns the value of sempid for the semnum-th
+		 semaphore of the set (i.e., the PID of the process that  exe-
+		 cuted	the  last semop(2) call for the semnum-th semaphore of
+		 the set).  The calling process must have read	permission  on
+		 the semaphore set.
+
+       GETVAL	 The system call returns the value of semval for the semnum-th
+		 semaphore of the set.	The calling  process  must  have  read
+		 permission on the semaphore set.
+
+       GETZCNT	 The  system call returns the value of semzcnt (i.e., the num-
+		 ber of processes waiting for the value of this	 semaphore  to
+		 become	 zero)	for  the semnum-th semaphore of the set (i.e.,
+		 the number of processes waiting for semval of	the  semnum-th
+		 semaphore  of the set to become 0).  The calling process must
+		 have read permission on the semaphore set.
+
+       SETALL	 Set semval for all semaphores of  the	set  using  arg.array,
+		 updating  also the sem_ctime member of the semid_ds structure
+		 associated with the set.  Undo	 entries  (see	semop(2))  are
+		 cleared  for  altered	semaphores  in	all processes.	If the
+		 changes to semaphore values  would  permit  blocked  semop(2)
+		 calls in other processes to proceed, then those processes are
+		 woken up.  The argument semnum is ignored.  The calling  pro-
+		 cess must have alter (write) permission on the semaphore set.
+
+       SETVAL	 Set  the  value  of  semval  to  arg.val  for	the  semnum-th
+		 semaphore  of	the set, updating also the sem_ctime member of
+		 the semid_ds structure associated with the set.  Undo entries
+		 are  cleared for altered semaphores in all processes.	If the
+		 changes to semaphore values  would  permit  blocked  semop(2)
+		 calls in other processes to proceed, then those processes are
+		 woken up.  The calling process must have alter permission  on
+		 the semaphore set.
+
+RETURN VALUE
+       On failure semctl() returns -1 with errno indicating the error.
+
+       Otherwise the system call returns a non-negative value depending on cmd
+       as follows:
+
+       GETNCNT	   the value of semncnt.
+
+       GETPID	   the value of sempid.
+
+       GETVAL	   the value of semval.
+
+       GETZCNT	   the value of semzcnt.
+
+       IPC_INFO	   the index of the highest used entry in the kernel’s	inter-
+		   nal	array  recording information about all semaphore sets.
+		   (This information can be used with repeated SEM_STAT opera-
+		   tions to obtain information about all semaphore sets on the
+		   system.)
+
+       SEM_INFO	   As for IPC_INFO.
+
+       SEM_STAT	   the identifier of the semaphore set whose index  was	 given
+		   in semid.
+
+       All other cmd values return 0 on success.
+-->
+<!--
 	semctl(2)
 	semget(2)
 	semop(2)
@@ -2434,6 +2737,4 @@
 			vm86plus_struct : Linux i386
 		-->
 	</section2>
-	<macro_funcs>
-	</macro_funcs>
 </entities>
