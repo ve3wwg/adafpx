@@ -15,6 +15,16 @@
    type itim_t is new uint_t;
    type ipccmd_t is new int_t;
 
+   type short_array is array(Natural range <>) of short_t;
+   type int_array is array(Natural range <>) of int_t;
+   type long_array is array(Natural range <>) of long_t;
+   type llong_array is array(Natural range <>) of llong_t;
+
+   type ushort_array is array(Natural range <>) of ushort_t;
+   type uint_array is array(Natural range <>) of uint_t;
+   type ulong_array is array(Natural range <>) of ulong_t;
+   type ullong_array is array(Natural range <>) of ullong_t;
+
    type sigproc_t is access procedure(Sig : int_t);
    pragma Convention(C,sigproc_t);
     
