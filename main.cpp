@@ -48,7 +48,6 @@ main(int argc,char **argv) {
 	std::stringstream opt_gcc;
 	std::string platform, version, machine;
 	bool opt_show_platform = false;
-	int ltoken;
 	char optch;
 	extern int yydebug;
 
@@ -129,18 +128,28 @@ main(int argc,char **argv) {
 	system("cat ./staging/????.ads >posix.ads");
 	system("cat ./staging/????.adb >posix.adb");
 
-exit(0);
+	{
+		std::fstream mktests;
+		int count = 0;
 
-	while ( (ltoken = yylex()) != 0 ) {
-		unsigned lno = lex_lineno();
-		int id = lex_token();
-		std::string& token = revsym[id];
+		mktests.open("Makefile.tests",std::fstream::out);
 
-		printf("%06u : %3d '%s' (%d)\n",
-			lno,
-			ltoken,
-			token.c_str(),
-			id);
+		mktests << "# Makefile.tests - generated file\n\n"
+			<< "test:\ttests\n"
+			<< "tests:\t";
+
+		for ( auto it=config.tests.begin(); it != config.tests.end(); ++it ) {
+			int testno = *it;
+		
+			mktests << "t";
+			mktests.width(4);
+			mktests.fill('0');
+			mktests << testno << " ";
+			if ( ++count % 10 == 0 )
+				mktests << "\\\n";
+		}
+
+		mktests << "\n";
 	}
 }
 

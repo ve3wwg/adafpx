@@ -9,11 +9,13 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <set>
 #include <unordered_set>
 
 struct s_config {
 	bool					debug;		// Show debug info
 	std::string				gcc_options;
+	std::set<int>				tests;		// Tests to perform
 
 	std::unordered_set<std::string>		copies;		// Files to be copied
 	std::unordered_set<std::string>		builtins;	// Builtin types

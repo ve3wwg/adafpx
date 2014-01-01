@@ -283,6 +283,11 @@ loadconfig() {
 			if ( !match(os,platform) )
 				continue;
 
+			int testno = func.attribute("test").as_int();
+
+			if ( testno > 0 )
+				config.tests.insert(testno);
+
 			s_config::s_section2::s_func funcent;
 
 			funcent.c_name = func.attribute("name").value();
