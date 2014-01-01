@@ -11,4 +11,7 @@ OPTZ	?= -O0 -g
 CXX	= g++
 CC	= gcc
 
+GNAT	= gnatmake
+GNATOPTS = -Wall
+
 # End Makefile.incl
