@@ -3,6 +3,7 @@
 ######################################################################
 
 include Makefile.incl
+-include Makefile.tests
 
 .SUFFIXES: .yacc .flex .cpp .hpp
 
@@ -56,6 +57,7 @@ clobber: clean
 	rm -f b~* *.ali
 	rm -f ansi-c-lex.cpp ansi-c-yacc.cpp ansi-c-yacc.hpp errs.t main core*
 	rm -f posix.ads posix.adb
+	rm -f Makefile.tests
 
 ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 
