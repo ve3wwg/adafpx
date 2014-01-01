@@ -166,6 +166,17 @@ package body Posix is
       end if;
    end C_Error;
 
+   function C_Error(Ret_Val: off_t) return errno_t is
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val >= 0 then
+         return 0;
+      else
+         return c_errno;
+      end if;
+   end C_Error;
+
    function C_Error(Ret_Val: System.Address) return errno_t is
       use System;
       function c_errno return errno_t;
