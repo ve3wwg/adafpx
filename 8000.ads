@@ -1,4 +1,6 @@
 
+   function Strerror(Error: errno_t) return String;
+
    function Ada_String(C_String: String) return String;
    function C_String(Ada_String: String) return String;
 
