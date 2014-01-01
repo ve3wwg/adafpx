@@ -150,6 +150,15 @@ main(int argc,char **argv) {
 		}
 
 		mktests << "\n";
+
+		for ( auto it=config.tests.begin(); it != config.tests.end(); ++it ) {
+			int testno = *it;
+		
+			mktests << "\t./t";
+			mktests.width(4);
+			mktests.fill('0');
+			mktests << testno << "\n";
+		}
 	}
 }
 
