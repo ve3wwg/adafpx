@@ -12,6 +12,6 @@ CXX	= g++
 CC	= gcc
 
 GNAT	= gnatmake
-GNATOPTS = -Wall
+GNATOPTS = -Wall -gnata
 
 # End Makefile.incl
