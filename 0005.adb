@@ -9,6 +9,27 @@ with Ada.Characters.Latin_1;
 
 package body Posix is
    
+   function Strlen(C_Ptr : System.Address) return Natural is
+      function UX_strlen(cstr : System.Address) return uint_t;
+      pragma Import(C,UX_strlen,"c_strlen");
+   begin
+      return Natural(UX_strlen(C_Ptr));
+   end Strlen;
+
+   pragma Inline(Strlen);
+
+   function Strerror(Error : errno_t) return String is
+      function UX_strerror(err : errno_t) return System.Address;
+      pragma Import(C,UX_strerror,"strerror");
+
+      C_Msg : constant System.Address := UX_strerror(Error);
+      Len :   constant Natural := Strlen(C_Msg);
+      Msg :   String(1..Len);
+      for Msg'Address use C_Msg;
+   begin
+      return Msg;
+   end Strerror;
+
    function "="(L,R : DIR) return Boolean is
       use System;
    begin
