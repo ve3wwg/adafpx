@@ -37,7 +37,7 @@ run:
 
 atest::	libadafpx.a
 	gnatmake -Wall atest.adb -o atest -largs libadafpx.a
-	@echo "No you may 'make tests'"
+	@echo "Apply 'make tests' to compile and run tests."
 
 libadafpx.a: adafpx.o
 	ar r libadafpx.a adafpx.o
