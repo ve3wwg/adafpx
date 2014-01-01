@@ -117,7 +117,7 @@ emit_basic_types() {
 
 	ads << "\n";
 
-        ads << "   type uchar_array is array(uint_t range <>) of uchar_t;\n";
+        ads << "   type uchar_array is array(Natural range <>) of uchar_t;\n";
 
 	ads << "\n";
 
