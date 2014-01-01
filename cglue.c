@@ -16,4 +16,9 @@ c_errno() {
 	return errno;
 }
 
+unsigned
+c_strlen(const char *sptr) {
+	return (unsigned)strlen(sptr);
+}
+
 // End cglue.c
