@@ -898,23 +898,24 @@
 				<include file="fcntl.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="T1'Address"/>
-			<c_arg name="oflags" type="int_t" from="OFlags"/>
+			<c_arg name="oflags" type="uint_t" from="OFlags"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
-			<ada_arg name="OFlags" io="in" type="int_t"/>
+			<ada_arg name="OFlags" io="in" type="uint_t"/>
                         <ada_arg name="Fd" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1">
+		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" 
+                 test="1" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/stat.h"/>
 				<include file="fcntl.h"/>
 			</includes>
 			<c_arg name="path" type="System.Address" from="T1'Address"/>
-			<c_arg name="oflags" type="int_t" from="OFlags"/>
-			<c_arg name="mode" type="mode_t" from="Mode"/>
+			<c_arg name="oflags" type="uint_t" from="OFlags"/>
+			<c_arg name="mode" type="uint_t" from="uint_t(Mode)"/>
 			<ada_arg name="Path" io="in" type="String" temp="T1" tempval="C_String(Path)"/>
-			<ada_arg name="OFlags" io="in" type="int_t"/>
+			<ada_arg name="OFlags" io="in" type="uint_t"/>
 			<ada_arg name="Mode" io="in" type="mode_t"/>
                         <ada_arg name="Fd" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
@@ -932,7 +933,8 @@
                         <ada_arg name="Fd" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="close" return="int_t" ada_type="procedure" rname="Status" ada_name="Close" inline="1">
+		<func name="close" return="int_t" ada_type="procedure" rname="Status" ada_name="Close" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -959,7 +961,8 @@
 			<ada_arg name="Fd2" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="write" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Write" inline="1">
+		<func name="write" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Write" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -985,7 +988,8 @@
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="read" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Read" inline="1">
+		<func name="read" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Read" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1081,7 +1085,8 @@
 			<temp name="C_Path1" type="String" init="C_String(Path1)"/>
 			<temp name="C_Path2" type="String" init="C_String(Path2)"/>
 		</func>
-		<func name="unlink" return="int_t" ada_type="procedure" rname="Status" ada_name="Unlink" inline="1">
+		<func name="unlink" return="int_t" ada_type="procedure" rname="Status" ada_name="Unlink" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1190,18 +1195,19 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Pathname)"/>
 		</func>
-		<func name="lseek" return="int_t" ada_type="procedure" rname="Status" ada_name="LSeek" inline="1">
+		<func name="lseek" return="off_t" ada_type="procedure" rname="R" ada_name="LSeek" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/types.h"/>
 			</includes>
-			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
 			<c_arg name="offset" type="off_t" from="Offset"/>
 			<c_arg name="whence" type="whence_t" from="Whence"/>
-			<ada_arg name="Fd" io="in" type="int_t"/>
-			<ada_arg name="Offset" io="in" type="off_t"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Offset" io="in out" type="off_t" from="R"/>
 			<ada_arg name="Whence" io="in" type="whence_t"/>
-			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="getpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpid" inline="1">
 			<includes>
@@ -2260,7 +2266,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="N" type="String" init="C_String(Name)"/>
 		</func>
-		<func name="ftruncate" return="int_t" ada_type="procedure" rname="R" ada_name="FTruncate" inline="1">
+		<func name="ftruncate" return="int_t" ada_type="procedure" rname="R" ada_name="Truncate" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
