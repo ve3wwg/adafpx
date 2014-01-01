@@ -5,7 +5,7 @@
 include Makefile.incl
 -include Makefile.tests
 
-.SUFFIXES: .yacc .flex .cpp .hpp
+.SUFFIXES: .yacc .flex .cpp .hpp .adb
 
 .yacc.cpp:
 	$(YACC) -o $*.cpp --defines=$*.hpp $<
@@ -13,6 +13,9 @@ include Makefile.incl
 .flex.cpp:
 	$(FLEX) --outfile=$*.cpp $<
 #	$(FLEX) -d --outfile=$*.cpp $<
+
+.adb:
+	$(GNAT) $(GNATOPTS) $*.adb -o $* -L. -largs libadafpx.a
 
 .cpp.o:
 	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
@@ -34,6 +37,7 @@ run:
 
 atest::	libadafpx.a
 	gnatmake -Wall atest.adb -o atest -largs libadafpx.a
+	@echo "No you may 'make tests'"
 
 libadafpx.a: adafpx.o
 	ar r libadafpx.a adafpx.o
@@ -50,7 +54,8 @@ retest:
 	$(MAKE) -$(MAKEFLAGS) atest
 
 clean:
-	rm -f *.o core 
+	rm -f *.o *.ali core 
+	rm -f t[0-9][0-9][0-9][0-9]
 
 clobber: clean
 	rm -fr ./staging adafpx.c
