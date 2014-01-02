@@ -231,6 +231,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				}
 			}
 			break;
+		case AnonMember :	// Anonymous member with bitfield specification
+			continue;	// Skip this one
 		default :
 			assert(0);
 		}
@@ -271,22 +273,24 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	std::string recd;
 
 	if ( getline(c,recd) ) {
-		node.size = stoul(recd);
+		char *ep = 0;
+		node.size = strtoul(recd.c_str(),&ep,10);
 
 		while ( getline(c,recd) ) {
 			std::vector<std::string> fields;
 			parse(fields,recd);
 			s_config::s_structs::s_member mem;
 			bool is_array = false;
+			char *ep = 0;
 
 			mem.name = fields[0];
 			mem.a_name = to_ada_name(mem.name);
-			mem.msize = stoul(fields[1]);
-			mem.union_struct = stoi(fields[2]);
-			mem.moffset = stoul(fields[3]);
-			mem.msigned = bool(stoi(fields[4]));
-			mem.array = stoi(fields[5]);
-			mem.ptr = stoi(fields[6]);
+			mem.msize = strtoul(fields[1].c_str(),&ep,10);
+			mem.union_struct = atoi(fields[2].c_str());
+			mem.moffset = strtoul(fields[3].c_str(),&ep,10);
+			mem.msigned = bool(atoi(fields[4].c_str()));
+			mem.array = atoi(fields[5].c_str());
+			mem.ptr = atoi(fields[6].c_str());
 			is_array = fields[7] == "A";
 
 			auto it = typemap.find(mem.name);

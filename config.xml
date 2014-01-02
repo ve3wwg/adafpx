@@ -11,6 +11,7 @@
 	</copies>
 	<builtin_types>
 		<builtin type="__builtin_va_list" os="Darwin *"/>
+		<builtin type="__builtin_va_list" os="FreeBSD *"/>
 	</builtin_types>
 	<basic_types genset="50">
 		<type name="char" ada="char_t"/>
@@ -444,7 +445,7 @@
                         <macro name="MAP_POPULATE" desc="Populate (prefault) page tables for a mapping"/>
                         <macro name="MAP_STACK" desc="(since Linux 2.6.27)"/>
 		</set>
-		<set type="sysc_t" genset="290" format="16#%08X#">
+		<set type="sysc_t" genset="290" format="%ld">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -755,8 +756,7 @@
 		</struct>
 		<struct name="tms" ada="s_tms" genset="510">
 			<includes>
-				<include file="sys/times.h" os="Linux *"/>
-				<include file="sys/times.h" os="Darwin *"/>
+				<include file="sys/times.h"/>
 			</includes>
 			<members>
 				<member name="tms_utime" pref="clock_t"/>
@@ -801,6 +801,11 @@
 				<include file="signal.h"/>
 			</includes>
 		</struct>
+		<struct name="sigset_t" ada="sigset_t" genset="560" os="FreeBSD *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+		</struct>
 		<struct name="dirent" ada="s_dirent" genset="580">
 			<includes>
 				<include file="sys/types.h"/>
@@ -821,6 +826,21 @@
 		<struct name="statfs" ada="s_statfs" genset="583" os="Linux *">
 			<includes>
 				<include file="sys/vfs.h"/>
+			</includes>
+			<members>
+				<member name="f_fsid" pref="fsid_t" struct="2"/>
+			</members>
+		</struct>
+		<struct name="fsid_t" ada="fsid_t" genset="581" os="FreeBSD *">
+                        <includes>
+                                <include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
+			</includes>
+		</struct>
+		<struct name="statfs" ada="s_statfs" genset="583" os="FreeBSD *">
+			<includes>
+				<include file="sys/param.h"/>
+				<include file="sys/mount.h"/>
 			</includes>
 			<members>
 				<member name="f_fsid" pref="fsid_t" struct="2"/>

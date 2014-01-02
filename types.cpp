@@ -60,7 +60,7 @@ comp_types() {
 		
 		std::string name = line.substr(0,pos);
 		std::string value = line.substr(pos+1);
-		long tsize = stol(value);
+		long tsize = atol(value.c_str());
 
 		s_config::s_basic_types::s_basic_type& node = config.basic_types.info[name];
 		node.size = tsize;
@@ -130,12 +130,12 @@ comp_systypes() {
 		
 		size_t pos2 = line.find_first_of('|',pos+1);
 		std::string value = line.substr(pos+1,pos2-pos-1);
-		long tsize = stol(value);
+		long tsize = atol(value.c_str());
 		std::string is_unsigned = line.substr(pos2+1);
 
 		s_config::s_sys_types::s_sys_type& node = config.sys_types.info[name];
 		node.size = tsize;
-		node.is_unsigned = stoi(is_unsigned);
+		node.is_unsigned = atoi(is_unsigned.c_str());
 
 		auto i = config.basic_types.sizemap.find(node.size);
 		if ( i != config.basic_types.sizemap.end() ) {

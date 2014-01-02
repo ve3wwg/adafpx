@@ -18,6 +18,7 @@ enum e_ntype {
 	StringLit,	// String literal
 	Typedef,	// Typedef
 	Type,		// Type name
+	AnonMember,	// Anonymous bitfield member
 	Struct,		// struct
 	Union,		// union
 	ArrayRef,	// [ ] ref
@@ -29,6 +30,7 @@ struct s_node {
 	int		symbol;		// Symbol ref
 	int		ltoken;		// Lexical token or 0
 	unsigned	ptr;		// Pointer levels
+	unsigned	bitfield : 1;	// Value is a bit field structure member
 
 	std::vector<int> list;		// List 
 
@@ -42,6 +44,7 @@ struct s_node {
 		ltoken = 0;
 		next = next2 = next3 = 0;
 		ptr = 0;
+		bitfield = 0;
 	}
 };
 

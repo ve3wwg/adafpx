@@ -86,7 +86,7 @@ comp_macro_set(s_config::s_macro_set& mset) {
 		
 		std::string name = line.substr(0,pos);
 		std::string value = line.substr(pos+1);
-		long mvalue = stol(value);
+		long mvalue = atol(value.c_str());
 
 		mset.values[name] = mvalue;
 	}		

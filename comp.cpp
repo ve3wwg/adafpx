@@ -206,6 +206,8 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 		outpath = s.str();
 	}
 
+	source_file = outpath;
+
 	fs.open(outpath.c_str(),std::fstream::in);
 	if ( fs.fail() ) {
 		std::cerr << strerror(errno) << ": opening " << path << " for read.\n";

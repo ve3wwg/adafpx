@@ -3,6 +3,7 @@
 // Date: Thu Nov 28 07:52:07 2013
 ///////////////////////////////////////////////////////////////////////
 
+#include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -441,7 +442,7 @@ loadconfig() {
 					const std::string& stru   = mnode.attribute("struct").value();
 
 					if ( stru != "" )
-						stype.is_struct[member] = stoi(stru);
+						stype.is_struct[member] = atoi(stru.c_str());
 					stype.prefs[member] = pref;
 				}
 			}
