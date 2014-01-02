@@ -69,7 +69,8 @@ extern int yylex();
 
 asm_list
 	: STRING_LITERAL
-	| asm_list STRING_LITERAL ;
+	| asm_list STRING_LITERAL
+	| asm_list ':' STRING_LITERAL '(' IDENTIFIER ')';
 
 asm2_statement
 	: ASM2 '(' STRING_LITERAL ':' STRING_LITERAL '(' IDENTIFIER ')' ')' ';';
@@ -389,7 +390,6 @@ assignment_expression
 	}
 	| unary_expression assignment_operator assignment_expression {
 		dump($1,"conditional_expression ..");
-		dump($2,".. assignment_operator ..");
 		dump($3,".. assignment_expression");
 		$$ = 0;
 	}
@@ -806,8 +806,19 @@ struct_declarator_list
 
 struct_declarator
 	: declarator
-	| ':' constant_expression
-	| declarator ':' constant_expression
+	| ':' constant_expression {
+		s_node node;
+		node.type = AnonMember;
+		node.bitfield = 1;
+		$$ = Node(node);
+	}
+	| declarator ':' constant_expression {
+		if ( $1 ) {
+			s_node& node = Get($1);
+			node.bitfield = 1;
+		}
+		$$ = $1;
+	}
 	;
 
 enum_specifier
@@ -889,7 +900,7 @@ direct_declarator
 	| '(' '^' ')' {
 		$$ = 0;
 	}
-	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
+	| direct_declarator '[' type_qualifier_list assignment_expression ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -897,7 +908,7 @@ direct_declarator
 		node.next3 = $4;
 		$$ = Node(node);
 	}
-	| direct_declarator '[' type_qualifier_list ']' {
+	| direct_declarator '[' type_qualifier_list ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -905,7 +916,7 @@ direct_declarator
 		node.next3 = 0;
 		$$ = Node(node);
 	}
-	| direct_declarator '[' assignment_expression ']' {
+	| direct_declarator '[' assignment_expression ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -913,7 +924,7 @@ direct_declarator
 		node.next3 = 0;
 		$$ = Node(node);
 	}
-	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
+	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -921,7 +932,7 @@ direct_declarator
 		node.next3 = $5;
 		$$ = Node(node);
 	}
-	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
+	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -929,7 +940,7 @@ direct_declarator
 		node.next3 = $5;
 		$$ = Node(node);
 	}
-	| direct_declarator '[' type_qualifier_list '*' ']' {
+	| direct_declarator '[' type_qualifier_list '*' ']' attribute_clause_list {
 		s_node node;
 		s_node node2;
 
@@ -942,7 +953,7 @@ direct_declarator
 		node.next3 = Node(node2);
 		$$ = Node(node);
 	}
-	| direct_declarator '[' '*' ']' {
+	| direct_declarator '[' '*' ']' attribute_clause_list {
 		s_node node;
 		s_node node2;
 
@@ -954,7 +965,7 @@ direct_declarator
 		node.next2 = Node(node2);
 		$$ = Node(node);
 	}
-	| direct_declarator '[' ']' {
+	| direct_declarator '[' ']' attribute_clause_list {
 		s_node node;
 		node.type = ArrayRef;
 		node.next = $1;
@@ -1089,6 +1100,9 @@ statement
 	| iteration_statement
 	| jump_statement
 	| asm2_statement
+	| ASM '(' asm_list ')' {
+		$$ = 0;
+	}
 	;
 
 labeled_statement
@@ -1244,6 +1258,8 @@ dump(s_node& node,const char *desc,int level) {
 		std::cerr << " '" << symbol << "'\n";
 	} else	std::cerr << "\n";
 
+	std::cerr << indent(level) << "node.bitfield = " << node.bitfield << "\n";
+
 	for ( auto it=node.list.begin(); it != node.list.end(); ++it ) {
 		s_node& lnode = Get(*it);
 
@@ -1272,6 +1288,8 @@ to_string(e_ntype type) {
 		return "StringLit";
 	case Ident :
 		return "Ident";
+	case AnonMember :
+		return "AnonMember";
 	case Typedef :
 		return "Typedef";
 	case Type :
