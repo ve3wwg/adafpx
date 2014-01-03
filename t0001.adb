@@ -16,7 +16,7 @@ procedure T0001 is
    Path1 :  constant String := "This_File_Does_Not_Exist";
    Path2 :  constant String := "Makefile";
    Path3 :  constant String := ".Test_File";
-   Fd, WFd : fd_t := 0;
+   Fd, Fd2 : fd_t := 0;
    Error :  errno_t;
 begin
 
@@ -55,7 +55,7 @@ begin
 
    Unlink(Path3,Error);             -- Ignore errors here
 
-   Open(Path3,O_WRONLY or O_CREAT,8#770#,WFd,Error);
+   Open(Path3,O_WRONLY or O_CREAT,8#770#,Fd2,Error);
    pragma Assert(Fd >= 0);          -- Expect a valid fd returned
    pragma Assert(Error = 0);        -- Expect success
 
@@ -87,7 +87,7 @@ begin
          -- Write block out to output file
          -------------------------------------------------------------
 
-         Write(WFd,Buffer(Buffer'First..Last),Count,Error);
+         Write(Fd2,Buffer(Buffer'First..Last),Count,Error);
          if Error /= 0 then
             Put_Line(Strerror(Error) & ": Writing " & Path3);
          end if;
@@ -108,12 +108,12 @@ begin
          declare
             Check_Offset : off_t := 0;
          begin
-            LSeek(WFd,Check_Offset,SEEK_CUR,Error);
+            LSeek(Fd2,Check_Offset,SEEK_CUR,Error);
             pragma Assert(Check_Offset = Offset);
          end;
       end loop;
 
-      Truncate(WFd,Offset,Error);
+      Truncate(Fd2,Offset,Error);
       pragma Assert(Error = 0);
    end;
 
@@ -124,7 +124,50 @@ begin
    Close(Fd,Error);
    pragma Assert(Error = 0);
 
-   Close(WFd,Error);
+   Close(Fd2,Error);
+   pragma Assert(Error = 0);
+
+   -------------------------------------------------------------------
+   -- Compare files
+   -------------------------------------------------------------------
+
+   Open(Path2,O_RDONLY,Fd,Error);
+   pragma Assert(Fd >= 0);
+   pragma Assert(Error = 0);        -- Expect success
+
+   Open(Path3,O_RDONLY,Fd2,Error);
+   pragma Assert(Fd >= 0);          -- Expect a valid fd returned
+   pragma Assert(Error = 0);        -- Expect success
+
+   declare
+      Buffer :       uchar_array(1..300);
+      Buf2 :         uchar_array(1..300);
+      Last, Last2 :  Natural := 0;
+   begin
+
+      loop
+         -------------------------------------------------------------
+         -- Read a block in from the input file
+         -------------------------------------------------------------
+
+         Read(Fd,Buffer,Last,Error);
+         pragma Assert(Error = 0);
+         exit when Last = 0;
+
+         -------------------------------------------------------------
+         -- Read a block from the other file
+         -------------------------------------------------------------
+
+         Read(Fd2,Buf2,Last2,Error);
+         pragma Assert(Error = 0);
+         pragma Assert(Last2 = Last);
+         pragma Assert(Buf2(1..Last2) = Buffer(1..Last));
+      end loop;
+   end;
+
+   Close(Fd,Error);
+   pragma Assert(Error = 0);
+   Close(Fd2,Error);
    pragma Assert(Error = 0);
 
    -------------------------------------------------------------------
