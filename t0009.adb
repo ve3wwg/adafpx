@@ -56,7 +56,6 @@ begin
    pragma Assert(Stat1.st_size = Stat2.st_size);
    pragma Assert(Stat1.st_blocks = Stat2.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat2.st_blksize);
-   pragma Assert(Stat1.st_flags = Stat2.st_flags);
 
    -------------------------------------------------------------------
    -- Open Makefile for reading
@@ -81,7 +80,6 @@ begin
    pragma Assert(Stat1.st_size = Stat3.st_size);
    pragma Assert(Stat1.st_blocks = Stat3.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat3.st_blksize);
-   pragma Assert(Stat1.st_flags = Stat3.st_flags);
 
    -------------------------------------------------------------------
    -- Now test Dup(2) and Dup2(2)
@@ -119,7 +117,6 @@ begin
    pragma Assert(Stat1.st_size = Stat4.st_size);
    pragma Assert(Stat1.st_blocks = Stat4.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat4.st_blksize);
-   pragma Assert(Stat1.st_flags = Stat4.st_flags);
 
    Close(Fd2,Error);
    pragma Assert(Error = 0);
@@ -136,7 +133,6 @@ begin
    pragma Assert(Stat1.st_size = Stat5.st_size);
    pragma Assert(Stat1.st_blocks = Stat5.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat5.st_blksize);
-   pragma Assert(Stat1.st_flags = Stat5.st_flags);
 
    Close(Fd3,Error);
    pragma Assert(Error = 0);
