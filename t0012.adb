@@ -13,7 +13,7 @@ use Posix;
 procedure T0012 is
    use Ada.Text_IO;    
 
-   Test_Pat :  String := "ABC012";
+   Test_Pat :  constant String := "ABC012";
    RFd, WFd :  fd_t := -1;
    Count :     Natural;
    Error :     errno_t;
