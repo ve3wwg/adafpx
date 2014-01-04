@@ -20,7 +20,7 @@ procedure T0011 is
    Error :     errno_t;
 begin
 
-   Put_Line("Test 0011 - Readlink/Symlink");
+   Put_Line("Test 0011 - Getcwd/Getwd/Chdir/FChdir/Mkdir/Rmdir");
 
    -------------------------------------------------------------------
    -- Determine current working directory
