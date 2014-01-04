@@ -1166,7 +1166,7 @@
 			<ada_arg name="status" io="in" type="int_t"/>
 		</func>
 		<func name="waitpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Wait_Pid" 
-		 test="6" inline="1">
+		 test="8" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/wait.h"/>
