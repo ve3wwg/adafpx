@@ -51,8 +51,6 @@ begin
    pragma Assert(Stat1.st_uid = Stat2.st_uid);
    pragma Assert(Stat1.st_gid = Stat2.st_gid);
    pragma Assert(Stat1.st_rdev = Stat2.st_rdev);
-   pragma Assert(Stat1.st_mtimespec = Stat2.st_mtimespec);
-   pragma Assert(Stat1.st_ctimespec = Stat2.st_ctimespec);
    pragma Assert(Stat1.st_size = Stat2.st_size);
    pragma Assert(Stat1.st_blocks = Stat2.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat2.st_blksize);
@@ -75,8 +73,6 @@ begin
    pragma Assert(Stat1.st_uid = Stat3.st_uid);
    pragma Assert(Stat1.st_gid = Stat3.st_gid);
    pragma Assert(Stat1.st_rdev = Stat3.st_rdev);
-   pragma Assert(Stat1.st_mtimespec = Stat3.st_mtimespec);
-   pragma Assert(Stat1.st_ctimespec = Stat3.st_ctimespec);
    pragma Assert(Stat1.st_size = Stat3.st_size);
    pragma Assert(Stat1.st_blocks = Stat3.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat3.st_blksize);
@@ -112,8 +108,6 @@ begin
    pragma Assert(Stat1.st_uid = Stat4.st_uid);
    pragma Assert(Stat1.st_gid = Stat4.st_gid);
    pragma Assert(Stat1.st_rdev = Stat4.st_rdev);
-   pragma Assert(Stat1.st_mtimespec = Stat4.st_mtimespec);
-   pragma Assert(Stat1.st_ctimespec = Stat4.st_ctimespec);
    pragma Assert(Stat1.st_size = Stat4.st_size);
    pragma Assert(Stat1.st_blocks = Stat4.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat4.st_blksize);
@@ -128,8 +122,6 @@ begin
    pragma Assert(Stat1.st_uid = Stat5.st_uid);
    pragma Assert(Stat1.st_gid = Stat5.st_gid);
    pragma Assert(Stat1.st_rdev = Stat5.st_rdev);
-   pragma Assert(Stat1.st_mtimespec = Stat5.st_mtimespec);
-   pragma Assert(Stat1.st_ctimespec = Stat5.st_ctimespec);
    pragma Assert(Stat1.st_size = Stat5.st_size);
    pragma Assert(Stat1.st_blocks = Stat5.st_blocks);
    pragma Assert(Stat1.st_blksize = Stat5.st_blksize);
