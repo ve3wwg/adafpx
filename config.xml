@@ -1204,7 +1204,29 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="chdir" return="int_t" ada_type="procedure" rname="Status" ada_name="Chdir" inline="1">
+		<func name="getcwd" return="System.Address" ada_type="procedure" rname="R" ada_name="Getcwd" 
+		 test="11" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="buf" type="System.Address" from="Buffer'Address"/>
+			<c_arg name="size" type="size_t" from="Buffer'Length"/>
+			<ada_arg name="Buffer" io="out" type="String" from="implied"/>
+			<ada_arg name="Last"   io="out" type="Natural" from="Buffer'First+Strlen(R)-1"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getwd" return="System.Address" ada_type="function" rname="R" ada_name="Getwd" 
+                 ada_return="String" ada_return_from="Ada_String(R)"
+		 test="11" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="buf" type="System.Address" from="T'Address"/>
+			<c_arg name="size" type="size_t" from="T'Length"/>
+			<temp name="T" type="String(1..MAXPATHLEN+1)"/>
+		</func>
+		<func name="chdir" return="int_t" ada_type="procedure" rname="Status" ada_name="Chdir" 
+		 test="11" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1213,12 +1235,13 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="fchdir" return="int_t" ada_type="procedure" rname="Status" ada_name="FChdir" inline="1">
+		<func name="fchdir" return="int_t" ada_type="procedure" rname="Status" ada_name="FChdir" 
+		 test="11" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
-			<c_arg name="fildes" type="int_t" from="Fildes"/>
-			<ada_arg name="Fildes" io="in" type="int_t"/>
+			<c_arg name="fildes" type="fd_t" from="Fildes"/>
+			<ada_arg name="Fildes" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
 		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" inline="1">
@@ -2000,7 +2023,8 @@
 			<temp name="T1" type="String" init="C_String(Old_Path)"/>
 			<temp name="T2" type="String" init="C_String(New_Path)"/>
 		</func>
-		<func name="mkdir" return="int_t" ada_type="procedure" rname="R" ada_name="Mkdir" inline="1">
+		<func name="mkdir" return="int_t" ada_type="procedure" rname="R" ada_name="Mkdir" 
+		 test="11" inline="1">
 			<includes>
 				<include file="sys/stat.h"/>
 			</includes>
@@ -2011,7 +2035,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="rmdir" return="int_t" ada_type="procedure" rname="R" ada_name="Rmdir" inline="1">
+		<func name="rmdir" return="int_t" ada_type="procedure" rname="R" ada_name="Rmdir" 
+		 test="11" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
