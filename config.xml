@@ -964,7 +964,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
 		<func name="dup" return="int_t" ada_type="procedure" rname="R" ada_name="Dup" 
-		 test="2" inline="1">
+		 test="9" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -974,7 +974,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="dup2" return="int_t" ada_type="procedure" rname="Status" ada_name="Dup2" 
-		 test="2" inline="1">
+		 test="9" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1180,7 +1180,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(P)"/>
 			<temp name="S" type="int_t" init="0"/>
 		</func>
-		<func name="link" return="int_t" ada_type="procedure" rname="Status" ada_name="Link" inline="1">
+		<func name="link" return="int_t" ada_type="procedure" rname="Status" ada_name="Link" 
+		 test="9" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1758,7 +1759,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="stat" return="int_t" ada_type="procedure" rname="R" ada_name="Stat" inline="1">
+		<func name="stat" return="int_t" ada_type="procedure" rname="R" ada_name="Stat" 
+		 test="9" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/stat.h"/>
@@ -1770,7 +1772,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="fstat" return="int_t" ada_type="procedure" rname="R" ada_name="FStat" inline="1">
+		<func name="fstat" return="int_t" ada_type="procedure" rname="R" ada_name="FStat" 
+		 test="9" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/stat.h"/>
