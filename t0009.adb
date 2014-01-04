@@ -25,7 +25,7 @@ begin
    Put_Line("Test 0009 - Link/Stat/Fstat/Dup/Dup2");
 
    -------------------------------------------------------------------
-   -- Open .Test_File for Writing
+   -- Link Makefile to Test_0009
    -------------------------------------------------------------------
 
    Unlink(Path2,Error);             -- Ignore errors here
