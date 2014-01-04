@@ -11,3 +11,6 @@
    function To_Argv(Argvs: String) return argv_array;
    procedure To_Argv(Argvs: String; Argv: out argv_array);
 
+   function To_String(A : uchar_array) return String;
+   function To_uchar_array(S : String) return uchar_array;
+

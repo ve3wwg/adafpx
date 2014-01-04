@@ -6,6 +6,7 @@
 -- This is generated source code. Edit at your own risk.
 
 with Ada.Characters.Latin_1;
+with Ada.Unchecked_Conversion;
 
 package body Posix is
    
@@ -340,3 +341,20 @@ package body Posix is
         pragma Warnings(On);
    end To_Clock;
 
+   function To_String(A : uchar_array) return String is
+      subtype uc_array is uchar_array(A'Range);
+      subtype uc_string is String(A'Range);
+      function To_String is new
+         Ada.Unchecked_Conversion(Source => uc_array,Target => uc_string);
+   begin
+      return To_String(A);
+   end To_String;
+
+   function To_uchar_array(S : String) return uchar_array is
+      subtype uc_string is String(S'Range);
+      subtype uc_array is uchar_array(S'Range);
+      function To_Array is new
+         Ada.Unchecked_Conversion(Target => uc_array,Source => uc_string);
+   begin
+      return To_Array(S);
+   end To_uchar_array;
