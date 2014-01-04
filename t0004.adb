@@ -17,5 +17,6 @@ begin
 
    Put_Line("T0004 will exit with code 0");
    Sys_Exit(0);
+   Put_Line("*** T0004 Failed if you see this ***");
 
 end T0004;

@@ -940,7 +940,8 @@
                         <ada_arg name="Fd" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="creat" return="int_t" ada_type="procedure" rname="R" ada_name="Create" inline="1">
+		<func name="creat" return="int_t" ada_type="procedure" rname="R" ada_name="Create" 
+		 test="2" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/stat.h"/>
@@ -962,7 +963,8 @@
 			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="dup" return="int_t" ada_type="procedure" rname="R" ada_name="Dup" inline="1">
+		<func name="dup" return="int_t" ada_type="procedure" rname="R" ada_name="Dup" 
+		 test="2" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -971,7 +973,8 @@
 			<ada_arg name="Fd2" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="dup2" return="int_t" ada_type="procedure" rname="Status" ada_name="Dup2" inline="1">
+		<func name="dup2" return="int_t" ada_type="procedure" rname="Status" ada_name="Dup2" 
+		 test="2" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -994,7 +997,8 @@
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="pwrite" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PWrite" inline="1">
+		<func name="pwrite" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PWrite" 
+		 test="3" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1034,7 +1038,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="pread" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PRead" inline="1">
+		<func name="pread" return="ssize_t" ada_type="procedure" rname="Status" ada_name="PRead" 
+		 test="3" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1048,14 +1053,16 @@
 			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit" inline="1">
+		<func name="exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit" 
+		 test="4" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
 			<c_arg name="status" type="int_t" from="Status"/>
 			<ada_arg name="Status" io="in" type="int_t"/>
 		</func>
-		<func name="_exit" altname="UX_exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit2" inline="1">
+		<func name="_exit" altname="UX_exit" return="" ada_type="procedure" rname="" ada_name="Sys_Exit2" 
+		 test="5" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>

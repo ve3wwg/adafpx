@@ -17,5 +17,6 @@ begin
 
    Put_Line("T0005 will exit with code 0");
    Sys_Exit2(0);
+   Put_Line("*** T0005 Failed if you see this ***");
 
 end T0005;
