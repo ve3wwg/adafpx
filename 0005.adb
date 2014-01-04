@@ -207,6 +207,23 @@ package body Posix is
       return C_String;
    end Ada_String;
 
+   function Ada_String(C_String: System.Address) return String is
+      use System;
+   begin
+      if C_String = Null_Address then
+         return "";
+      end if;
+
+      declare
+         Len : constant Natural := Strlen(C_String);
+         Str : String(1..Len);
+         for Str'Address use C_String;
+      begin
+         return Str;
+      end;
+
+   end Ada_String;
+
    function Pos_PID(Status: int_t) return pid_t is
    begin
       if Status >= 0 then
