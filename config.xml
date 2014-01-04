@@ -1215,7 +1215,7 @@
 			<ada_arg name="Last"   io="out" type="Natural" from="Buffer'First+Strlen(R)-1"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getwd" return="System.Address" ada_type="function" rname="R" ada_name="Getwd" 
+		<func name="getcwd" return="System.Address" ada_type="function" rname="R" ada_name="Getwd" 
                  ada_return="String" ada_return_from="Ada_String(R)"
 		 test="11" inline="1">
 			<includes>
