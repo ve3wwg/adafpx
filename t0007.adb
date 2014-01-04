@@ -54,7 +54,7 @@ begin
       begin
          Wait(Status,Error);
          pragma Assert(Error = 0);
-         pragma Assert(WIFSIGNALED(Status) = True);
+         pragma Assert(WIFSIGNALED(Status));
 
          Sig := WTERMSIG(Status);
          pragma Assert(Sig = SIGTERM);

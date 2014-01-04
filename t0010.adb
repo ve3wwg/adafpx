@@ -24,7 +24,9 @@ begin
    -- Symlink Makefile to .Test_0010
    -------------------------------------------------------------------
 
+   pragma Warnings(Off);
    Unlink(Path2,Error);             -- Ignore errors here
+   pragma Warnngs(On);
 
    Symlink(Path1,Path2,Error);      -- ln -s Makefile .Test_0010
    pragma Assert(Error = 0);

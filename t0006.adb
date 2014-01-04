@@ -50,7 +50,7 @@ begin
       begin
          Wait(Status,Error);
          pragma Assert(Error = 0);
-         pragma Assert(WIFEXITED(Status) = True);
+         pragma Assert(WIFEXITED(Status));
 
          Exit_Code := WEXITSTATUS(Status);
          Put_Line("Parent: My child process has exited with code =" & int_t'Image(Exit_Code));

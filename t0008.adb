@@ -55,7 +55,7 @@ begin
 
          Wait_Pid(Child,0,Status,Error);
          pragma Assert(Error = 0);
-         pragma Assert(WIFSIGNALED(Status) = True);
+         pragma Assert(WIFSIGNALED(Status));
 
          Sig := WTERMSIG(Status);
          pragma Assert(Sig = SIGINT);

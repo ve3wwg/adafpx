@@ -43,7 +43,9 @@ begin
    -- Make a test directory
    -------------------------------------------------------------------
 
+   pragma Warnings(Off);
    Rmdir(Subdir,Error);       -- Ignore errors here
+   pragma Warnings(On);
 
    Mkdir(Subdir,8#750#,Error);
    pragma Assert(Error = 0);

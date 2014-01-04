@@ -11,8 +11,6 @@ use Posix;
 
 procedure T0004 is
    use Ada.Text_IO;
-
-   Error :  errno_t;
 begin
 
    Put_Line("T0004 will exit with code 0");

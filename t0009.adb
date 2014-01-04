@@ -28,10 +28,11 @@ begin
    -- Link Makefile to Test_0009
    -------------------------------------------------------------------
 
+   pragma Warnings(Off);
    Unlink(Path2,Error);             -- Ignore errors here
+   pragma Warnings(On);
 
    Link(Path1,Path2,Error);
-
    pragma Assert(Error = 0);
 
    -------------------------------------------------------------------
