@@ -92,9 +92,10 @@ emit_section2() {
 				proto << arg.type;
 			}
 			proto << ")";
-			if ( func.type == "function" )
-				proto << " return " << func.ada_return;
 		}
+
+		if ( func.type == "function" )
+			proto << " return " << func.ada_return;
 
 		//////////////////////////////////////////////////////
 		// Generate the prototype in the Spec
