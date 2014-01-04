@@ -14,7 +14,7 @@
 
 #include <sys/utsname.h>
 
-#include <string>
+#include "utils.hpp"
 
 static bool uts_init = false;
 static struct utsname uts_name;
@@ -55,11 +55,42 @@ uts_machine() {
 	return uts_name.machine;
 }
 
+//////////////////////////////////////////////////////////////////////
+// Parse s into vec, based upon separator sep
+//////////////////////////////////////////////////////////////////////
+
+void
+split(std::vector<std::string>& vec,const std::string s,char sep) {
+	size_t spos = 0;
+
+	vec.clear();
+	while ( spos < s.size() ) {
+		size_t p = s.find_first_of(sep,spos);
+		if ( p == std::string::npos ) {
+			if ( spos < s.size() )
+				vec.push_back(s.substr(spos));
+			break;
+		}
+		vec.push_back(s.substr(spos,p-1));
+		spos = p + 1;
+	}
+}
+
 bool
 match(const std::string pattern,const std::string s,bool caseless) {
 	int flags = caseless ? FNM_CASEFOLD : 0;
+	std::vector<std::string> mvec;
 
-	return !fnmatch(pattern.c_str(),s.c_str(),flags);
+	split(mvec,pattern);
+
+	for ( auto it=mvec.begin(); it != mvec.end(); ++it ) {
+		const std::string& pat = *it;
+
+		if ( !fnmatch(pat.c_str(),s.c_str(),flags) )
+			return true;
+	}
+
+	return false;
 }
 
 // End utils.cpp
