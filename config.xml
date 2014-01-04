@@ -1025,7 +1025,8 @@
 			<ada_arg name="Last" io="out" type="Natural" from="Natural(Buffer'First)+To_Count(Status)-1"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="readlink" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readlink" inline="1">
+		<func name="readlink" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readlink" 
+		 test="10" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -2209,7 +2210,8 @@
 			<ada_arg name="Grouplist" io="in" type="gid_array"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="symlink" return="int_t" ada_type="procedure" rname="R" ada_name="Symlink" inline="1">
+		<func name="symlink" return="int_t" ada_type="procedure" rname="R" ada_name="Symlink" 
+		 test="10" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
