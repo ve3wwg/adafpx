@@ -19,7 +19,7 @@ procedure T0013 is
    Error :     errno_t;
 begin
 
-   Put_Line("Test 0013 - Pipe");
+   Put_Line("Test 0013 - Pipe2");
 
    Pipe2(0,RFd,WFd,Error);
    pragma Assert(Error = 0);
