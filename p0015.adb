@@ -5,15 +5,14 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Ada.Text_IO;
 with Posix;
 use Posix;
 
 package body P0015 is
 
-   procedure User1_Handler(Sig : int_t);
-   procedure User2_Handler(Sig : int_t);
-   procedure Alarm_Handler(Sig : int_t);
+   procedure User1_Handler(Sig : sig_t);
+   procedure User2_Handler(Sig : sig_t);
+   procedure Alarm_Handler(Sig : sig_t);
 
    pragma Convention(C,User1_Handler);
    pragma Convention(C,User2_Handler);
@@ -29,35 +28,36 @@ package body P0015 is
    pragma Volatile(Alarm_Signaled);
 
 
-   procedure User1_Handler(Sig : int_t) is
-      Prior : sig_t;
-      Error : errno_t;
+   procedure User1_Handler(Sig : sig_t) is
+      Prior :  sig_t;
+      Error :  errno_t;
    begin
+      pragma Assert(Sig = SIGUSR1);
       Sig_User1 := Sig_User1 + 1;
-      Signal(SIGUSR1,User1_Handler'Access,Prior,Error);  -- This call signature returns Prior
+      Signal(Sig,User1_Handler'Access,Prior,Error);  -- This call signature returns Prior
       pragma Assert(Error = 0);
    end User1_Handler;
 
-   procedure User2_Handler(Sig : int_t) is
-      Error : errno_t;
+   procedure User2_Handler(Sig : sig_t) is
+      Error :  errno_t;
    begin
+      pragma Assert(Sig = SIGUSR2);
       Sig_User2 := Sig_User2 + 1;
-      Signal(SIGUSR1,User1_Handler'Access,Error);        -- This is the old unreliable signal API
+      Signal(Sig,User1_Handler'Access,Error);        -- This is the old unreliable signal API
       pragma Assert(Error = 0);
    end User2_Handler;
 
-   procedure Alarm_Handler(Sig : int_t) is
+   procedure Alarm_Handler(Sig : sig_t) is
       Error : errno_t;
    begin
+      pragma Assert(Sig = SIGALRM);
       Alarm_Signaled := true;
-      Signal(SIGALRM,User1_Handler'Access,Error);        -- This is the old unreliable signal API
+      Signal(Sig,User1_Handler'Access,Error);        -- This is the old unreliable signal API
       pragma Assert(Error = 0);
    end Alarm_Handler;
 
 
    procedure Test is
-      use Ada.Text_IO;
-
       PID :    pid_t;
       Secs :   uint_t;
       Error :  errno_t;
