@@ -46,7 +46,7 @@ usage(const char *cmd) {
 int
 main(int argc,char **argv) {
 	std::stringstream opt_gcc;
-	std::string platform, version, machine;
+	std::string clan, platform, version, machine;
 	bool opt_show_platform = false;
 	char optch;
 	extern int yydebug;
@@ -87,6 +87,12 @@ main(int argc,char **argv) {
 	version = uts_version();
 	machine = uts_machine();
 
+	{
+		std::vector<std::string> vec;
+		split(vec,platform,' ');
+		clan = vec[0];
+	}
+
 	std::cout
 		<< "Platform:    " << platform << "\n"
 		<< "Machine:     " << machine << "\n"
@@ -95,6 +101,11 @@ main(int argc,char **argv) {
 
 	if ( opt_show_platform )
 		exit(0);
+
+	config.gnatprep["%clan"]     = clan;
+	config.gnatprep["%platform"] = platform;
+	config.gnatprep["%machine"]  = machine;
+	config.gnatprep["%version"]  = version;
 
 	loadconfig();
 
