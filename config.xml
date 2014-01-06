@@ -1,4 +1,10 @@
 <entities>
+	<gnatprep file="posix.defs">
+		<define symbol="POSIX_CLAN"     string="%clan"/>
+		<define symbol="POSIX_PLATFORM" string="%platform"/>
+		<define symbol="POSIX_MACHINE"  string="%machine"/>
+		<define symbol="POSIX_VERSION" string="%version"/>
+	</gnatprep>
 	<copies>
 		<copy name="0005.ads"/>
 		<copy name="0005.adb"/>
@@ -1245,7 +1251,8 @@
 			<ada_arg name="Fildes" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" inline="1">
+		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" 
+		 test="16" inline="1">
 			<includes>
 				<include file="time.h"/>
 			</includes>
@@ -1785,7 +1792,20 @@
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
 		<func name="stat" return="int_t" ada_type="procedure" rname="R" ada_name="Stat" 
-		 test="9" inline="1">
+		 test="9" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="stat$INODE64" altname="UX_stat" return="int_t" ada_type="procedure" rname="R" ada_name="Stat" 
+		 test="9" inline="1" os="Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/stat.h"/>
@@ -1798,7 +1818,19 @@
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
 		<func name="fstat" return="int_t" ada_type="procedure" rname="R" ada_name="FStat" 
-		 test="9" inline="1">
+		 test="9" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="fstat$INODE64" altname="fstat" return="int_t" ada_type="procedure" rname="R" ada_name="FStat" 
+		 test="9" inline="1" os="Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/stat.h"/>
@@ -1960,7 +1992,8 @@
 			</includes>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="utime" return="int_t" ada_type="procedure" rname="R" ada_name="UTime" inline="1">
+		<func name="utime" return="int_t" ada_type="procedure" rname="R" ada_name="UTime" 
+		 test="16" inline="1">
 			<includes>
 				<include file="utime.h"/>
 			</includes>
@@ -1970,6 +2003,40 @@
 			<ada_arg name="Times" io="in" type="s_utimbuf" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="utimes" return="int_t" ada_type="procedure" rname="R" ada_name="UTimes" 
+		 test="16" inline="1">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="times" type="System.Address" from="System.Null_Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="utimes" return="int_t" ada_type="procedure" rname="R" ada_name="UTimes" 
+		 test="16" inline="1">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="times" type="System.Address" from="Times(Times'First)'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Times" io="in" type="s_timeval_array2"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="futimes" return="int_t" ada_type="procedure" rname="R" ada_name="FUTimes" 
+		 test="16" inline="1">
+			<includes>
+				<include file="sys/time.h"/>
+			</includes>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="times" type="System.Address" from="Times(Times'First)'Address"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
+			<ada_arg name="Times" io="in" type="s_timeval_array2"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="access" return="int_t" ada_type="procedure" rname="R" ada_name="Test_Access" inline="1">
 			<includes>
