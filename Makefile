@@ -59,7 +59,7 @@ clean:
 
 clobber: clean
 	rm -fr ./staging adafpx.c
-	rm -f b~* *.ali
+	rm -f b~* *.ali posix.defs
 	rm -f ansi-c-lex.cpp ansi-c-yacc.cpp ansi-c-yacc.hpp errs.t main core*
 	rm -f posix.ads posix.adb
 	rm -f Makefile.tests
