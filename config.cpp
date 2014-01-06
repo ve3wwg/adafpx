@@ -17,13 +17,58 @@
 #include "config.hpp"
 
 #include <iostream>
+#include <fstream>
 #include <unordered_set>
 
 s_config config;
+std::fstream gnatprep;
 
 static std::string platform;
 
 static std::unordered_set<int> used_gensets;
+
+//////////////////////////////////////////////////////////////////////
+// Contribute gnatprep lines
+//////////////////////////////////////////////////////////////////////
+
+static void
+gnatprep_defines(pugi::xml_node& gnode) {
+
+	if ( !gnatprep.is_open() )
+		return;
+
+	for ( auto it=gnode.begin(); it != gnode.end(); ++it ) {
+		pugi::xml_node& define = *it;
+
+		if ( strcmp(define.name(),"define") != 0 )
+			continue;
+
+		const std::string& symbol = define.attribute("symbol").value();
+		std::string value = define.attribute("value").value();
+		bool is_string = false;
+
+		if ( value == "" ) {
+			const char *cp = define.attribute("string").value();
+			is_string = cp != 0;
+			if ( is_string )
+				value = cp;
+		}
+
+		if ( symbol == "" )
+			continue;
+
+		// Check if there is a known substitution defined
+		if ( value != "" && value[0] == '%' ) {
+			auto sit = config.gnatprep.find(value);
+			if ( sit != config.gnatprep.end() )
+				value = sit->second;	// Substitute the defined value
+		}
+
+		if ( !is_string )
+			gnatprep << symbol << " := " << value << "\n";
+		else	gnatprep << symbol << " := \"" << value << "\"\n";
+	}
+}
 
 static void
 load_includes(std::vector<std::string>& vec,pugi::xml_node& inode) {
@@ -99,6 +144,21 @@ loadconfig() {
 			if ( match(os,platform) )
 				config.copies.insert(filename);
 		}
+	}
+
+	{
+		pugi::xml_node gnode = doc.child("entities").child("gnatprep");
+		const std::string filename = gnode.attribute("file").value();
+
+		if ( filename != "" ) {
+			gnatprep.open(filename.c_str(),std::fstream::out);
+			if ( gnatprep.fail() ) {
+				std::cerr << strerror(errno) << ": opening " << filename << " for write.\n";
+				exit(3);
+			}
+		}
+
+		gnatprep_defines(gnode);
 	}
 
 	{

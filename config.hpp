@@ -19,6 +19,7 @@ struct s_config {
 
 	std::unordered_set<std::string>		copies;		// Files to be copied
 	std::unordered_set<std::string>		builtins;	// Builtin types
+	std::unordered_map<std::string,std::string> gnatprep;	// gnatprep symbol definitions
 
 	struct s_macro_set {
 		int				genset;
