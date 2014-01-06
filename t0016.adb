@@ -36,7 +36,19 @@ begin
 #if POSIX_CLAN = "Darwin"
    pragma Assert(S.st_atimespec.tv_sec = Times.actime);
    pragma Assert(S.st_mtimespec.tv_sec = Times.modtime);
+#end if;
+
+#if POSIX_CLAN = "Linux"
+#if POSIX_MACHINE = "x86_64"
+   pragma Assert(S.st_atim.tv_sec = Times.actime);
+   pragma Assert(S.st_mtim.tv_sec = Times.modtime);
 #else
+   pragma Assert(S.st_atime = Times.actime);
+   pragma Assert(S.st_mtime = Times.modtime);
+#end if;   
+#end if;
+
+#if POSIX_CLAN = "FreeBSD"
    pragma Assert(S.st_atime = Times.actime);
    pragma Assert(S.st_mtime = Times.modtime);
 #end if;
@@ -55,9 +67,21 @@ begin
 #if POSIX_CLAN = "Darwin"
    pragma Assert(S.st_atimespec.tv_sec = Now+1);
    pragma Assert(S.st_mtimespec.tv_sec = Now+1);
+#end if;
+
+#if POSIX_CLAN = "Linux"
+#if POSIX_MACHINE = "x86_64"
+   pragma Assert(S.st_atim.tv_sec = Times.actime + 1);
+   pragma Assert(S.st_mtim.tv_sec = Times.modtime + 1);
 #else
-   pragma Assert(S.st_atime = Now+1);
-   pragma Assert(S.st_mtime = Now+1);
+   pragma Assert(S.st_atime = Times.actime + 1);
+   pragma Assert(S.st_mtime = Times.modtime + 1);
+#end if;   
+#end if;
+
+#if POSIX_CLAN = "FreeBSD"
+   pragma Assert(S.st_atime = Times.actime + 1);
+   pragma Assert(S.st_mtime = Times.modtime + 1);
 #end if;
 
    Put_Line("Test 0016 Passed.");
