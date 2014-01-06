@@ -49,8 +49,13 @@ begin
 #end if;
 
 #if POSIX_CLAN = "FreeBSD"
+#if POSIX_MACHINE = "amd64"
+   pragma Assert(S.st_atim.tv_sec = Times.actime);
+   pragma Assert(S.st_mtim.tv_sec = Times.modtime);
+#else
    pragma Assert(S.st_atime = Times.actime);
    pragma Assert(S.st_mtime = Times.modtime);
+#end if;
 #end if;
 
    T(1).tv_sec := Now + 1;
@@ -80,8 +85,13 @@ begin
 #end if;
 
 #if POSIX_CLAN = "FreeBSD"
+#if POSIX_MACHINE = "amd64"
+   pragma Assert(S.st_atim.tv_sec = Times.actime + 1);
+   pragma Assert(S.st_mtim.tv_sec = Times.modtime + 1);
+#else
    pragma Assert(S.st_atime = Times.actime + 1);
    pragma Assert(S.st_mtime = Times.modtime + 1);
+#end if;
 #end if;
 
    Put_Line("Test 0016 Passed.");
