@@ -1326,7 +1326,8 @@
 			<ada_arg name="Group" io="in" type="gid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="lchown" return="int_t" ada_type="procedure" rname="Status" ada_name="LChown" inline="1">
+		<func name="lchown" return="int_t" ada_type="procedure" rname="Status" ada_name="LChown" 
+		 test="19" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1831,7 +1832,21 @@
 			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="lstat" return="int_t" ada_type="procedure" rname="R" ada_name="LStat" inline="1">
+		<func name="lstat" return="int_t" ada_type="procedure" rname="R" ada_name="LStat" 
+		 test="19" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/stat.h"/>
+			</includes>
+			<c_arg name="path" type="System.Address" from="P'Address"/>
+			<c_arg name="buf" type="System.Address" from="Stat'Address"/>
+			<ada_arg name="Path" io="in" type="String"/>
+			<ada_arg name="Stat" io="out" type="s_stat" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="P" type="String" init="C_String(Path)"/>
+		</func>
+		<func name="lstat$INODE64" altname="lstat" return="int_t" ada_type="procedure" rname="R" ada_name="LStat" 
+		 test="19" inline="1" os="Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/stat.h"/>
