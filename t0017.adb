@@ -27,26 +27,30 @@ begin
    Unlink(Path,Error);           -- Ignore errors
    pragma Warnings(On);
 
-   Create(Path,8#666#,Fd,Error);
-   pragma Assert(Error = 0);
-   pragma Assert(Fd >= 0);
-
    UMask(8#111#,Old_Mask,Error);
    pragma Assert(Error = 0);
 
-   Chmod(Path,8#777#,Error);
+   Create(Path,8#777#,Fd,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(Fd >= 0);
+
+   Stat(Path,S,Error);
+   pragma Assert(Error = 0);
+   pragma Assert((S.st_mode and 8#777#) = 8#666#);
+
+   Chmod(Path,8#440#,Error);
    pragma Assert(Error = 0);
    
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
-   pragma Assert(S.st_mode = 8#666#);
+   pragma Assert((S.st_mode and 8#777#) = 8#440#);
 
-   FChmod(Fd,8#444#,Error);
+   FChmod(Fd,8#600#,Error);
    pragma Assert(Error = 0);
 
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
-   pragma Assert(S.st_mode = 8#444#);
+   pragma Assert((S.st_mode and 8#777#) = 8#600#);
 
    UMask(Old_Mask,Old_Mask,Error);
    pragma Assert(Error = 0);
