@@ -15,7 +15,7 @@ procedure T0018 is
 
    Path :      constant String := "Test_0018";
    My_Uid :    constant uid_t := Geteuid;
-   My_Gid :    constant gid_t := Getegid;
+   My_Gid :    constant gid_t := Getgid;
    Fd :        fd_t;
    S :         s_stat;
    Error :     errno_t;
@@ -38,7 +38,6 @@ begin
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
    pragma Assert(S.st_uid = My_Uid);
-   pragma Assert(S.st_gid = My_Gid);
 
    Chown(Path,1,2,Error);
    if Error = 0 then
@@ -59,13 +58,13 @@ begin
    pragma Assert(Error = 0);
    pragma Assert(Fd >= 0);
 
-   FChown(Fd,2,3,Error);
+   FChown(Fd,2,My_Gid,Error);
 
    if Error = 0 then
       Stat(Path,S,Error);
       pragma Assert(Error = 0);
       pragma Assert(S.st_uid = 2);
-      pragma Assert(S.st_gid = 3);
+      pragma Assert(S.st_gid = My_Gid);
       Confirms := Confirms + 1;
    else
       pragma Assert(Error = EPERM);
