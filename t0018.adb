@@ -1,4 +1,4 @@
--- t0017.adb - Tue Jan  7 19:31:46 2014
+-- t0018.adb - Tue Jan  7 20:05:48 2014
 --
 -- (c) Warren W. Gay VE3WWG  ve3wwg@gmail.com
 --
@@ -10,10 +10,12 @@ with Ada.Text_IO;
 with Posix;
 use Posix;
 
-procedure T0017 is
+procedure T0018 is
    use Ada.Text_IO;    
 
-   Path :      constant String := "Test_0017";
+   Path :      constant String := "Test_0018";
+   My_Uid :    constant uid_t := Geteuid;
+   My_Gid :    constant gid_t := Getegid;
    Fd :        fd_t;
    Old_Mask :  mode_t;
    S :         s_stat;
@@ -21,40 +23,47 @@ procedure T0017 is
    Times :     s_utimbuf;
 begin
 
-   Put_Line("Test 0017 - Chmod/FChmod");
+   Put_Line("Test 0018 - Chmod/FChmod");
 
    pragma Warnings(Off);
    Unlink(Path,Error);           -- Ignore errors
    pragma Warnings(On);
 
-   UMask(8#111#,Old_Mask,Error);
+   Create(Path,8#777#,Fd,Error);
    pragma Assert(Error = 0);
+   pragma Assert(Fd >= 0);
+
+   Close(Fd,Error);
+   pragma Assert(Error = 0);
+
+   Stat(Path,S,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(S.st_uid = My_Uid);
+   pragma Assert(S.st_gid = My_Gid);
+
+   Chown(Path,0,0,Error);
+   pragma Assert(Error = 0);
+   
+   Stat(Path,S,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(S.st_uid = 1);
+   pragma Assert(S.st_gid = 1);
+
+   Unlink(Path,Error);
+   pragma Assert(Error = 0);
+
 
    Create(Path,8#777#,Fd,Error);
    pragma Assert(Error = 0);
    pragma Assert(Fd >= 0);
 
-   Stat(Path,S,Error);
-   pragma Assert(Error = 0);
-   pragma Assert((S.st_mode and 8#777#) = 8#666#);
-
-   Chmod(Path,8#440#,Error);
-   pragma Assert(Error = 0);
-   
-   Stat(Path,S,Error);
-   pragma Assert(Error = 0);
-   pragma Assert((S.st_mode and 8#777#) = 8#440#);
-
-   FChmod(Fd,8#600#,Error);
+   FChown(Fd,2,3,Error);
    pragma Assert(Error = 0);
 
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
-   pragma Assert((S.st_mode and 8#777#) = 8#600#);
-
-   UMask(Old_Mask,Old_Mask,Error);
-   pragma Assert(Error = 0);
-   pragma Assert(Old_Mask = 8#111#);
+   pragma Assert(S.st_uid = 2);
+   pragma Assert(S.st_gid = 3);
 
    Close(Fd,Error);
    pragma Assert(Error = 0);
@@ -62,6 +71,6 @@ begin
    Unlink(Path,Error);
    pragma Assert(Error = 0);
 
-   Put_Line("Test 0017 Passed.");
+   Put_Line("Test 0018 Passed.");
 
-end T0017;
+end T0018;
