@@ -1299,7 +1299,8 @@
 			<ada_arg name="Mode" io="in" type="mode_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="chown" return="int_t" ada_type="procedure" rname="Status" ada_name="Chown" inline="1">
+		<func name="chown" return="int_t" ada_type="procedure" rname="Status" ada_name="Chown" 
+		 test="18" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1312,14 +1313,15 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Pathname)"/>
 		</func>
-		<func name="fchown" return="int_t" ada_type="procedure" rname="Status" ada_name="FChown" inline="1">
+		<func name="fchown" return="int_t" ada_type="procedure" rname="Status" ada_name="FChown" 
+		 test="18" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
-			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
 			<c_arg name="owner" type="uid_t" from="Owner"/>
 			<c_arg name="group" type="gid_t" from="Group"/>
-			<ada_arg name="Fd" io="in" type="int_t"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Owner" io="in" type="uid_t"/>
 			<ada_arg name="Group" io="in" type="gid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
@@ -1401,20 +1403,6 @@
 			<ada_arg name="PID" io="in" type="pid_t"/>
 			<ada_arg name="PGRP" io="in" type="pid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
-		</func>
-		<func name="getgid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getgid" inline="1">
-			<includes>
-				<include file="unistd.h"/>
-				<include file="sys/types.h"/>
-			</includes>
-			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
-		</func>
-		<func name="getegid" return="gid_t" ada_type="procedure" rname="G" ada_name="Getegid" inline="1">
-			<includes>
-				<include file="unistd.h"/>
-				<include file="sys/types.h"/>
-			</includes>
-			<ada_arg name="GID" io="out" type="gid_t" from="G"/>
 		</func>
 		<func name="mount" return="int_t" ada_type="procedure" rname="Status" ada_name="Mount" inline="1">
 			<includes>
@@ -2183,7 +2171,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(File)"/>
 		</func>
-		<func name="umask" return="mode_t" ada_type="procedure" rname="R" ada_name="UMask" inline="1">
+		<func name="umask" return="mode_t" ada_type="procedure" rname="R" ada_name="UMask" 
+		 test="17" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/stat.h"/>
@@ -2635,6 +2624,36 @@
 			<c_arg   name="info"  type="System.Address" from="Info'Address"/>
 			<ada_arg name="Info"  io="out" type="s_sysinfo" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getuid" rname="R" return="uid_t" ada_type="function" ada_name="Getuid" 
+		 ada_return="uid_t" ada_return_from="R"
+		 inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+		</func>
+		<func name="geteuid" rname="R" return="uid_t" ada_type="function" ada_name="Geteuid" 
+		 ada_return="uid_t" ada_return_from="R"
+		 test="18" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+		</func>
+		<func name="getgid" return="gid_t" ada_type="function" rname="R" ada_name="Getgid" 
+		 ada_return="gid_t" ada_return_from="R"
+		 inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
+			</includes>
+		</func>
+		<func name="getegid" return="gid_t" ada_type="function" rname="R" ada_name="Getegid" 
+		 ada_return="gid_t" ada_return_from="R"
+		 test="18" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+				<include file="sys/types.h"/>
+			</includes>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1" os="Linux *">
 			<includes>
