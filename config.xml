@@ -1354,21 +1354,21 @@
 			<ada_arg name="Whence" io="in" type="whence_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getpid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpid" 
+		<func name="getpid" return="pid_t" ada_type="function" rname="P" ada_name="Getpid" 
+		 ada_return="pid_t" ada_return_from="P"
 		 test="6" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/types.h"/>
 			</includes>
-			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
-		<func name="getppid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getppid" 
+		<func name="getppid" return="pid_t" ada_type="function" rname="P" ada_name="Getppid" 
+		 ada_return="pid_t" ada_return_from="P"
 		 test="6" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="sys/types.h"/>
 			</includes>
-			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
 		<func name="getpgid" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgid" inline="1">
 			<includes>
@@ -1379,11 +1379,12 @@
 			<ada_arg name="PPID" io="out" type="pid_t" from="P"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(P)"/>
 		</func>
-		<func name="getpgrp" return="pid_t" ada_type="procedure" rname="P" ada_name="Getpgrp" inline="1">
+		<func name="getpgrp" return="pid_t" ada_type="function" rname="P" ada_name="Getpgrp" 
+		 ada_return="pid_t" ada_return_from="P"
+		 inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
-			<ada_arg name="PID" io="out" type="pid_t" from="P"/>
 		</func>
 		<func name="setpgid" return="pid_t" ada_type="procedure" rname="Status" ada_name="Setpgid" inline="1">
 			<includes>

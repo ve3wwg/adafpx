@@ -21,7 +21,7 @@ begin
 
    Put_Line("Test 0007 - Fork/Wait/Getpid/Getppid/Kill");
 
-   Getpid(Parent);
+   Parent := Getpid;
 
    Put_Line("Parent: My PID is " & pid_t'Image(Parent));
 
@@ -33,8 +33,8 @@ begin
       ----------------------------------------------------------------
       -- This is the child process running
       ----------------------------------------------------------------
-      Getpid(Child);
-      Getppid(P_PID);
+      Child := Getpid;
+      P_PID := Getppid;
       Put_Line("Child: My PID is " & pid_t'Image(Child) & " and my Parent is " & pid_t'Image(P_PID));
       pragma Assert(P_PID = Parent);
       Kill(Child,SIGTERM,Error);

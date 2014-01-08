@@ -62,7 +62,7 @@ package body P0015 is
       Secs :   uint_t;
       Error :  errno_t;
    begin
-      Getpid(PID);
+      PID := Getpid;
 
       Signal(SIGUSR1,User1_Handler'Access,Error);
       pragma Assert(Error = 0);
