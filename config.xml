@@ -1276,7 +1276,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Pathname)"/>
 		</func>
-		<func name="chmod" return="int_t" ada_type="procedure" rname="Status" ada_name="Chmod" inline="1">
+		<func name="chmod" return="int_t" ada_type="procedure" rname="Status" ada_name="Chmod" 
+		 test="17" inline="1">
 			<includes>
 				<include file="sys/stat.h"/>
 			</includes>
@@ -1287,13 +1288,14 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="Temp" type="String" init="C_String(Pathname)"/>
 		</func>
-		<func name="fchmod" return="int_t" ada_type="procedure" rname="Status" ada_name="FChmod" inline="1">
+		<func name="fchmod" return="int_t" ada_type="procedure" rname="Status" ada_name="FChmod" 
+		 test="17" inline="1">
 			<includes>
 				<include file="sys/stat.h"/>
 			</includes>
-			<c_arg name="fd" type="int_t" from="Fd"/>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
 			<c_arg name="mode" type="mode_t" from="Mode"/>
-			<ada_arg name="Fd" io="in" type="int_t"/>
+			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Mode" io="in" type="mode_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
