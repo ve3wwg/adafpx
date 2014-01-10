@@ -247,6 +247,14 @@
 			<macro name="S_ISUID"/>
 			<macro name="S_ISGID"/>
 			<macro name="S_ISVTX"/>
+			<macro name="S_IFMT"/>
+			<macro name="S_IFSOCK"/>
+			<macro name="S_IFLNK"/>
+			<macro name="S_IFREG"/>
+			<macro name="S_IFBLK"/>
+			<macro name="S_IFDIR"/>
+			<macro name="S_IFCHR"/>
+			<macro name="S_IFIFO"/>
 		</set>
 		<set type="whence_t" genset="150">
 			<macro name="SEEK_SET"/>
@@ -1260,7 +1268,8 @@
 			<ada_arg name="Time" io="out" type="time_t" from="T"/>
 			<temp name="T" type="time_t" init="0"/>
 		</func>
-		<func name="mknod" return="int_t" ada_type="procedure" rname="Status" ada_name="Mknod" inline="1">
+		<func name="mknod" return="int_t" ada_type="procedure" rname="Status" ada_name="Mknod" 
+		 test="20" inline="1">
 			<includes>
 				<include file="sys/unistd.h"/>
 				<include file="sys/types.h"/>
