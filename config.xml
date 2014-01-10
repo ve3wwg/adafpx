@@ -1467,7 +1467,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 			<temp name="C_Target" type="String" init="C_String(Target)"/>
 		</func>
-		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" 
+		 test="22" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
