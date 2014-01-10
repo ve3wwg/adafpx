@@ -24,13 +24,13 @@ begin
    pragma Assert(Error = 0);
    pragma Assert(Fd >= 0);
    
+   Fd2 := Fd + 10;
    Fcntl(Fd,F_DUPFD,Fd2,Error);
    pragma Assert(Error = 0);
-   pragma Assert(Fd2 > Fd);
 
+   Fd3 := Fd + 11;
    Fcntl(Fd,F_DUPFD_CLOEXEC,Fd3,Error);
    pragma Assert(Error = 0);
-   pragma Assert(Fd3 > Fd2);
 
    Close(Fd,Error);
    pragma Assert(Error = 0);

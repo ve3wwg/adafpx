@@ -1473,13 +1473,14 @@
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
 			</includes>
-			<c_arg name="Fd" type="fd_t" from="Fd"/>
-			<c_arg name="Cmd" type="fcntl_t" from="Cmd"/>
+			<c_arg name="fd" type="fd_t" from="Fd"/>
+			<c_arg name="cmd" type="fcntl_t" from="Cmd"/>
+			<c_arg name="newfd" type="long_t" from="long_t(New_Fd)"/>
 			<ada_arg name="Fd" io="in" type="fd_t"/>
 			<ada_arg name="Cmd" io="in" type="fcntl_t"/>
-			<ada_arg name="Dup_Fd" io="out" type="fd_t" from="fd_t(Status)"/>
+			<ada_arg name="New_Fd" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
-			<cases name="Cmd" on_error="Dup_Fd := -1">
+			<cases name="Cmd">
 				<case name="F_DUPFD"/>
 				<case name="F_DUPFD_CLOEXEC"/>
 			</cases>
