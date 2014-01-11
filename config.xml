@@ -1623,7 +1623,8 @@
 				<case name="F_UNLCK"/>
 			</cases>
 		</func>
-		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1" os="Darwin *">
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" 
+		 test="24" inline="1" os="Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
