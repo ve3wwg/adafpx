@@ -1485,7 +1485,8 @@
 				<case name="F_DUPFD_CLOEXEC"/>
 			</cases>
 		</func>
-		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" 
+		 test="22" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
@@ -1501,7 +1502,8 @@
 				<case name="F_GETFL"/>
 			</cases>
 		</func>
-		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl" inline="1">
+		<func name="fcntl" return="int_t" ada_type="procedure" rname="Status" ada_name="Fcntl_Set" 
+		 test="22" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 				<include file="fcntl.h"/>
