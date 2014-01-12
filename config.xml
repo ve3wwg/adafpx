@@ -1741,7 +1741,8 @@
 				<case name="F_FULLFSYNC"/>
 			</cases>
 		</func>
-		<func name="readv" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readv" inline="1">
+		<func name="readv" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Readv" 
+		 test="25" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/uio.h"/>
@@ -1755,7 +1756,8 @@
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="writev" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Writev" inline="1">
+		<func name="writev" return="ssize_t" ada_type="procedure" rname="Status" ada_name="Writev" 
+		 test="25" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/uio.h"/>
