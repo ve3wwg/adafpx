@@ -1771,7 +1771,8 @@
 			<ada_arg name="Count" io="out" type="Natural" from="To_Count(Status)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="wait3" return="pid_t" ada_type="procedure" rname="R" ada_name="Wait3" inline="1">
+		<func name="wait3" return="pid_t" ada_type="procedure" rname="R" ada_name="Wait3" 
+                 test="26" inline="1">
 			<includes>
 				<include file="sys/wait.h"/>
 			</includes>
