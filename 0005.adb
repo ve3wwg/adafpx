@@ -236,6 +236,17 @@ package body Posix is
 
    pragma Inline(Pos_PID);
 
+   function Pos_PID(Status: pid_t) return pid_t is
+   begin
+      if Status >= 0 then
+         return Status;
+      else
+         return 0;
+      end if;
+   end Pos_PID;
+
+   pragma Inline(Pos_PID);
+
    function Neg_PID(Status: int_t) return pid_t is
    begin
       if Status < 0 then
