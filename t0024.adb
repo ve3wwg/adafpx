@@ -32,7 +32,7 @@ begin
    pragma Assert(Last > Buffer'First and Last <= Buffer'Last);
    pragma Assert(Buffer(Buffer'First) = '/');
 
-   for X in reverse Buffer'Range loop
+   for X in reverse Buffer'First..Last loop
       if Buffer(X) = '/' then
          First := X + 1;
          exit;
