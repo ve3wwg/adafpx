@@ -1967,7 +1967,8 @@
 			<c_arg   name="m"    type="mode_t"  from="Mode"/>
 			<ada_arg name="Mode" io="in" type="mode_t"/>
 		</func>
-		<func name="setuid" return="int_t" ada_type="procedure" rname="R" ada_name="Setuid" inline="1">
+		<func name="setuid" return="int_t" ada_type="procedure" rname="R" ada_name="Setuid" 
+		 test="27" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1975,7 +1976,8 @@
 			<ada_arg name="Uid" io="in" type="uid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setgid" return="int_t" ada_type="procedure" rname="R" ada_name="Setgid" inline="1">
+		<func name="setgid" return="int_t" ada_type="procedure" rname="R" ada_name="Setgid" 
+		 test="27" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1983,7 +1985,8 @@
 			<ada_arg name="Gid" io="in" type="gid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="seteuid" return="int_t" ada_type="procedure" rname="R" ada_name="Seteuid" inline="1">
+		<func name="seteuid" return="int_t" ada_type="procedure" rname="R" ada_name="Seteuid" 
+		 test="27" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -1991,7 +1994,8 @@
 			<ada_arg name="Effective_Uid" io="in" type="uid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setegid" return="int_t" ada_type="procedure" rname="R" ada_name="Setegid" inline="1">
+		<func name="setegid" return="int_t" ada_type="procedure" rname="R" ada_name="Setegid" 
+		 test="27" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -2238,11 +2242,12 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Dirname)"/>
 		</func>
-		<func name="setsid" return="pid_t" ada_type="procedure" rname="R" ada_name="Setsid" inline="1">
+		<func name="setsid" return="pid_t" ada_type="function" rname="R" ada_name="Setsid" 
+		 ada_return="pid_t" ada_return_from="R"
+		 test="27" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
-			<ada_arg name="PID" io="out" type="pid_t" from="R"/>
 		</func>
 		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend" inline="1">
 			<includes>
@@ -2518,7 +2523,8 @@
 			<ada_arg name="Parm"  io="out" type="long_t"  from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="truncate" return="int_t" ada_type="procedure" rname="R" ada_name="Truncate" inline="1">
+		<func name="truncate" return="int_t" ada_type="procedure" rname="R" ada_name="Truncate" 
+		 test="1" inline="1">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -2701,6 +2707,16 @@
 				<include file="unistd.h"/>
 				<include file="sys/types.h"/>
 			</includes>
+		</func>
+		<func name="getsid" return="pid_t" ada_type="procedure" rname="r" ada_name="Getsid"
+		 test="27" inline="1">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg	name="pid" type="pid_t" from="PID"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="SID" io="out" type="pid_t" from="Pos_PID(R)"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1" os="Linux *">
 			<includes>
