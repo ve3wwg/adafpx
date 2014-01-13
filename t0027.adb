@@ -13,11 +13,7 @@ use Posix;
 procedure T0027 is
    use Ada.Text_IO;    
 
-   PID :       pid_t := Getpid;
-   Uid :       uid_t := Getuid;
-   Gid :       gid_t := Getgid;
-   EUid :      uid_t := Geteuid;
-   EGid :      gid_t := Getegid;
+   PID :       constant pid_t := Getpid;
    SID :       pid_t := -1;
    SID2 :      pid_t := -1;
    Error :     errno_t;
