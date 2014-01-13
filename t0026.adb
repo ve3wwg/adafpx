@@ -39,7 +39,7 @@ begin
    pragma Assert(WIFEXITED(Status));
    pragma Assert(WEXITSTATUS(Status) = 42);
    pragma Assert(Resource.ru_utime.tv_usec > 0);
-   pragma Assert(Resource.ru_stime.tv_usec > 0);
+   pragma Assert(Resource.ru_stime.tv_usec >= 0);
 
    Put_Line("Test 0026 Passed.");
 
