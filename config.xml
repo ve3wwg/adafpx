@@ -2275,7 +2275,7 @@
 		</func>
 		<func name="sigismember" rname="R" return="int_t" ada_type="function" ada_name="Sigismember" 
 		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
-		 macro="int adafpx_macro_sigismember(sigset_t *set,int signo) { return sigismember(set,signo); }" 
+		 macro="int adafpx_macro_sigismember(sigset_t *set,int signo) { return sigismember(set,signo) > 0; }" 
 		 test="28" inline="1">
 			<includes>
 				<include file="signal.h"/>
