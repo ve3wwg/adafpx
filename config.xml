@@ -2251,7 +2251,8 @@
 		</func>
 		<func name="sigaddset" ada_type="procedure" ada_name="Sigaddset" 
 		 prefix="adafpx_macro_"
-		 macro="void adafpx_macro_sigaddset(sigset_t *set,int signo) { sigaddset(set,signo); }" inline="1">
+		 macro="void adafpx_macro_sigaddset(sigset_t *set,int signo) { sigaddset(set,signo); }" 
+		 test="28" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -2262,7 +2263,8 @@
 		</func>
 		<func name="sigdelset" ada_type="procedure" ada_name="Sigdelset" 
 		 prefix="adafpx_macro_"
-		 macro="void adafpx_macro_sigdelset(sigset_t *set,int signo) { sigdelset(set,signo); }" inline="1">
+		 macro="void adafpx_macro_sigdelset(sigset_t *set,int signo) { sigdelset(set,signo); }" 
+		 test="28" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -2273,7 +2275,8 @@
 		</func>
 		<func name="sigismember" rname="R" return="int_t" ada_type="function" ada_name="Sigismember" 
 		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
-		 macro="int adafpx_macro_sigismember(sigset_t *set,int signo) { return sigismember(set,signo); }" inline="1">
+		 macro="int adafpx_macro_sigismember(sigset_t *set,int signo) { return sigismember(set,signo); }" 
+		 test="28" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -2294,7 +2297,8 @@
 		</func>
 		<func name="sigfillset" ada_type="procedure" ada_name="Sigfillset" 
 		 prefix="adafpx_macro_"
-		 macro="void adafpx_macro_sigfillset(sigset_t *set) { sigfillset(set); }" inline="1">
+		 macro="void adafpx_macro_sigfillset(sigset_t *set) { sigfillset(set); }" 
+		 test="28" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
