@@ -2249,6 +2249,58 @@
 				<include file="unistd.h"/>
 			</includes>
 		</func>
+		<func name="sigaddset" ada_type="procedure" ada_name="Sigaddset" 
+		 prefix="adafpx_macro_"
+		 macro="void adafpx_macro_sigaddset(sigset_t *set,int signo) { sigaddset(set,signo); }" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
+			<c_arg   name="signo" type="int_t" from="int_t(Signo)"/>
+			<ada_arg name="Set"   io="in out"  type="sigset_t" from="implied"/>
+			<ada_arg name="Signo" io="in"      type="sig_t"/>
+		</func>
+		<func name="sigdelset" ada_type="procedure" ada_name="Sigdelset" 
+		 prefix="adafpx_macro_"
+		 macro="void adafpx_macro_sigdelset(sigset_t *set,int signo) { sigdelset(set,signo); }" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
+			<c_arg   name="signo" type="int_t" from="int_t(Signo)"/>
+			<ada_arg name="Set"   io="in out"  type="sigset_t" from="implied"/>
+			<ada_arg name="Signo" io="in"      type="sig_t"/>
+		</func>
+		<func name="sigismember" rname="R" return="int_t" ada_type="function" ada_name="Sigismember" 
+		 ada_return="Boolean" ada_return_from="R /= 0" prefix="adafpx_macro_"
+		 macro="int adafpx_macro_sigismember(sigset_t *set,int signo) { return sigismember(set,signo); }" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
+			<c_arg   name="signo" type="int_t" from="int_t(Signo)"/>
+			<ada_arg name="Set"   io="in"      type="sigset_t"/>
+			<ada_arg name="Signo" io="in"      type="sig_t"/>
+		</func>
+		<func name="sigemptyset" ada_type="procedure" ada_name="Sigemptyset" 
+		 prefix="adafpx_macro_"
+		 macro="void adafpx_macro_sigemptyset(sigset_t *set) { sigemptyset(set); }" 
+		 test="28" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
+			<ada_arg name="Set"   io="out"      type="sigset_t" from="implied"/>
+		</func>
+		<func name="sigfillset" ada_type="procedure" ada_name="Sigfillset" 
+		 prefix="adafpx_macro_"
+		 macro="void adafpx_macro_sigfillset(sigset_t *set) { sigfillset(set); }" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
+			<ada_arg name="Set"   io="out"      type="sigset_t" from="implied"/>
+		</func>
 		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend" inline="1">
 			<includes>
 				<include file="signal.h"/>
