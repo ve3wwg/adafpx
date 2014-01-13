@@ -21,14 +21,14 @@ begin
 
    Sigfillset(Set);
 
-   for Signo in sig_t(0)..31 loop
+   for Signo in sig_t(1)..31 loop
       pragma Assert(Sigismember(Set,Signo));
       null;
    end loop;
 
    Sigemptyset(Set);
 
-   for Signo in sig_t(0)..31 loop
+   for Signo in sig_t(1)..31 loop
       pragma Assert(not Sigismember(Set,Signo));
       null;
    end loop;
@@ -36,7 +36,7 @@ begin
    Sigaddset(Set,SIGINT);
    Sigaddset(Set,SIGTERM);
 
-   for Signo in sig_t(0)..31 loop
+   for Signo in sig_t(1)..31 loop
       case Signo is
       when SIGINT | SIGTERM =>
          pragma Assert(Sigismember(Set,Signo));
@@ -52,7 +52,7 @@ begin
    Sigdelset(Set,SIGINT);
    Sigdelset(Set,SIGTERM);
 
-   for Signo in sig_t(0)..31 loop
+   for Signo in sig_t(1)..31 loop
       case Signo is
       when SIGINT | SIGTERM =>
          pragma Assert(not Sigismember(Set,Signo));
