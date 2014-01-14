@@ -14,6 +14,7 @@ procedure T0031 is
    use Ada.Text_IO;    
 
    RLimit :       s_rlimit;
+   RLimit2 :      s_rlimit;
    Error :        errno_t;
 begin
 
@@ -21,11 +22,15 @@ begin
 
    Getrlimit(RLIMIT_NOFILE,RLimit,Error);
    pragma Assert(Error = 0);
-   
-   Put_Line("Current files limit is: " & rlim_t'Image(RLimit.rlim_cur));
-   Put_Line("Max files limit is:     " & rlim_t'Image(RLimit.rlim_max));
-
    pragma Assert(RLimit.rlim_cur <= RLimit.rlim_max);
+
+   RLimit.rlim_cur := RLimit.rlim_cur - 1;      -- Reduction does not require root
+   Setrlimit(RLIMIT_NOFILE,RLimit,Error);
+   pragma Assert(Error = 0);
+
+   Getrlimit(RLIMIT_NOFILE,RLimit2,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(RLimit2.rlim_cur = RLimit.rlim_cur);
 
    Put_Line("Test 0031 Passed.");
 
