@@ -2376,7 +2376,8 @@
 			<ada_arg name="Name" io="in" type="String"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Getrlimit" inline="1">
+		<func name="getrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Getrlimit" 
+		 test="31" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -2386,7 +2387,8 @@
 			<ada_arg name="Rlimit" io="out" type="s_rlimit" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Setrlimit" inline="1">
+		<func name="setrlimit" return="int_t" ada_type="procedure" rname="R" ada_name="Setrlimit" 
+		 test="31" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
