@@ -357,6 +357,14 @@
 			<macro name="SIG_HOLD"/>
 			<macro name="SIG_ERR"/>
 		</set>
+		<set type="sigpmop_t" genset="192">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<macro name="SIG_BLOCK"/>
+			<macro name="SIG_UNBLOCK"/>
+			<macro name="SIG_SETMASK"/>
+		</set>
 		<set type="" genset="200">
 			<includes>
 				<include file="sys/param.h"/>
@@ -2305,12 +2313,38 @@
 			<c_arg   name="set"   type="System.Address"  from="Set'Address"/>
 			<ada_arg name="Set"   io="out"      type="sigset_t" from="implied"/>
 		</func>
-		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend" inline="1">
+		<func name="sigsuspend" return="int_t" ada_type="procedure" rname="R" ada_name="Sigsuspend" 
+		 test="29" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
 			<c_arg   name="sigmask" type="System.Address" from="Sigmask'Address"/>
 			<ada_arg name="Sigmask" io="in" type="sigset_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigprocmask" return="int_t" ada_type="procedure" rname="R" ada_name="Sigprocmask" 
+		 test="29" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg	 name="how"     type="int_t" from="int_t(How)"/>
+			<c_arg   name="set"     type="System.Address" from="Set'Address"/>
+			<c_arg   name="oset"    type="System.Address" from="Old_Set'Address"/>
+			<ada_arg name="How"     io="in" type="sigpmop_t"/>
+			<ada_arg name="Set"     io="in" type="sigset_t"/>
+			<ada_arg name="Old_Set"	io="in" type="sigset_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigprocmask" return="int_t" ada_type="procedure" rname="R" ada_name="Sigprocmask" 
+		 test="29" inline="1">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg	 name="how"     type="int_t" from="int_t(How)"/>
+			<c_arg   name="set"     type="System.Address" from="Set'Address"/>
+			<c_arg   name="oset"    type="System.Address" from="System.Null_Address"/>
+			<ada_arg name="How"     io="in" type="sigpmop_t"/>
+			<ada_arg name="Set"     io="in" type="sigset_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending" inline="1">
