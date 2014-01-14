@@ -66,6 +66,12 @@ package body P0029 is
       pragma Assert(Sig_User1 = false);
       pragma Assert(not Alarm_Signaled);
 
+      Sigemptyset(Sigs);                  -- Clear sig set
+      Sigpending(Sigs,Error);             -- Put pending sigs into Sigs
+      pragma Assert(Error = 0);
+      pragma Assert(Sigismember(Sigs,SIGUSR1));       -- SIGUSR should be pending
+      pragma Assert(not Sigismember(Sigs,SIGALRM));   -- but not SIGALRM
+
       Sigemptyset(Sigs);
       Sigaddset(Sigs,SIGUSR1);            -- Sigs := SIGUSR1
       Secs := 1;

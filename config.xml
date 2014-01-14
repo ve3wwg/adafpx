@@ -2347,7 +2347,8 @@
 			<ada_arg name="Set"     io="in" type="sigset_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending" inline="1">
+		<func name="sigpending" return="int_t" ada_type="procedure" rname="R" ada_name="Sigpending" 
+		 test="29" inline="1">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
