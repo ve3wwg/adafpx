@@ -420,6 +420,13 @@
 			<macro name="RLIMIT_NPROC"/>
 			<macro name="RLIMIT_RSS"/>
 			<macro name="RLIMIT_STACK"/>
+			<macro name="RLIMIT_AS"/>
+			<macro name="RLIMIT_LOCKS"/>
+			<macro name="RLIMIT_MSGQUEUE"/>
+			<macro name="RLIMIT_NICE"/>
+			<macro name="RLIMIT_RTPRIO"/>
+			<macro name="RLIMIT_RTTIME"/>
+			<macro name="RLIMIT_SIGPENDING"/>
 		</set>
 		<set type="rwho_t" genset="250" format="%d">
 			<includes>
