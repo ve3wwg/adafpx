@@ -228,7 +228,7 @@
 			<macro name="WUNTRACED"/>
 			<macro name="WCONTINUED"/>
 		</set>
-		<set type = "" genset="140" format="16#%04X#">
+		<set type = "" genset="140" format="8#%06o#">
 			<includes>
 				<include file="sys/stat.h"/>
 			</includes>
