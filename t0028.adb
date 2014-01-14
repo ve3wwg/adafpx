@@ -14,7 +14,6 @@ procedure T0028 is
    use Ada.Text_IO;    
 
    Set :       sigset_t;
-   Error :     errno_t;
 begin
 
    Put_Line("Test 0028 - Sigemptyset/Sigfillset/Sigaddset/Sigdelset/Sigismember");
