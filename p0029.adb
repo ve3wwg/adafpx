@@ -43,13 +43,11 @@ package body P0029 is
 
 
    procedure Test is
-      PID :    pid_t;
-      Secs :   uint_t;
+      Pid :    pid_t := Getpid;
       Sigs :   sigset_t;
+      Secs :   uint_t;
       Error :  errno_t;
    begin
-      PID := Getpid;
-
       Signal(SIGUSR1,User1_Handler'Access,Error);
       pragma Assert(Error = 0);
 
@@ -60,22 +58,32 @@ package body P0029 is
       Sigaddset(Sigs,SIGUSR1);
       Sigaddset(Sigs,SIGALRM);
 
-      Sigprocmask(SIG_BLOCK,Sigs,Error);
+      Sigprocmask(SIG_BLOCK,Sigs,Error);  -- Block SIGUSR1 & SIGALRM
       pragma Assert(Error = 0);
 
-      Kill(PID,SIGUSR1,Error);
+      Kill(Pid,SIGUSR1,Error);            -- This signal should be blocked
       pragma Assert(Error = 0);
       pragma Assert(Sig_User1 = false);
+      pragma Assert(not Alarm_Signaled);
 
       Sigemptyset(Sigs);
-      Sigaddset(Sigs,SIGALRM);
-      Sigsuspend(Sigs,Error);
-      pragma Assert(Error = 0);
-      pragma Assert(Alarm_Signaled);   -- Should be toggled true
+      Sigaddset(Sigs,SIGUSR1);            -- Sigs := SIGUSR1
+      Secs := 1;
+      Alarm(Secs);
+      Sigsuspend(Sigs,Error);             -- Only SIGUSR1 is now blocked
+      pragma Assert(Error = EINTR);       -- EINTR indicates handler was called
+      pragma Assert(Alarm_Signaled);      -- Should be toggled true by SIGALRM handler
 
-      Kill(PID,SIGALRM,Error);
+      Kill(Pid,SIGALRM,Error);            -- Old mask now blocks SIGALRM
       pragma Assert(Error = 0);
-      pragma Assert(Alarm_Signaled);   -- Should not be toggled
+      pragma Assert(Alarm_Signaled);      -- Should not be toggled
+
+      Sigemptyset(Sigs);
+      Sigaddset(Sigs,SIGALRM);            -- Sigs := SIGALRM
+      pragma Assert(not Sig_User1);
+      Sigsuspend(Sigs,Error);             -- Pending SIGUSR1 should now be handled
+      pragma Assert(Error = EINTR);
+      pragma Assert(Sig_User1);           -- SIGUSR1 handler should have been called
 
    end Test;
 
