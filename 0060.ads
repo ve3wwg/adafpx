@@ -14,6 +14,7 @@
    type logfac_t is new uint_t;
    type itim_t is new uint_t;
    type ipccmd_t is new int_t;
+   type sigpmop_t is new int_t;
 
    type short_array is array(Natural range <>) of short_t;
    type int_array is array(Natural range <>) of int_t;
