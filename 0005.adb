@@ -208,6 +208,12 @@ package body Posix is
       return C_String;
    end Ada_String;
 
+   function Ada_String(C_String: uchar_array) return String is
+      C : constant String(1..C_String'Length) := To_String(C_String);
+   begin
+      return Ada_String(C);
+   end Ada_String;
+
    function Ada_String(C_String: System.Address) return String is
       use System;
    begin
@@ -354,7 +360,7 @@ package body Posix is
 
    function To_String(A : uchar_array) return String is
       subtype uc_array is uchar_array(A'Range);
-      subtype uc_string is String(A'Range);
+      subtype uc_string is String(1..A'Length);
       function To_String is new
          Ada.Unchecked_Conversion(Source => uc_array,Target => uc_string);
    begin
