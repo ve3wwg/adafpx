@@ -2516,7 +2516,19 @@
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
 		<func name="opendir" return="DIR" ada_type="procedure" rname="R" ada_name="Opendir" 
-		 test="35" inline="1">
+		 test="35" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<c_arg   name="name" type="System.Address" from="N'Address"/>
+			<ada_arg name="Name" io="in" type="String"/>
+			<ada_arg name="Dir_Stream" io="out" type="DIR" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="N" type="String" init="C_String(Name)"/>
+		</func>
+		<func name="opendir$INODE64" altname="UX_opendir" return="DIR" ada_type="procedure" rname="R" ada_name="Opendir" 
+		 test="35" inline="1" os="Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2539,7 +2551,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="readdir_r" return="int_t" ada_type="procedure" rname="R" ada_name="Readdir" 
-		 test="35" inline="1">
+		 test="35" inline="1" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2554,10 +2566,37 @@
 			<ada_arg name="Dir_Entry" io="out" type="s_dirent" from="implied"/>
 			<ada_arg name="End_File" io="out" type="Boolean" from="Result = Null_Address"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="errno_t(R)"/>
-			<temp name="Result" type="System.Address" init="Null_Address"/>
+			<temp name="Result" type="System.Address" init="System.Null_Address"/>
+		</func>
+		<func name="readdir_r$INODE64" altname="UX_readdir" return="int_t" ada_type="procedure" rname="R" ada_name="Readdir" 
+		 test="35" inline="1" os="Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<use_clauses>
+				<use name="System"/>
+			</use_clauses>
+			<c_arg   name="dirp" type="DIR" from="Directory"/>
+			<c_arg   name="direntry" type="System.Address" from="Dir_Entry'Address"/>
+			<c_arg   name="result" type="System.Address" from="Result'Address"/>
+			<ada_arg name="Directory" io="in" type="DIR"/>
+			<ada_arg name="Dir_Entry" io="out" type="s_dirent" from="implied"/>
+			<ada_arg name="End_File" io="out" type="Boolean" from="Result = Null_Address"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="errno_t(R)"/>
+			<temp name="Result" type="System.Address" init="System.Null_Address"/>
 		</func>
 		<func name="rewinddir" ada_type="procedure" ada_name="Rewinddir" 
-		 test="35" inline="1">
+		 test="35" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<c_arg   name="dirp" type="DIR" from="Directory"/>
+			<ada_arg name="Directory" io="in" type="DIR"/>
+		</func>
+		<func name="rewinddir$INODE64" altname="UX_rewinddir" ada_type="procedure" ada_name="Rewinddir" 
+		 test="35" inline="1" os="Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2577,7 +2616,18 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="telldir" return="long_t" ada_type="procedure" rname="R" ada_name="Telldir" 
-		 test="35" inline="1">
+		 test="35" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<c_arg   name="dirp" type="DIR" from="Directory"/>
+			<ada_arg name="Directory" io="in" type="DIR"/>
+			<ada_arg name="Pos" io="out" type="long_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="telldir$INODE64" altname="UX_telldir" return="long_t" ada_type="procedure" rname="R" ada_name="Telldir" 
+		 test="35" inline="1" os="Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2588,7 +2638,19 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="seekdir" return="long_t" ada_type="procedure" rname="R" ada_name="Seekdir" 
-		 test="35" inline="1">
+		 test="35" inline="1" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<c_arg   name="dirp" type="DIR" from="Directory"/>
+			<c_arg   name="pos"  type="long_t" from="Pos"/>
+			<ada_arg name="Directory" io="in" type="DIR"/>
+			<ada_arg name="Pos" io="in" type="long_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="seekdir$INODE64" altname="UX_seekdir" return="long_t" ada_type="procedure" rname="R" ada_name="Seekdir" 
+		 test="35" inline="1" os="Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
