@@ -20,14 +20,20 @@ begin
 
    Put_Line("Test 0032 - Getrlimit/Setrlimit");
 
-   for X in 0..99999 loop
-      Error := 0;
+   Error := 0;
+
+   for X in 0..999999 loop
+      if Error < 32000 then
+         Error := Error + 1;
+      else
+         Error := 0;
+      end if;
    end loop;
 
    Getrusage(RUSAGE_SELF,Res,Error);
    pragma Assert(Error = 0);
    pragma Assert(Res.ru_utime.tv_sec >= 0);
-   pragma Assert(Res.ru_utime.tv_usec > 10);
+   pragma Assert(Res.ru_utime.tv_usec > 0 or else Res.ru_utime.tv_sec > 0);
 
    Put_Line("Test 0032 Passed.");
 
