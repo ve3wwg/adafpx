@@ -699,11 +699,6 @@
 				<member name="tv_sec" pref="time_t"/>
 			</members>
 		</struct>
-		<struct name="timezone" ada="s_timezone" genset="415">
-			<includes>
-				<include file="sys/time.h"/>
-			</includes>
-		</struct>
 		<struct name="rusage" ada="s_rusage" genset="420">
 			<includes>
 				<include file="sys/resource.h"/>
@@ -2416,25 +2411,25 @@
 			<ada_arg name="R_Usage" io="out" type="s_rusage" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="tzset" ada_type="procedure" ada_name="Tzset" 
+		 test="33" inline="1">
+			<includes>
+				<include file="time.h"/>
+			</includes>
+		</func>
+		<func name="tzsetwall" ada_type="procedure" ada_name="Tzsetwall" inline="1">
+			<includes>
+				<include file="time.h"/>
+			</includes>
+		</func>
 		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday" 
 		 test="33" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
 			<c_arg   name="tp" type="System.Address" from="Time'Address"/>
-			<c_arg   name="tzp" type="System.Address" from="Time_Zone'Address"/>
+			<c_arg   name="tzp" type="System.Address" from="System.Null_Address"/>
 			<ada_arg name="Time" io="out" type="s_timeval" from="implied"/>
-			<ada_arg name="Time_Zone" io="out" type="s_timezone" from="implied"/>
-			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
-		</func>
-		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday" inline="1">
-			<includes>
-				<include file="sys/time.h"/>
-			</includes>
-			<c_arg   name="tp" type="System.Address" from="Time'Address"/>
-			<c_arg   name="tzp" type="System.Address" from="Time_Zone'Address"/>
-			<ada_arg name="Time" io="in" type="s_timeval"/>
-			<ada_arg name="Time_Zone" io="in" type="s_timezone"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="settimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Settimeofday" inline="1">
