@@ -33,12 +33,12 @@ begin
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
 
-#if POSIX_CLAN = "Darwin"
+#if POSIX_FAMILY = "Darwin"
    pragma Assert(S.st_atimespec.tv_sec = Times.actime);
    pragma Assert(S.st_mtimespec.tv_sec = Times.modtime);
 #end if;
 
-#if POSIX_CLAN = "Linux"
+#if POSIX_FAMILY = "Linux"
 #if POSIX_MACHINE = "x86_64"
    pragma Assert(S.st_atim.tv_sec = Times.actime);
    pragma Assert(S.st_mtim.tv_sec = Times.modtime);
@@ -48,7 +48,7 @@ begin
 #end if;   
 #end if;
 
-#if POSIX_CLAN = "FreeBSD"
+#if POSIX_FAMILY = "FreeBSD"
 #if POSIX_MACHINE = "amd64"
    pragma Assert(S.st_atim.tv_sec = Times.actime);
    pragma Assert(S.st_mtim.tv_sec = Times.modtime);
@@ -69,12 +69,12 @@ begin
    Stat(Path,S,Error);
    pragma Assert(Error = 0);
 
-#if POSIX_CLAN = "Darwin"
+#if POSIX_FAMILY = "Darwin"
    pragma Assert(S.st_atimespec.tv_sec = Now+1);
    pragma Assert(S.st_mtimespec.tv_sec = Now+1);
 #end if;
 
-#if POSIX_CLAN = "Linux"
+#if POSIX_FAMILY = "Linux"
 #if POSIX_MACHINE = "x86_64"
    pragma Assert(S.st_atim.tv_sec = Times.actime + 1);
    pragma Assert(S.st_mtim.tv_sec = Times.modtime + 1);
@@ -84,7 +84,7 @@ begin
 #end if;   
 #end if;
 
-#if POSIX_CLAN = "FreeBSD"
+#if POSIX_FAMILY = "FreeBSD"
 #if POSIX_MACHINE = "amd64"
    pragma Assert(S.st_atim.tv_sec = Times.actime + 1);
    pragma Assert(S.st_mtim.tv_sec = Times.modtime + 1);

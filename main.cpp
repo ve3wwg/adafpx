@@ -46,7 +46,7 @@ usage(const char *cmd) {
 int
 main(int argc,char **argv) {
 	std::stringstream opt_gcc;
-	std::string clan, platform, version, machine;
+	std::string family, platform, version, machine;
 	bool opt_show_platform = false;
 	char optch;
 	extern int yydebug;
@@ -90,7 +90,7 @@ main(int argc,char **argv) {
 	{
 		std::vector<std::string> vec;
 		split(vec,platform,' ');
-		clan = vec[0];
+		family = vec[0];
 	}
 
 	std::cout
@@ -102,7 +102,7 @@ main(int argc,char **argv) {
 	if ( opt_show_platform )
 		exit(0);
 
-	config.gnatprep["%clan"]     = clan;
+	config.gnatprep["%family"]   = family;
 	config.gnatprep["%platform"] = platform;
 	config.gnatprep["%machine"]  = machine;
 	config.gnatprep["%version"]  = version;

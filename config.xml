@@ -1,6 +1,6 @@
 <entities>
 	<gnatprep file="posix.defs">
-		<define symbol="POSIX_CLAN"     string="%clan"/>
+		<define symbol="POSIX_FAMILY"   string="%family"/>
 		<define symbol="POSIX_PLATFORM" string="%platform"/>
 		<define symbol="POSIX_MACHINE"  string="%machine"/>
 		<define symbol="POSIX_VERSION" string="%version"/>
