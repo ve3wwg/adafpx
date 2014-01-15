@@ -2416,7 +2416,8 @@
 			<ada_arg name="R_Usage" io="out" type="s_rusage" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday" inline="1">
+		<func name="gettimeofday" return="int_t" ada_type="procedure" rname="R" ada_name="Gettimeofday" 
+		 test="33" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
