@@ -2417,7 +2417,7 @@
 				<include file="time.h"/>
 			</includes>
 		</func>
-		<func name="tzsetwall" ada_type="procedure" ada_name="Tzsetwall" inline="1" os="FreeBSD *">
+		<func name="tzsetwall" ada_type="procedure" ada_name="Tzsetwall" inline="1" os="FreeBSD *|Darwin *">
 			<includes>
 				<include file="time.h"/>
 			</includes>
