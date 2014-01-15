@@ -2500,7 +2500,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="P" type="String" init="C_String(Path)"/>
 		</func>
-		<func name="opendir" return="DIR" ada_type="procedure" rname="R" ada_name="Opendir" inline="1">
+		<func name="opendir" return="DIR" ada_type="procedure" rname="R" ada_name="Opendir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2511,7 +2512,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="N" type="String" init="C_String(Name)"/>
 		</func>
-		<func name="fdopendir" return="DIR" ada_type="procedure" rname="R" ada_name="FdOpendir" inline="1" os="Linux *">
+		<func name="fdopendir" return="DIR" ada_type="procedure" rname="R" ada_name="FdOpendir" 
+		 test="35" inline="1" os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2521,7 +2523,8 @@
 			<ada_arg name="Dir_Stream" io="out" type="DIR" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="readdir_r" return="int_t" ada_type="procedure" rname="R" ada_name="Readdir" inline="1">
+		<func name="readdir_r" return="int_t" ada_type="procedure" rname="R" ada_name="Readdir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2538,7 +2541,8 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="errno_t(R)"/>
 			<temp name="Result" type="System.Address" init="Null_Address"/>
 		</func>
-		<func name="rewinddir" ada_type="procedure" ada_name="Rewinddir" inline="1">
+		<func name="rewinddir" ada_type="procedure" ada_name="Rewinddir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2546,7 +2550,8 @@
 			<c_arg   name="dirp" type="DIR" from="Directory"/>
 			<ada_arg name="Directory" io="in" type="DIR"/>
 		</func>
-		<func name="dirfd" return="int_t" ada_type="procedure" rname="R" ada_name="DirFd" inline="1">
+		<func name="dirfd" return="int_t" ada_type="procedure" rname="R" ada_name="DirFd" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2556,7 +2561,8 @@
 			<ada_arg name="Fd" io="out" type="fd_t" from="fd_t(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="telldir" return="long_t" ada_type="procedure" rname="R" ada_name="Telldir" inline="1">
+		<func name="telldir" return="long_t" ada_type="procedure" rname="R" ada_name="Telldir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2566,7 +2572,8 @@
 			<ada_arg name="Pos" io="out" type="long_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="seekdir" return="long_t" ada_type="procedure" rname="R" ada_name="Seekdir" inline="1">
+		<func name="seekdir" return="long_t" ada_type="procedure" rname="R" ada_name="Seekdir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -2577,7 +2584,8 @@
 			<ada_arg name="Pos" io="in" type="long_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="closedir" return="int_t" ada_type="procedure" rname="R" ada_name="Closedir" inline="1">
+		<func name="closedir" return="int_t" ada_type="procedure" rname="R" ada_name="Closedir" 
+		 test="35" inline="1">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
