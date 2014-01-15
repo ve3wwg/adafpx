@@ -67,7 +67,10 @@ begin
 
    Telldir(D,Dir_Pos2,Error);
    pragma Assert(Error = 0);
+
+#if not POSIX_FAMILY = "FreeBSD"
    pragma Assert(Dir_Pos = Dir_Pos2);
+#end if;
 
    Readdir(D,Dirent,Eof,Error);
    pragma Assert(Error = 0);
