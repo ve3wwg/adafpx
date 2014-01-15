@@ -256,6 +256,21 @@
 			<macro name="S_IFCHR"/>
 			<macro name="S_IFIFO"/>
 		</set>
+		<set type="uchar_t" genset="143" format="%d">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="dirent.h"/>
+			</includes>
+			<macro name="DT_REG"/>
+			<macro name="DT_BLK"/>
+			<macro name="DT_CHR"/>
+			<macro name="DT_DIR"/>
+			<macro name="DT_FIFO"/>
+			<macro name="DT_LABEL"/>
+			<macro name="DT_LNK"/>
+			<macro name="DT_SOCK"/>
+			<macro name="DT_UNKNOWN"/>
+		</set>
 		<set type="whence_t" genset="150">
 			<macro name="SEEK_SET"/>
 			<macro name="SEEK_CUR"/>
