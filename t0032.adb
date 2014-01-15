@@ -18,7 +18,7 @@ procedure T0032 is
    pragma Volatile(Error);
 begin
 
-   Put_Line("Test 0032 - Getrlimit/Setrlimit");
+   Put_Line("Test 0032 - Getrusage");
 
    Error := 0;
 
