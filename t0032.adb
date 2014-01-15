@@ -22,7 +22,7 @@ begin
 
    Error := 0;
 
-   for X in 0..999999 loop
+   for X in 0..9999999 loop
       if Error < 32000 then
          Error := Error + 1;
       else
