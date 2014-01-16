@@ -167,12 +167,16 @@ begin
 
    Close(Fd,Error);
    pragma Assert(Error = 0);
+
    Close(Fd2,Error);
    pragma Assert(Error = 0);
 
    -------------------------------------------------------------------
    -- Delete the output file
    -------------------------------------------------------------------
+
+   Truncate(Path3,0,Error);         -- Test truncate by pathname
+   pragma Assert(Error = 0);
 
    Unlink(Path3,Error);
    pragma Assert(Error = 0);
