@@ -2783,12 +2783,14 @@
 			<ada_arg name="Buf"   io="out" type="s_statfs" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="closelog" ada_type="procedure" ada_name="CloseLog" inline="1">
+		<func name="closelog" ada_type="procedure" ada_name="CloseLog" inline="1"
+		 test="38">
 			<includes>
 				<include file="syslog.h"/>
 			</includes>
 		</func>
-		<func name="openlog" ada_type="procedure" ada_name="OpenLog" inline="1">
+		<func name="openlog" ada_type="procedure" ada_name="OpenLog" inline="1"
+                 test="38">
 			<includes>
 				<include file="syslog.h"/>
 			</includes>
@@ -2818,7 +2820,8 @@
 			<c_arg   name="pri"  type="int_t" from="Priority"/>
 			<ada_arg name="Priority" io="in" type="int_t"/>
 		</func>
-		<func name="syslog" ada_type="procedure" ada_name="Syslog">
+		<func name="syslog" ada_type="procedure" ada_name="Syslog"
+		 test="38">
 			<includes>
 				<include file="syslog.h"/>
 			</includes>
