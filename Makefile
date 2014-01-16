@@ -32,7 +32,7 @@ main:	ansi-c-lex.cpp ansi-c-yacc.cpp $(OBJS)
 	$(CXX) $(OBJS) -o main
 	rm -f atest atest.o *.ali b~* cglue.o
 
-run:
+run:	main
 	./main
 
 atest::	libadafpx.a
@@ -68,5 +68,16 @@ ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 
 backup: clobber
 	(cd .. && tar czvf adafpx.tar.gz adafpx)
+
+ansi-c-lex.cpp: ansi-c-lex.flex
+ansi-c-yacc.hpp: ansi-c-lex.flex
+
+ansi-c-yacc.cpp: ansi-c-yacc.yacc
+ansi-c-yacc.hpp: ansi-c-yacc.yacc
+
+main.o:	ansi-c-yacc.hpp ansi-c-yacc.cpp cglue.h
+
+posix.ads: main run
+posix.adb: main run
 
 # End Makefile
