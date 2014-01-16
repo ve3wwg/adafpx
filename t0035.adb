@@ -13,8 +13,8 @@ use Posix;
 procedure T0035 is
    use Ada.Text_IO;    
 
-   Path1 :              String := "Makefile";
-   Path2 :              String := ".";
+   Path1 :              constant String := "Makefile";
+   Path2 :              constant String := ".";
    D :                  DIR;
    Dirent :             s_dirent;
    Eof :                Boolean := False;
