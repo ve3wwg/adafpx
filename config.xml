@@ -1287,13 +1287,13 @@
 			<ada_arg name="Fildes" io="in" type="fd_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(Status)"/>
 		</func>
-		<func name="time" return="" ada_type="procedure" rname="" ada_name="Time" 
+		<func name="time" return="" ada_type="function" rname="" ada_name="Time" 
+		 ada_return="time_t" ada_return_from="T"
 		 test="16" inline="1">
 			<includes>
 				<include file="time.h"/>
 			</includes>
 			<c_arg name="t" type="System.Address" from="T'Address"/>
-			<ada_arg name="Time" io="out" type="time_t" from="T"/>
 			<temp name="T" type="time_t" init="0"/>
 		</func>
 		<func name="mknod" return="int_t" ada_type="procedure" rname="Status" ada_name="Mknod" 

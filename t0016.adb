@@ -14,7 +14,7 @@ procedure T0016 is
    use Ada.Text_IO;    
 
    Path :      constant String := "Makefile";
-   Now :       time_t;
+   Now :       constant time_t := Time;
    Times :     s_utimbuf;
    Error :     errno_t;
    S :         s_stat;
@@ -22,8 +22,6 @@ procedure T0016 is
 begin
 
    Put_Line("Test 0016 - UTime/UTimes/Stat");
-
-   Time(Now);
 
    Times.actime  := Now;
    Times.modtime := Now;
