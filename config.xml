@@ -2834,7 +2834,8 @@
 			<temp name="Fmt" type="String" init="C_String(F)"/>
 			<temp name="Msg" type="String" init="C_String(Message)"/>
 		</func>
-		<func name="getitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Getitimer" inline="1">
+		<func name="getitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Getitimer" 
+		 test="39" inline="1">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
