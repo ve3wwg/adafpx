@@ -43,7 +43,7 @@ package body P0015 is
    begin
       pragma Assert(Sig = SIGUSR2);
       Sig_User2 := Sig_User2 + 1;
-      Signal(Sig,User1_Handler'Access,Error);        -- This is the old unreliable signal API
+      Signal(Sig,User2_Handler'Access,Error);        -- This is the old unreliable signal API
       pragma Assert(Error = 0);
    end User2_Handler;
 
@@ -52,7 +52,7 @@ package body P0015 is
    begin
       pragma Assert(Sig = SIGALRM);
       Alarm_Signaled := true;
-      Signal(Sig,User1_Handler'Access,Error);        -- This is the old unreliable signal API
+      Signal(Sig,Alarm_Handler'Access,Error);        -- This is the old unreliable signal API
       pragma Assert(Error = 0);
    end Alarm_Handler;
 
