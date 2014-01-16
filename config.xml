@@ -271,6 +271,17 @@
 			<macro name="DT_SOCK"/>
 			<macro name="DT_UNKNOWN"/>
 		</set>
+		<set type="prio_t" genset="145" format="16#%08X#">
+			<includes>
+				<include file="sys/resource.h"/>
+			</includes>
+			<macro name="PRIO_PROCESS"/>
+			<macro name="PRIO_PGRP"/>
+			<macro name="PRIO_USER"/>
+			<macro name="PRIO_DARWIN_THREAD"/>
+			<macro name="PRIO_DARWIN_PROCESS"/>
+			<macro name="PRIO_DARWIN_BG"/>
+		</set>
 		<set type="whence_t" genset="150">
 			<macro name="SEEK_SET"/>
 			<macro name="SEEK_CUR"/>
@@ -550,14 +561,6 @@
 			<macro name="SC_AVPHYS_PAGES" alt="_SC_AVPHYS_PAGES"/>
 			<macro name="SC_NPROCESSORS_CONF" alt="_SC_NPROCESSORS_CONF"/>
 			<macro name="SC_NPROCESSORS_ONLN" alt="_SC_NPROCESSORS_ONLN"/>
-		</set>
-		<set genset="292">
-			<includes>
-				<include file="sys/resource.h"/>
-			</includes>
-			<macro name="PRIO_PROCESS"/>
-			<macro name="PRIO_PGRP"/>
-			<macro name="PRIO_USER"/>
 		</set>
 		<set genset="295" format="16#%08X#" os="Linux *">
 			<includes>
@@ -2734,24 +2737,27 @@
 			<ada_arg name="Len"   io="in" type="off_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="getpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Getpriority" inline="1">
+		<func name="getpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Getpriority" 
+		 test="37" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
-			<c_arg   name="which" type="int_t" from="Which"/>
+			<c_arg   name="which" type="prio_t" from="Which"/>
 			<c_arg   name="who"   type="id_t" from="Who"/>
-			<ada_arg name="Which" io="in" type="int_t"/>
+			<ada_arg name="Which" io="in" type="prio_t"/>
 			<ada_arg name="Who"   io="in" type="id_t"/>
+			<ada_arg name="Pri"   io="out" type="int_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Setpriority" inline="1">
+		<func name="setpriority" return="int_t" ada_type="procedure" rname="R" ada_name="Setpriority" 
+		 test="37" inline="1">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
-			<c_arg   name="which" type="int_t" from="Which"/>
+			<c_arg   name="which" type="prio_t" from="Which"/>
 			<c_arg   name="who"   type="id_t" from="Who"/>
 			<c_arg   name="prior" type="int_t" from="Prior"/>
-			<ada_arg name="Which" io="in" type="int_t"/>
+			<ada_arg name="Which" io="in" type="prio_t"/>
 			<ada_arg name="Who"   io="in" type="id_t"/>
 			<ada_arg name="Prior" io="in" type="int_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
