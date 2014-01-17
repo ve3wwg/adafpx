@@ -367,7 +367,12 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				if ( ada_type == "" )
 					ada_type = std_type(member.msize,member.msigned,member.array);
 			} else	{
-				ada_type = "System.Address";
+				auto it = node.override_type.find(member.name);
+				if ( it != node.override_type.end() ) {
+					ada_type = it->second;	// eg. sigproc_t
+				} else	{
+					ada_type = "System.Address";
+				}
 			}
 
 			ads << ada_type;
