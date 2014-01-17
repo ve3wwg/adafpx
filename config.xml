@@ -391,6 +391,18 @@
 			<macro name="SIG_UNBLOCK"/>
 			<macro name="SIG_SETMASK"/>
 		</set>
+		<set type="" genset="194">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<macro name="SA_NOCLDSTOP"/>
+			<macro name="SA_NOCLDWAIT"/>
+			<macro name="SA_NODEFER"/>
+			<macro name="SA_ONSTACK"/>
+			<macro name="SA_RESETHAND"/>
+			<macro name="SA_RESTART"/>
+			<macro name="SA_SIGINFO"/>
+		</set>
 		<set type="" genset="200">
 			<includes>
 				<include file="sys/param.h"/>
@@ -856,6 +868,7 @@
 			<members>
 				<override name="__sigaction_handler" ada="sa_handler" type="sigproc_t" struct="2"/>
 				<member name="sa_mask" pref="sigset_t" struct="1"/>
+				<override name="sa_restorer" type="sigrest_t"/>
 			</members>
 		</struct>
 		<struct name="sigaction" ada="s_sigaction" genset="565" os="Darwin *|FreeBSD *">
@@ -865,6 +878,7 @@
 			<members>
 				<override name="__sigaction_u" ada="sa_handler" type="sigproc_t" struct="2"/>
 				<member name="sa_mask" pref="sigset_t" struct="2"/>
+				<override name="sa_restorer" ada="sa_restorer" type="sigrest_t"/>
 			</members>
 		</struct>
 		<struct name="dirent" ada="s_dirent" genset="580">
@@ -2863,7 +2877,8 @@
 			<ada_arg name="Cur_Value" io="out" type="s_itimerval" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="setitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Setitimer" inline="1">
+		<func name="setitimer" return="int_t" ada_type="procedure" rname="R" ada_name="Setitimer" inline="1"
+		 test="39">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
@@ -2871,6 +2886,31 @@
 			<c_arg   name="curr"   type="System.Address" from="Cur_Value'Address"/>
 			<ada_arg name="Which"  io="in" type="itim_t"/>
 			<ada_arg name="Cur_Value" io="in" type="s_itimerval"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigaction" return="int_t" ada_type="procedure" rname="R" ada_name="Sigaction" inline="1"
+		 test="39">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg name="signum" type="sig_t" from="Sig"/>
+			<c_arg name="act"    type="System.Address" from="Act'Address"/>
+			<c_arg name="oldact" type="System.Address" from="Old'Address"/>
+			<ada_arg name="Sig"  io="in"  type="sig_t"/>
+			<ada_arg name="Act"  io="in"  type="s_sigaction"/>
+			<ada_arg name="Old"  io="out" type="s_sigaction" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigaction" return="int_t" ada_type="procedure" rname="R" ada_name="Sigaction" inline="1"
+		 test="39">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg name="signum" type="sig_t" from="Sig"/>
+			<c_arg name="act"    type="System.Address" from="Act'Address"/>
+			<c_arg name="oldact" type="System.Address" from="System.Null_Address"/>
+			<ada_arg name="Sig"  io="in"  type="sig_t"/>
+			<ada_arg name="Act"  io="in"  type="s_sigaction"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="vhangup" return="int_t" ada_type="procedure" rname="R" ada_name="VHangup" inline="1" os="Linux *">
