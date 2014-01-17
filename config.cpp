@@ -515,7 +515,7 @@ loadconfig() {
 						const std::string& ada_name = mnode.attribute("ada").value();
 						const std::string& mem_os = mnode.attribute("os").value();
 
-						if ( mem_os != "" && match(mem_os,platform) ) {
+						if ( mem_os == "" || match(mem_os,platform) ) {
 							const std::string type = mnode.attribute("type").value();
 							stype.override_type[member] = type;
 	
