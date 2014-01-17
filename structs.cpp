@@ -188,6 +188,19 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				ptr = znode.ptr;
 			}
 			break;
+		case Union :
+			{
+				s_node& nnode = Get(znode.next);
+				assert(nnode.type == Ident);
+				member = lex_revsym(nnode.symbol);
+				auto it = node.override_type.find(member);
+				if ( it != node.override_type.end() ) {
+					typemap[member] = it->second;
+				} else	{
+					assert(0);
+				}
+			}
+			break;
 		case Type :
 			// (lldb) p nnode
 			// (s_node) $0 = {
@@ -325,6 +338,12 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			if ( member.tname == "" ) {
 				member.tname = node.prefs[member.name];
 			}
+		}
+
+		auto im = node.nprefs.find(member.name);
+		if ( im != node.nprefs.end() ) {
+			const std::string pref_name = im->second;
+			member.a_name = pref_name;			// Use config.xml name instead
 		}
 
 		s << member.a_name << " :";

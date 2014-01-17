@@ -494,16 +494,38 @@ loadconfig() {
 
 				for ( auto pit=pnode.begin(); pit != pnode.end(); ++pit ) {
 					pugi::xml_node& mnode = *pit;
-					if ( strcmp(mnode.name(),"member") != 0 )
-						continue;
-					
-					const std::string& member = mnode.attribute("name").value();
-					const std::string& pref   = mnode.attribute("pref").value();
-					const std::string& stru   = mnode.attribute("struct").value();
+					const std::string ntype = mnode.name();
+		
+					if ( ntype == "member" ) {
+						const std::string& member = mnode.attribute("name").value();
+						const std::string& pref   = mnode.attribute("pref").value();
+						const std::string& stru   = mnode.attribute("struct").value();
 
-					if ( stru != "" )
-						stype.is_struct[member] = atoi(stru.c_str());
-					stype.prefs[member] = pref;
+						if ( stru != "" )
+							stype.is_struct[member] = atoi(stru.c_str());
+						stype.prefs[member] = pref;
+					} else if ( ntype == "struct" ) {
+						const std::string& member = mnode.attribute("name").value();
+						const std::string& mem_os = mnode.attribute("os").value();
+
+						if ( mem_os == "" || match(mem_os,platform) )
+							stype.is_struct[member] = 1;
+					} else if ( ntype == "override" ) {
+						const std::string& member = mnode.attribute("name").value();
+						const std::string& ada_name = mnode.attribute("ada").value();
+						const std::string& mem_os = mnode.attribute("os").value();
+
+						if ( mem_os != "" && match(mem_os,platform) ) {
+							const std::string type = mnode.attribute("type").value();
+							stype.override_type[member] = type;
+	
+							const std::string& stru   = mnode.attribute("struct").value();
+							if ( stru != "" )
+								stype.is_struct[member] = atoi(stru.c_str());
+							if ( ada_name != "" )
+								stype.nprefs[member] = ada_name;
+						}
+					}
 				}
 			}
 

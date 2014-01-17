@@ -692,6 +692,7 @@ struct_or_union_specifier
 			s_node& node = Get($1);
 			node.symbol = 0;		// Anonymous struct/union
 			node.next = $3;
+			node.next2 = $5;
 			$$ = $1;
 			dump($$,"struct_or_union '{' struct_declaration_list '}' attribute_clause_list");
 		} else	{

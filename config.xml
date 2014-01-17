@@ -849,6 +849,15 @@
 				<include file="signal.h"/>
 			</includes>
 		</struct>
+		<struct name="sigaction" ada="s_sigaction" genset="565">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<members>
+				<override name="__sigaction_handler" ada="sa_handler" type="sigproc_t" struct="2" os="Linux *"/>
+				<member name="sa_mask" pref="sigset_t" struct="1" os="Linux *"/>
+			</members>
+		</struct>
 		<struct name="dirent" ada="s_dirent" genset="580">
 			<includes>
 				<include file="sys/types.h"/>
