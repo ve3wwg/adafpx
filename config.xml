@@ -854,11 +854,11 @@
 				<include file="signal.h"/>
 			</includes>
 			<members>
-				<override name="__sigaction_handler" ada="sa_handler" type="sigproc_t" struct="2" os="Linux *"/>
+				<override name="__sigaction_handler" ada="sa_handler" type="sigproc_t" struct="2"/>
 				<member name="sa_mask" pref="sigset_t" struct="1"/>
 			</members>
 		</struct>
-		<struct name="sigaction" ada="s_sigaction" genset="565" os="Darwin *">
+		<struct name="sigaction" ada="s_sigaction" genset="565" os="Darwin *|FreeBSD *">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
