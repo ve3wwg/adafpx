@@ -5,7 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Posix;
+with Posix, System;
 use Posix;
 
 package body P0039 is
@@ -26,12 +26,18 @@ package body P0039 is
    end Alarm_Handler;
 
    procedure Test is
-      Secs :   uint_t;
-      Timer :  s_itimerval;
-      Error :  errno_t;
+      Secs :      uint_t;
+      Timer :     s_itimerval;
+      Error :     errno_t;
+      Sig_Act :   s_sigaction;
    begin
 
-      Signal(SIGALRM,Alarm_Handler'Access,Error);    -- This is the old unreliable signal API
+      Sig_Act.sa_handler := Alarm_Handler'Access;
+      Sigemptyset(Sig_Act.sa_mask);
+      Sig_Act.sa_flags := 0;
+
+      Sigaction(SIGALRM,Sig_Act,Error);
+      pragma Assert(Error = 0);
 
       Timer.it_value.tv_sec := 1;
       Timer.it_value.tv_usec := 1000;

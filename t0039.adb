@@ -13,8 +13,6 @@ with P0039;
 
 procedure T0039 is
    use Ada.Text_IO;    
-
-   Error :  errno_t;
 begin
 
    Put_Line("Test 0039 - Getitimer");
