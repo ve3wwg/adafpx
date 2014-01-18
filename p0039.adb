@@ -19,7 +19,6 @@ package body P0039 is
    procedure Alarm_Handler(Sig : sig_t) is
       Error : errno_t;
    begin
-      Signal(Sig,Alarm_Handler'Access,Error);        -- This is the old unreliable signal API
       pragma Assert(Error = 0);
       pragma Assert(Sig = SIGALRM);
       Alarm_Count := Alarm_Count + 1;
