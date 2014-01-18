@@ -17,7 +17,7 @@ procedure T0040 is
    Error :  errno_t;
 begin
 
-   Put_Line("Test 0040 - Syslog");
+   Put_Line("Test 0040 - Uname");
 
    UName(Names,Error);
    pragma Assert(Error = 0);

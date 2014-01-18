@@ -2920,10 +2920,20 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="uname" return="int_t" ada_type="procedure" rname="R" ada_name="Uname" 
-		 test="40" inline="1">
+		 test="40" inline="1" os="Darwin *|Linux *">
 			<includes>
 				<include file="sys/utsname.h"/>
 			</includes>
+			<c_arg   name="names" type="System.Address" from="Names'Address"/>
+			<ada_arg name="Names" io="out" type="s_utsname" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="__xuname" altname="UX_uname" return="int_t" ada_type="procedure" rname="R" ada_name="Uname" 
+		 test="40" os="FreeBSD 10.*">
+			<includes>
+				<include file="sys/utsname.h"/>
+			</includes>
+			<c_arg	 name="len"   type="int_t" from="Names.Sysname'Length"/>
 			<c_arg   name="names" type="System.Address" from="Names'Address"/>
 			<ada_arg name="Names" io="out" type="s_utsname" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
