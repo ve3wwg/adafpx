@@ -5,7 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Posix, System;
+with Posix;
 use Posix;
 
 package body P0039 is
@@ -17,15 +17,12 @@ package body P0039 is
    pragma Volatile(Alarm_Count);
 
    procedure Alarm_Handler(Sig : sig_t) is
-      Error : errno_t;
    begin
-      pragma Assert(Error = 0);
       pragma Assert(Sig = SIGALRM);
       Alarm_Count := Alarm_Count + 1;
    end Alarm_Handler;
 
    procedure Test is
-      Secs :      uint_t;
       Timer :     s_itimerval;
       Error :     errno_t;
       Sig_Act :   s_sigaction;

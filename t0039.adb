@@ -5,11 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Ada.Text_IO;
-with Posix;
-use Posix;
-
-with P0039;
+with Ada.Text_IO, P0039;
 
 procedure T0039 is
    use Ada.Text_IO;    
