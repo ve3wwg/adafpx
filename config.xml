@@ -2929,7 +2929,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="__xuname" altname="UX_uname" return="int_t" ada_type="procedure" rname="R" ada_name="Uname" 
-		 test="40" os="FreeBSD 10.*">
+		 test="40" inline="1" os="FreeBSD 10.*">
 			<includes>
 				<include file="sys/utsname.h"/>
 			</includes>
