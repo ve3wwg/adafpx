@@ -62,7 +62,7 @@
 		<type name="ino64_t" os="Darwin 13.*.*"/>
 		<type name="sigset_t" os="Darwin *"/>
 		<type name="rlim_t"/>
-		<type name="key_t" os="Linux *"/>
+		<type name="key_t" os="Linux *|FreeBSD *"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -940,20 +940,22 @@
 				<include file="sys/sysinfo.h"/>
 			</includes>
 		</struct>
-		<struct name="ipc_perm" ada="s_ipc_perm" genset="590">
+		<struct name="ipc_perm" ada="s_ipc_perm" genset="589">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
 				<include file="sys/msg.h"/>
 			</includes>
 		</struct>
-		<struct name="msqid_ds" ada="s_msqid_ds" genset="593" os="Linux *">
+		<struct name="msqid_ds" ada="s_msqid_ds" genset="593" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
 				<include file="sys/msg.h"/>
 			</includes>
 			<members>
+				<override name="msg_first" ada="msg_first" type="System.Address" struct="2"/>
+				<override name="msg_last"  ada="msg_last"  type="System.Address" struct="2"/>
 				<member name="msg_stime" pref="time_t"/>
 				<member name="msg_rtime" pref="time_t"/>
 				<member name="msg_ctime" pref="time_t"/>
@@ -2988,7 +2990,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" 
-		 inline="1" os="Linux *|FreeBSD">
+		 inline="1" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3006,7 +3008,8 @@
 				<case name="MSG_STAT"/>
 			</cases>
 		</func>
-		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1" os="Linux *">
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1" 
+		 os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3024,7 +3027,8 @@
 				<case name="MSG_INFO"/>
 			</cases>
 		</func>
-		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Set" inline="1" os="Linux *">
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Set" inline="1" 
+		 os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3043,7 +3047,7 @@
 			</cases>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl" inline="1"
-		 test="42" os="Linux *">
+		 test="42" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>

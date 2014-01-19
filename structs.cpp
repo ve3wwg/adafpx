@@ -184,8 +184,14 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				s_node& nnode = Get(znode.next);
 				assert(nnode.type == Ident);
 				member = lex_revsym(nnode.symbol);
-				typemap[member] = lex_revsym(znode.symbol);
-				ptr = znode.ptr;
+
+				auto it = node.override_type.find(member);
+				if ( it != node.override_type.end() ) {
+					typemap[member] = it->second;
+				} else	{
+					typemap[member] = lex_revsym(znode.symbol);
+					ptr = znode.ptr;
+				}
 			}
 			break;
 		case Union :
