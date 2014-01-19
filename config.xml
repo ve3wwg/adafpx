@@ -62,7 +62,7 @@
 		<type name="ino64_t" os="Darwin 13.*.*"/>
 		<type name="sigset_t" os="Darwin *"/>
 		<type name="rlim_t"/>
-		<type name="key_t" os="Linux *|FreeBSD *"/>
+		<type name="key_t" os="Linux *|FreeBSD *|Darwin *"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -981,8 +981,19 @@
 				<member name="sem_ctime" pref="time_t"/>
 			</members>
 		</struct>
+		<struct name="__semid_ds_new" ada="s_semid_ds" genset="600" os="Darwin 13.*">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<members>
+				<member name="sem_otime" pref="time_t"/>
+				<member name="sem_ctime" pref="time_t"/>
+			</members>
+		</struct>
 		<struct name="sembuf" ada="s_sembuf" genset="603" 
-		 os="Linux *|FreeBSD *" 
+		 os="Linux *|FreeBSD *|Darwin *" 
 		 array="Natural range <>">
 			<includes>
 				<include file="sys/types.h"/>
@@ -3138,7 +3149,7 @@
 			<declare text="Msgr : Msgr_Type;" />
 		</func>
 		<func name="semget" return="int_t" ada_type="procedure" rname="R" ada_name="Semget" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3154,7 +3165,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3174,7 +3185,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3193,7 +3204,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Set" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3233,7 +3244,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3254,7 +3265,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3275,7 +3286,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3293,7 +3304,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Set" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3314,7 +3325,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Set" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3334,7 +3345,7 @@
 			</cases>
 		</func>
 		<func name="semop" return="int_t" ada_type="procedure" rname="R" ada_name="Semop" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
