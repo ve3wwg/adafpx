@@ -280,9 +280,12 @@ loadconfig() {
 				continue;
 
 			const std::string name = tnode.attribute("name").value();
-			const std::string os   = tnode.attribute("os").value();
+			std::string os   = tnode.attribute("os").value();
 
-			if ( os !=  "" && !match(os,platform) )
+			if ( os == "" )
+				os = "*";
+
+			if ( !match(os,platform) )
 				continue;
 
 			s_config::s_sys_types::s_sys_type stype;
