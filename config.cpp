@@ -482,6 +482,7 @@ loadconfig() {
 			
 			stype.c_name = snode.attribute("name").value();
 			stype.a_name = snode.attribute("ada").value();
+			stype.array  = snode.attribute("array").value();
 
 			{
 				pugi::xml_node inode = snode.child("includes");

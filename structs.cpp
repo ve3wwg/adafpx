@@ -412,6 +412,13 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
         ads     << "      end record;\n";
 
+
+	if ( node.array != "" ) {
+		ads 	<< "\n"
+			<< "   type " << node.a_name << "_array" << " is array(" << node.array
+			<< ") of " << node.a_name << ";\n";
+	}
+
 	ads.close();
 }
 
