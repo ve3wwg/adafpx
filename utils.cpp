@@ -71,7 +71,8 @@ split(std::vector<std::string>& vec,const std::string s,char sep) {
 				vec.push_back(s.substr(spos));
 			break;
 		}
-		vec.push_back(s.substr(spos,p));
+		const std::string sub = s.substr(spos,p-spos);
+		vec.push_back(sub);
 		spos = p + 1;
 	}
 }
