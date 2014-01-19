@@ -2987,7 +2987,8 @@
 			<ada_arg name="SID" io="out" type="pid_t" from="Pos_PID(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" inline="1" os="Linux *">
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" 
+		 inline="1" os="Linux *|FreeBSD">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3041,7 +3042,26 @@
 				<case name="IPC_RMID"/>
 			</cases>
 		</func>
-		<func name="msgget" return="int_t" ada_type="procedure" rname="R" ada_name="Msgget" inline="1" os="Linux *">
+		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl" inline="1"
+		 test="42" os="Linux *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<c_arg   name="msqid" type="int_t" from="Msqid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Msqid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="Buf" type="s_msqid_ds"/>
+			<cases name="Cmd">
+				<case name="IPC_RMID"/>
+			</cases>
+		</func>
+		<func name="msgget" return="int_t" ada_type="procedure" rname="R" ada_name="Msgget" inline="1" 
+		 test="42" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3054,7 +3074,8 @@
 			<ada_arg name="Msqqid" io="out" type="int_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-		<func name="msgsnd" return="int_t" ada_type="procedure" rname="R" ada_name="Msgsnd" inline="1" os="Linux *">
+		<func name="msgsnd" return="int_t" ada_type="procedure" rname="R" ada_name="Msgsnd" inline="1" 
+		 os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3076,7 +3097,8 @@
 			<declare text="   end record;"/>
 			<declare text="Msgr : Msgr_Type := ( Msgtyp, Msg );" />
 		</func>
-		<func name="msgrcv" return="int_t" ada_type="procedure" rname="R" ada_name="Msgrcv" inline="1" os="Linux *">
+		<func name="msgrcv" return="int_t" ada_type="procedure" rname="R" ada_name="Msgrcv" 
+		 inline="1" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
