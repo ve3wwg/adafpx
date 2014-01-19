@@ -141,6 +141,7 @@ struct s_config {
 			std::unordered_map<std::string,std::string> prefs;  // Preferred type name
 			std::unordered_map<std::string,int> is_struct;  // Treat member as a struct
 			std::unordered_map<std::string,std::string> override_type; // Type override/helper
+			std::string		array;			// Array bounds if array should also be defined
 		};
 		std::vector<s_struct>		structvec;
 	} structs;
