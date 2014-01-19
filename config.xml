@@ -42,6 +42,8 @@
 			<include file="sys/param.h"/>
 			<include file="signal.h"/>
 			<include file="sys/resource.h"/>
+			<include file="sys/ipc.h"/>
+			<include file="sys/sem.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -3359,7 +3361,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="semtimedop" return="int_t" ada_type="procedure" rname="R" ada_name="Semtimedop" inline="1" 
-		 test="43" os="Linux *|FreeBSD *">
+		 os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
