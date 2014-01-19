@@ -976,6 +976,7 @@
 				<include file="sys/sem.h"/>
 			</includes>
 			<members>
+				<override name="sem_base" ada="sem_base" type="System.Address" struct="2"/>
 				<member name="sem_otime" pref="time_t"/>
 				<member name="sem_ctime" pref="time_t"/>
 			</members>
@@ -3211,7 +3212,7 @@
 			</cases>
 		</func>
 		<func name="semctl" return="int_t" ada_type="procedure" rname="R" ada_name="Semctl_Get" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
