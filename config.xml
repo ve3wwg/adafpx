@@ -3358,18 +3358,28 @@
 			<ada_arg name="Sops"  io="in" type="s_sembuf_array"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-<!--
-       int semtimedop(int semid, struct sembuf *sops, unsigned nsops,
-		      struct timespec *timeout);
--->
-		<!-- Outstanding functions:
-			setlogmasl : Linux - needs LOGS_MASK(pri) macro
-			sigaction
-			initgroups
-			select
-			reboot : Linux
-			scandir(3) : Linux
-			vm86plus_struct : Linux i386
-		-->
+		<func name="semtimedop" return="int_t" ada_type="procedure" rname="R" ada_name="Semtimedop" inline="1" 
+		 test="43" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/sem.h"/>
+			</includes>
+			<c_arg   name="semid" type="int_t" from="Semid"/>
+			<c_arg	 name="sops"  type="System.Address" from="Sops'Address"/>
+			<c_arg	 name="nsops" type="int_t" from="Sops'Length"/>
+			<c_arg	 name="timeout" type="System.Address" from="Timeout'Address"/>
+			<ada_arg name="Semid" io="in" type="int_t"/>
+			<ada_arg name="Sops"  io="in" type="s_sembuf_array"/>
+			<ada_arg name="Timeout" io="in" type="s_timespec"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 	</section2>
+	<!-- Outstanding functions:
+		initgroups
+		select
+		reboot : Linux
+		scandir(3) : Linux
+		vm86plus_struct : Linux i386
+	-->
 </entities>
