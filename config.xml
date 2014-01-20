@@ -696,6 +696,8 @@
 			<macro name="GETZCNT" ada_name="IPC_GETZCNT"/>
 			<macro name="SETALL"  ada_name="IPC_SETALL"/>
 			<macro name="SETVAL"  ada_name="IPC_SETVAL"/>
+			<macro name="SHM_RND"/>
+			<macro name="SHM_RDONLY"/>
 		</set>
 		<set type="" genset="315" format="16#%08X#">
 			<includes>
@@ -1009,6 +1011,29 @@
 				<include file="sys/ipc.h"/>
 				<include file="sys/sem.h"/>
 			</includes>
+		</struct>
+		<struct name="shmid_ds" ada="s_shmid_ds" genset="607" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<members>
+				<member name="shm_atime" pref="time_t"/>
+				<member name="shm_dtime" pref="time_t"/>
+				<member name="shm_ctime" pref="time_t"/>
+			</members>
+		</struct>
+		<struct name="__shmid_ds_new" ada="s_shmid_ds" genset="607" os="Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<members>
+				<member name="shm_otime" pref="time_t"/>
+				<member name="shm_ctime" pref="time_t"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -3374,6 +3399,105 @@
 			<ada_arg name="Semid" io="in" type="int_t"/>
 			<ada_arg name="Sops"  io="in" type="s_sembuf_array"/>
 			<ada_arg name="Timeout" io="in" type="s_timespec"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="shmget" return="int_t" ada_type="procedure" rname="R" ada_name="Shmget" inline="1" 
+		 test="44" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg   name="key"   type="key_t" from="Key"/>
+			<c_arg	 name="size" type="size_t" from="Size"/>
+			<c_arg   name="shmflg" type="uint_t" from="Flags"/>
+			<ada_arg name="Key"   io="in" type="key_t"/>
+			<ada_arg name="Size" io="in" type="size_t"/>
+			<ada_arg name="Flags" io="in" type="uint_t"/>
+			<ada_arg name="Shmid" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="shmctl" return="int_t" ada_type="procedure" rname="R" ada_name="Shmctl" inline="1" 
+		 test="44" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg   name="shmid" type="int_t" from="Shmid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Shmid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="Buf" type="s_shmid_ds"/>
+			<cases name="Cmd">
+				<case name="IPC_RMID"/>
+			</cases>
+		</func>
+
+		<func name="shmctl" return="int_t" ada_type="procedure" rname="R" ada_name="Shmctl_Get" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg   name="shmid" type="int_t" from="Shmid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Shmid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="out" type="s_shmid_ds" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_STAT"/>
+			</cases>
+		</func>
+
+		<func name="shmctl" return="int_t" ada_type="procedure" rname="R" ada_name="Shmctl_Set" inline="1" 
+		 test="43" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg   name="shmid" type="int_t" from="Shmid"/>
+			<c_arg   name="cmd"   type="ipccmd_t" from="Cmd"/>
+			<c_arg	 name="buf"   type="System.Address" from="Buf'Address"/>
+			<ada_arg name="Shmid" io="in" type="int_t"/>
+			<ada_arg name="Cmd"   io="in" type="ipccmd_t"/>
+			<ada_arg name="Buf"   io="in" type="s_shmid_ds"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+			<cases name="Cmd">
+				<case name="IPC_SET"/>
+			</cases>
+		</func>
+
+		<func name="shmat" return="System.Address" ada_type="procedure" rname="R" ada_name="Shmat" inline="1" 
+		 test="44" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg   name="shmid" type="int_t" from="Shmid"/>
+			<c_arg	 name="shmaddr" type="System.Address" from="Shm_Addr"/>
+			<c_arg   name="flags" type="uint_t" from="Flags"/>
+			<ada_arg name="Shmid" io="in" type="int_t"/>
+			<ada_arg name="Shm_Addr" io="in out" type="System.Address" from="R"/>
+			<ada_arg name="Flags" io="in"  type="uint_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="shmdt" return="int_t" ada_type="procedure" rname="R" ada_name="Shmdt" inline="1" 
+		 test="44" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/shm.h"/>
+			</includes>
+			<c_arg	 name="shmaddr" type="System.Address" from="Shm_Addr"/>
+			<ada_arg name="Shm_Addr" io="in" type="System.Address"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 	</section2>
