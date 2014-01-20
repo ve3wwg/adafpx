@@ -966,6 +966,18 @@
 				<member name="msg_ctime" pref="time_t"/>
 			</members>
 		</struct>
+		<struct name="__msqid_ds_new" ada="s_msqid_ds" genset="593" os="Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/ipc.h"/>
+				<include file="sys/msg.h"/>
+			</includes>
+			<members>
+				<member name="msg_stime" pref="time_t"/>
+				<member name="msg_rtime" pref="time_t"/>
+				<member name="msg_ctime" pref="time_t"/>
+			</members>
+		</struct>
 		<struct name="msginfo" ada="s_msginfo" genset="595" os="Linux *">
 			<includes>
 				<include file="sys/types.h"/>
@@ -3039,7 +3051,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Get" 
-		 inline="1" os="Linux *|FreeBSD *">
+		 inline="1" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3077,7 +3089,7 @@
 			</cases>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl_Set" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3096,7 +3108,7 @@
 			</cases>
 		</func>
 		<func name="msgctl" return="int_t" ada_type="procedure" rname="R" ada_name="Msgctl" inline="1"
-		 test="42" os="Linux *|FreeBSD *">
+		 test="42" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3114,7 +3126,7 @@
 			</cases>
 		</func>
 		<func name="msgget" return="int_t" ada_type="procedure" rname="R" ada_name="Msgget" inline="1" 
-		 test="42" os="Linux *|FreeBSD *">
+		 test="42" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3128,7 +3140,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="msgsnd" return="int_t" ada_type="procedure" rname="R" ada_name="Msgsnd" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -3151,7 +3163,7 @@
 			<declare text="Msgr : Msgr_Type := ( Msgtyp, Msg );" />
 		</func>
 		<func name="msgrcv" return="int_t" ada_type="procedure" rname="R" ada_name="Msgrcv" 
-		 inline="1" os="Linux *|FreeBSD *">
+		 inline="1" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
