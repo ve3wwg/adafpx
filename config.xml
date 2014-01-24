@@ -1047,6 +1047,12 @@
 				<member name="shm_ctime" pref="time_t"/>
 			</members>
 		</struct>
+		<struct name="dqblk" ada="s_dqblk" genset="610" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/quota.h"/>
+			</includes>
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
@@ -3512,7 +3518,6 @@
 			<ada_arg name="Shm_Addr" io="in" type="System.Address"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
-
 		<func name="mprotect" return="int_t" ada_type="procedure" rname="R" ada_name="MProtect" inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
@@ -3526,6 +3531,63 @@
 			<ada_arg name="Prot" io="in" type="mprot_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+<!--
+     #include <sys/types.h>   /* types needed by quota.h */
+     #include <sys/quota.h>   /* for disk quotas */
+
+     int
+     quotactl(const char *path, int cmd, int id, char *addr);
+
+DESCRIPTION
+     The quotactl() call enables, disables and manipulates filesystem quotas.
+     A quota control command given by cmd operates on the given filename path
+     for the given user id.  The address of an optional command specific data
+     structure, addr, may be given; its interpretation is discussed below with
+     each command.
+
+     A command is composed of a primary command (see below) and a command type
+     used to interpret the id.	Types are supported for interpretation of user
+     identifiers and group identifiers.  The specific commands are:
+
+     Q_QUOTAON	  Enable disk quotas for the filesystem specified by path.
+		  The command type specifies the type of the quotas being
+		  enabled.  The addr argument specifies a file from which to
+		  take the quotas.  The quota file must exist; it is normally
+		  created with the quotacheck(8) program.  The id argument is
+		  unused.  Only the super-user may turn quotas on.
+
+     Q_QUOTAOFF   Disable disk quotas for the filesystem specified by path.
+		  The command type specifies the type of the quotas being dis-
+		  abled.  The addr and id arguments are unused.  Only the
+		  super-user may turn quotas off.
+
+     Q_GETQUOTA   Get disk quota limits and current usage for the user or
+		  group (as determined by the command type) with identifier
+		  id.  Addr is a pointer to a struct dqblk structure.
+
+     Q_SETQUOTA   Set disk quota limits for the user or group (as determined
+		  by the command type) with identifier id.  Addr is a pointer
+		  to a struct dqblk structure.	The usage fields of the dqblk
+		  structure are ignored.  This call is restricted to the
+		  super-user.
+
+     Q_SETUSE	  Set disk usage limits for the user or group (as determined
+		  by the command type) with identifier id.  Addr is a pointer
+		  to a struct dqblk structure.	Only the usage fields are
+		  used.  This call is restricted to the super-user.
+
+     Q_SYNC	  Update the on-disk copy of quota usages.  The command type
+		  specifies which type of quotas are to be updated.  The id
+		  and addr parameters are ignored.
+
+     Q_QUOTASTAT  Get the enable status for the filesystem specified by path.
+		  The command type specifies the type of the quotas whose sta-
+		  tus is being queried.  Addr is a pointer to an integer.
+		  Upon return, this integer will hold a zero value if quotas
+		  for the given type are not enabled and a non-zero value if
+		  quotas for the given type are enabled.  The id parameter is
+		  ignored.
+-->
 	</section2>
 	<!-- Outstanding functions:
 		initgroups
