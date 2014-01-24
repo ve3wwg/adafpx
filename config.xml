@@ -44,6 +44,7 @@
 			<include file="sys/resource.h"/>
 			<include file="sys/ipc.h"/>
 			<include file="sys/sem.h"/>
+			<include file="poll.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -65,6 +66,7 @@
 		<type name="sigset_t" os="Darwin *"/>
 		<type name="rlim_t"/>
 		<type name="key_t" os="Linux *|FreeBSD *|Darwin *"/>
+		<type name="nfds_t" os="Linux *|FreeBSD *|Darwin *"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -729,6 +731,21 @@
 			<macro name="Q_SYNC"/>
 			<macro name="Q_QUOTASTAT"/>
 		</set>
+		<set type="" genset="320" format="16#%08X#">
+			<includes>
+				<include file="poll.h"/>
+			</includes>
+			<macro name="POLLERR"/>
+			<macro name="POLLHUP"/>
+			<macro name="POLLIN"/>
+			<macro name="POLLNVAL"/>
+			<macro name="POLLOUT"/>
+			<macro name="POLLPRI"/>
+			<macro name="POLLRDBAND"/>
+			<macro name="POLLRDNORM"/>
+			<macro name="POLLWRBAND"/>
+			<macro name="POLLWRNORM"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -1073,6 +1090,13 @@
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="ufs/ufs/quota.h"/>
+			</includes>
+		</struct>
+		<struct name="pollfd" ada="s_pollfd" genset="612" 
+		 array="Natural range <>"
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="poll.h"/>
 			</includes>
 		</struct>
 	</structs>
@@ -3654,6 +3678,24 @@
 				<case name="Q_SETUSE"/>
 			</cases>
 		</func>
+		<func name="poll" return="int_t" ada_type="procedure" rname="R" ada_name="Poll" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="poll.h"/>
+			</includes>
+			<c_arg	 name="fds" type="System.Address" from="Fds'Address"/>
+			<c_arg	 name="nfds" type="nfds_t" from="nfds_t(Fds'Length)"/>
+			<c_arg	 name="timeout"   type="int_t" from="Timeout"/>
+			<ada_arg name="Fds" io="in" type="s_pollfd_array"/>
+			<ada_arg name="Timeout" io="in" type="int_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+<!--
+     #include <poll.h>
+
+     int
+     poll(struct pollfd fds[], nfds_t nfds, int timeout);
+-->
 	</section2>
 	<!-- Outstanding functions:
 		initgroups
