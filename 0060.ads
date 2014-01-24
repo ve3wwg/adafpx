@@ -16,6 +16,7 @@
    type ipccmd_t is new int_t;
    type sigpmop_t is new int_t;
    type prio_t is new int_t;
+   type quotcmd_t is new int_t;
 
    type short_array is array(Natural range <>) of short_t;
    type int_array is array(Natural range <>) of int_t;
