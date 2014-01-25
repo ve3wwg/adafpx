@@ -1098,6 +1098,11 @@
 			<includes>
 				<include file="poll.h"/>
 			</includes>
+			<members>
+				<member name="fd" pref="fd_t" when="int32_t"/>
+				<member name="events" pref="uint16_t" when="int16_t"/>
+				<member name="revents" pref="uint16_t" when="int16_t"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -3679,7 +3684,7 @@
 			</cases>
 		</func>
 		<func name="poll" return="int_t" ada_type="procedure" rname="R" ada_name="Poll" inline="1" 
-		 os="Linux *|FreeBSD *|Darwin *">
+		 test="45" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="poll.h"/>
 			</includes>
@@ -3688,6 +3693,7 @@
 			<c_arg	 name="timeout"   type="int_t" from="Timeout"/>
 			<ada_arg name="Fds" io="in" type="s_pollfd_array"/>
 			<ada_arg name="Timeout" io="in" type="int_t"/>
+			<ada_arg name="Count"   io="out" type="Natural" from="Pos_Natural(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 <!--
