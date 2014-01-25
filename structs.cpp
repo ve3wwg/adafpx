@@ -26,7 +26,7 @@ use_preferred_type(unsigned size,bool is_unsigned,const std::string pref_type) {
 		auto pit = config.sys_types.info.find(pref_type);
 		if ( pit != config.sys_types.info.end() ) {
 			const s_config::s_sys_types::s_sys_type& stype = pit->second;
-			if ( size == stype.size && is_unsigned == stype.is_unsigned )
+			if ( size == stype.size /* && is_unsigned == stype.is_unsigned */ )
 				return true;
 		}
 	}
@@ -361,13 +361,17 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	
 		if ( !member.union_struct ) {
 			std::string ada_type;
+			bool subbed = false, prefs = false;
 
 			auto mit = node.prefs.find(member.name);
 			if ( mit != node.prefs.end() ) {
 				const std::string& pref_type = mit->second;
+				prefs = true;
 
-				if ( use_preferred_type(member.msize,!member.msigned,pref_type) )
+				if ( use_preferred_type(member.msize,!member.msigned,pref_type) ) {
 					ada_type = pref_type;
+					subbed = true;
+				}
 			}
 			if ( !member.ptr ) {
 				if ( ada_type == "" )
@@ -379,6 +383,13 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				} else	{
 					ada_type = "System.Address";
 				}
+			}
+
+			// Process when=
+			if ( prefs && !subbed ) {
+				const std::string when = node.xlate[member.name];
+				if ( when != "" && ada_type == when )
+					ada_type = node.prefs[member.name];
 			}
 
 			ads << ada_type;
