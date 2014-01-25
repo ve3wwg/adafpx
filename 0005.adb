@@ -264,6 +264,17 @@ package body Posix is
 
    pragma Inline(Neg_PID);
 
+   function Pos_Natural(Status: int_t) return Natural is
+   begin
+      if Status >= 0 then
+         return Natural(Status);
+      else
+         return 0;
+      end if;
+   end Pos_Natural;
+
+   pragma Inline(Pos_Natural);
+
    function Argv_Length(Argvs: String) return Natural is
       Count : Natural := 0;   
    begin
