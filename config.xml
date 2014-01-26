@@ -1111,6 +1111,14 @@
 				<member name="revents" pref="uint16_t" when="int16_t"/>
 			</members>
 		</struct>
+		<struct name="sched_param" ada="s_sched_param" genset="614" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<members>
+				<member name="__sched_priority" ada="usched_priority"/>
+			</members>                  
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
