@@ -3853,7 +3853,7 @@
 		</func>
 		<func name="nanosleep" return="int_t" ada_type="procedure" rname="R" ada_name="Nanosleep"
 		 test="46" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="time.h"/>
 			</includes>
@@ -3864,7 +3864,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="sleep" ada_type="procedure" ada_name="Sleep" inline="1" 
-		 test="46" os="Linux *|FreeBSD *">
+		 test="46" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -3873,7 +3873,7 @@
 		</func>
 		<func name="sleep" return="uint_t" ada_type="procedure" rname="R" ada_name="Sleep"
 		 test="46" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
