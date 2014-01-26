@@ -753,6 +753,16 @@
 			<macro name="MCL_CURRENT"/>
 			<macro name="MCL_FUTURE"/>
 		</set>
+		<set type="" genset="324" format="16#%08X#">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<macro name="SCHED_OTHER"/>
+			<macro name="SCHED_BATCH"/>
+			<macro name="SCHED_IDLE"/>
+			<macro name="SCHED_FIFO"/>
+			<macro name="SCHED_RR"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -3770,6 +3780,106 @@
 			<ada_arg name="PID"   io="in" type="pid_t"/>
 			<ada_arg name="Param" io="out" type="s_sched_param" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_setscheduler" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Setscheduler" 
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="pid" type="pid_t" from="PID"/>
+			<c_arg	 name="policy" type="int_t" from="Policy"/>
+			<c_arg	 name="param" type="System.Address" from="Param'Address"/>
+			<ada_arg name="PID"   io="in" type="pid_t"/>
+			<ada_arg name="Policy" io="in" type="int_t"/>
+			<ada_arg name="Param" io="in" type="s_sched_param"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_getscheduler" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Getscheduler"
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="pid" type="pid_t" from="PID"/>
+			<ada_arg name="PID"   io="in" type="pid_t"/>
+			<ada_arg name="Policy" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_yield" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Yield"
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_get_priority_max" return="int_t" ada_type="procedure" rname="R" 
+		 ada_name="Sched_Get_Priority_Max"
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="policy" type="int_t" from="Policy"/>
+			<ada_arg name="Policy" io="in" type="int_t"/>
+			<ada_arg name="Priority" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_get_priority_min" return="int_t" ada_type="procedure" rname="R" 
+		 ada_name="Sched_Get_Priority_Min"
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="policy" type="int_t" from="Policy"/>
+			<ada_arg name="Policy" io="in" type="int_t"/>
+			<ada_arg name="Priority" io="out" type="int_t" from="R"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_rr_get_interval" return="int_t" ada_type="procedure" rname="R" 
+		 ada_name="Sched_RR_Get_Interval"
+		 inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="pid" type="pid_t" from="PID"/>
+			<c_arg	 name="ival" type="System.Address" from="Interval'Address"/>
+			<ada_arg name="PID" io="in" type="pid_t"/>
+			<ada_arg name="Interval" io="out" type="s_timespec" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="nanosleep" return="int_t" ada_type="procedure" rname="R" ada_name="Nanosleep"
+		 test="46" inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="time.h"/>
+			</includes>
+			<c_arg	 name="req" type="System.Address" from="Request'Address"/>
+			<c_arg	 name="remn" type="System.Address" from="Remain'Address"/>
+			<ada_arg name="Request" io="in" type="s_timespec"/>
+			<ada_arg name="Remain"  io="out" type="s_timespec" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sleep" ada_type="procedure" ada_name="Sleep" inline="1" 
+		 test="46" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg	 name="sec" type="uint_t" from="Seconds"/>
+			<ada_arg name="Seconds" io="in" type="uint_t"/>
+		</func>
+		<func name="sleep" return="uint_t" ada_type="procedure" rname="R" ada_name="Sleep"
+		 test="46" inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg	 name="sec" type="uint_t" from="Seconds"/>
+			<ada_arg name="Seconds" io="in" type="uint_t"/>
+			<ada_arg name="Remain" io="out" type="uint_t" from="R"/>
 		</func>
 	</section2>
 	<!-- Outstanding functions:
