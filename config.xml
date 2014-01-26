@@ -3696,6 +3696,28 @@
 			<ada_arg name="Count"   io="out" type="Natural" from="Pos_Natural(R)"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="mlock" return="int_t" ada_type="procedure" rname="R" ada_name="MLock" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/mman.h"/>
+			</includes>
+			<c_arg	 name="addr" type="System.Address" from="Addr"/>
+			<c_arg	 name="len" type="size_t" from="Len"/>
+			<ada_arg name="Addr" io="in" type="System.Address"/>
+			<ada_arg name="Len"  io="in" type="size_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="munlock" return="int_t" ada_type="procedure" rname="R" ada_name="MUnlock" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/mman.h"/>
+			</includes>
+			<c_arg	 name="addr" type="System.Address" from="Addr"/>
+			<c_arg	 name="len" type="size_t" from="Len"/>
+			<ada_arg name="Addr" io="in" type="System.Address"/>
+			<ada_arg name="Len"  io="in" type="size_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 <!--
      #include <poll.h>
 
