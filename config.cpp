@@ -503,12 +503,15 @@ loadconfig() {
 					if ( ntype == "member" ) {
 						const std::string& member = mnode.attribute("name").value();
 						const std::string& pref   = mnode.attribute("pref").value();
+						const std::string& ada_name = mnode.attribute("ada").value();
 						const std::string& when   = mnode.attribute("when").value();
 						const std::string& stru   = mnode.attribute("struct").value();
 
 						if ( stru != "" )
 							stype.is_struct[member] = atoi(stru.c_str());
 						stype.prefs[member] = pref;
+						if ( ada_name != "" )
+							stype.nprefs[member] = ada_name;
 						if ( when != "" )
 							stype.xlate[member] = when;
 					} else if ( ntype == "struct" ) {
