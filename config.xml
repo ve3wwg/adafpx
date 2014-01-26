@@ -3741,6 +3741,28 @@
 			</includes>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="sched_setparam" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Setparam" inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="pid" type="pid_t" from="PID"/>
+			<c_arg	 name="param" type="System.Address" from="Param'Address"/>
+			<ada_arg name="PID"   io="in" type="pid_t"/>
+			<ada_arg name="Param" io="in" type="s_sched_param"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sched_setparam" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Getparam" inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sched.h"/>
+			</includes>
+			<c_arg	 name="pid" type="pid_t" from="PID"/>
+			<c_arg	 name="param" type="System.Address" from="Param'Address"/>
+			<ada_arg name="PID"   io="in" type="pid_t"/>
+			<ada_arg name="Param" io="out" type="s_sched_param" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 	</section2>
 	<!-- Outstanding functions:
 		initgroups
