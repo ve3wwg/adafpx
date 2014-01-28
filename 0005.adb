@@ -10,6 +10,15 @@ with Ada.Unchecked_Conversion;
 
 package body Posix is
    
+   function Error_Pointer return System.Address is
+      function UX_c_error_ptr return System.Address;
+      pragma Import(C,UX_c_error_ptr,"c_error_ptr");
+   begin
+      return UX_c_error_ptr;
+   end Error_Pointer;
+
+   pragma Inline(Error_Pointer);
+
    function Strlen(C_Ptr : System.Address) return Natural is
       function UX_strlen(cstr : System.Address) return uint_t;
       pragma Import(C,UX_strlen,"c_strlen");
@@ -189,6 +198,20 @@ package body Posix is
          return c_errno;
       end if;
    end C_Error;
+
+   function C_Error_Ptr(Ret_Val: System.Address) return errno_t is
+      use System;
+      function c_errno return errno_t;
+      pragma Import(C,c_errno,"c_errno");
+   begin
+      if Ret_Val /= Error_Pointer then
+         return 0;
+      else
+         return c_errno;
+      end if;
+   end C_Error_Ptr;
+
+   pragma Inline(C_Error_Ptr);
 
    function C_String(Ada_String: String) return String is
       T : String(Ada_String'First..Ada_String'Last+1);
