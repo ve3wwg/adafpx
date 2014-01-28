@@ -763,6 +763,15 @@
 			<macro name="SCHED_FIFO"/>
 			<macro name="SCHED_RR"/>
 		</set>
+		<set type="" genset="326" format="16#%08X#" os="Linux *">
+			<includes>
+				<include file="sys/mman.h"/>
+			</includes>
+			<define name="_GNU_SOURCE" os="Linux *"/>
+			<define name="__USE_GNU"   os="Linux *"/>
+			<macro name="MREMAP_MAYMOVE"/>
+			<macro name="MREMAP_FIXED"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -3758,6 +3767,21 @@
 				<include file="sys/mman.h"/>
 			</includes>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="mremap" return="System.Address" ada_type="procedure" rname="R" ada_name="MRemap" inline="1" 
+		 os="Linux *|FreeBSD *">
+			<includes>
+				<include file="sys/mman.h"/>
+			</includes>
+			<c_arg	 name="oaddr" type="System.Address" from="Addr"/>
+			<c_arg   name="osize" type="size_t" from="Old_Size"/>
+			<c_arg   name="nsize" type="size_t" from="New_Size"/>
+			<c_arg	 name="flags" type="uint_t" from="Flags"/>
+			<ada_arg name="Addr" io="in out" type="System.Address" from="R"/>
+			<ada_arg name="Old_Size" io="in" type="size_t"/>
+			<ada_arg name="New_Size" io="in" type="size_t"/>
+			<ada_arg name="Flags" io="in" type="uint_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error_Ptr(R)"/>
 		</func>
 		<func name="sched_setparam" return="int_t" ada_type="procedure" rname="R" ada_name="Sched_Setparam" inline="1" 
 		 os="Linux *|FreeBSD *">
