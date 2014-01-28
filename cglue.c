@@ -11,6 +11,11 @@
 
 #include "cglue.h"
 
+void *
+c_error_ptr() {
+	return (void *)(-1);
+}
+
 int
 c_errno() {
 	return errno;
