@@ -27,6 +27,7 @@ struct s_config {
 		std::string			format;
 		std::vector<std::string>	includes;
 		std::vector<std::string> 	macros;
+		std::vector<std::string>	defines;
 		std::unordered_map<std::string,std::string> ada_name;
 		std::unordered_map<std::string,std::string> alternates;
 		std::unordered_map<std::string,long> values;

@@ -212,7 +212,15 @@ loadconfig() {
 		for ( auto mit = snode.begin(); mit != snode.end(); ++mit ) {
 			pugi::xml_node mnode = *mit;
 
-			if ( strcmp(mnode.name(),"macro") != 0 )
+			if ( !strcasecmp(mnode.name(),"define") ) {
+				const std::string macname = mnode.attribute("name").value();
+				std::string os = mnode.attribute("os").value();
+
+				if ( os == "" || match(os,platform) )
+					mset.defines.push_back(macname);
+				continue;
+				
+			} else if ( strcasecmp(mnode.name(),"macro") != 0 )
 				continue;
 
 			const std::string macro_name = mnode.attribute("name").value();
