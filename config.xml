@@ -2218,7 +2218,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="setresuid" return="int_t" ada_type="procedure" rname="R" ada_name="Setresuid" 
-		 test="27" inline="1" os="Linux *">
+		 inline="1" os="Linux *">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -2230,8 +2230,21 @@
 			<ada_arg name="SUid" io="in" type="uid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="getresuid" return="int_t" ada_type="procedure" rname="R" ada_name="Getresuid" 
+		 inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="ruid" type="System.Address" from="RUid'Address"/>
+			<c_arg name="euid" type="System.Address" from="EUid'Address"/>
+			<c_arg name="suid" type="System.Address" from="SUid'Address"/>
+			<ada_arg name="RUid" io="out" type="uid_t" from="implied"/>
+			<ada_arg name="EUid" io="out" type="uid_t" from="implied"/>
+			<ada_arg name="SUid" io="out" type="uid_t" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<func name="setresgid" return="int_t" ada_type="procedure" rname="R" ada_name="Setresgid" 
-		 test="27" inline="1" os="Linux *">
+		 inline="1" os="Linux *">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -2241,6 +2254,19 @@
 			<ada_arg name="RGid" io="in" type="gid_t"/>
 			<ada_arg name="EGid" io="in" type="gid_t"/>
 			<ada_arg name="SGid" io="in" type="gid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getresgid" return="int_t" ada_type="procedure" rname="R" ada_name="Getresgid" 
+		 inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="rgid" type="System.Address" from="RGid'Address"/>
+			<c_arg name="egid" type="System.Address" from="EGid'Address"/>
+			<c_arg name="sgid" type="System.Address" from="SGid'Address"/>
+			<ada_arg name="RGid" io="out" type="gid_t" from="implied"/>
+			<ada_arg name="EGid" io="out" type="gid_t" from="implied"/>
+			<ada_arg name="SGid" io="out" type="gid_t" from="implied"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="ptrace" return="int_t" ada_type="procedure" rname="Status" ada_name="PTrace" inline="1" os="Darwin *">
