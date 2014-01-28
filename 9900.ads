@@ -12,6 +12,7 @@ private
    function Pos_PID(Status: int_t) return pid_t;
    function Neg_PID(Status: int_t) return pid_t;
    function To_Clock(Ticks: clock_t) return clock_t;
+   function C_Error_Ptr(Ret_Val: System.Address) return errno_t;
 
    pragma Inline(To_Count);
    pragma Inline(C_Error);
