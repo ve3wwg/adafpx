@@ -3769,7 +3769,7 @@
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="mremap" return="System.Address" ada_type="procedure" rname="R" ada_name="MRemap" inline="1" 
-		 os="Linux *|FreeBSD *">
+		 os="Linux *">
 			<includes>
 				<include file="sys/mman.h"/>
 			</includes>
