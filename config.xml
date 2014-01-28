@@ -2217,6 +2217,32 @@
 			<ada_arg name="Effective_Gid" io="in" type="gid_t"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="setresuid" return="int_t" ada_type="procedure" rname="R" ada_name="Setresuid" 
+		 test="27" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="ruid" type="uid_t" from="RUid"/>
+			<c_arg name="euid" type="uid_t" from="EUid"/>
+			<c_arg name="suid" type="uid_t" from="SUid"/>
+			<ada_arg name="RUid" io="in" type="uid_t"/>
+			<ada_arg name="EUid" io="in" type="uid_t"/>
+			<ada_arg name="SUid" io="in" type="uid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="setresgid" return="int_t" ada_type="procedure" rname="R" ada_name="Setresgid" 
+		 test="27" inline="1" os="Linux *">
+			<includes>
+				<include file="unistd.h"/>
+			</includes>
+			<c_arg name="rgid" type="gid_t" from="RGid"/>
+			<c_arg name="egid" type="gid_t" from="EGid"/>
+			<c_arg name="sgid" type="gid_t" from="SGid"/>
+			<ada_arg name="RGid" io="in" type="gid_t"/>
+			<ada_arg name="EGid" io="in" type="gid_t"/>
+			<ada_arg name="SGid" io="in" type="gid_t"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<func name="ptrace" return="int_t" ada_type="procedure" rname="Status" ada_name="PTrace" inline="1" os="Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
