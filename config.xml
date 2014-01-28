@@ -1153,6 +1153,14 @@
 				<member name="ss_flags" pref="uint32_t" when="int32_t"/>
 			</members>                  
 		</struct>
+		<struct name="__darwin_sigaltstack" ada="s_stack" typedef="1" genset="616" os="Darwin *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<members>
+				<member name="ss_flags" pref="uint32_t" when="int32_t"/>
+			</members>                  
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
