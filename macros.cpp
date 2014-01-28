@@ -32,6 +32,12 @@ comp_macro_set(s_config::s_macro_set& mset) {
 
 	fs 	<< "#include <stdio.h>\n\n";
 
+	for ( auto it=mset.defines.begin(); it != mset.defines.end(); ++it ) {
+		const std::string macname = *it;
+
+		fs << "#define " << macname << "\n";
+	}
+
 	for ( auto it=mset.includes.begin(); it != mset.includes.end(); ++it ) {
 		const std::string& incl_file = *it;
 
