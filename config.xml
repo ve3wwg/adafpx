@@ -772,6 +772,13 @@
 			<macro name="MREMAP_MAYMOVE"/>
 			<macro name="MREMAP_FIXED"/>
 		</set>
+		<set type="" genset="328" format="%d" os="Linux *|FreeBSD *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<macro name="SIGSTKSZ"/>
+			<macro name="MINSIGSTKSZ"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -3964,6 +3971,40 @@
 			<c_arg	 name="sec" type="uint_t" from="Seconds"/>
 			<ada_arg name="Seconds" io="in" type="uint_t"/>
 			<ada_arg name="Remain" io="out" type="uint_t" from="R"/>
+		</func>
+		<func name="sigaltstack" return="int_t" ada_type="procedure" rname="R" ada_name="Sigaltstack"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg	 name="ss" type="System.Address" from="SS'Address"/>
+			<c_arg	 name="oss" type="System.Address" from="OSS'Address"/>
+			<ada_arg name="SS"  io="in" type="s_stack"/>
+			<ada_arg name="OSS" io="out" type="s_stack" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigaltstack" return="int_t" ada_type="procedure" rname="R" ada_name="Sigaltstack_Set"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg	 name="ss" type="System.Address" from="SS'Address"/>
+			<c_arg	 name="oss" type="System.Address" from="System.Null_Address"/>
+			<ada_arg name="SS"  io="in" type="s_stack"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sigaltstack" return="int_t" ada_type="procedure" rname="R" ada_name="Sigaltstack_Get"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="signal.h"/>
+			</includes>
+			<c_arg	 name="ss" type="System.Address" from="System.Null_Address"/>
+			<c_arg	 name="oss" type="System.Address" from="OSS'Address"/>
+			<ada_arg name="OSS" io="out" type="s_stack" from="implied"/>
+			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 	</section2>
 	<!-- Outstanding functions:
