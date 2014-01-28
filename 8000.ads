@@ -15,3 +15,5 @@
    function To_String(A : uchar_array) return String;
    function To_uchar_array(S : String) return uchar_array;
 
+   function Error_Pointer return System.Address;
+
