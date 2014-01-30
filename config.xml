@@ -46,6 +46,8 @@
 			<include file="sys/sem.h"/>
 			<include file="poll.h"/>
 			<include file="sys/socket.h"/>
+			<include file="netinet/in.h"/>
+			<include file="arpa/inet.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -69,6 +71,7 @@
 		<type name="key_t" os="Linux *|FreeBSD *|Darwin *"/>
 		<type name="nfds_t" os="Linux *|FreeBSD *|Darwin *"/>
 		<type name="socklen_t"/>
+		<type name="in_addr_t"/>         
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -839,6 +842,15 @@
 			<macro name="SOCK_NONBLOCK"/>
 			<macro name="SOCK_CLOEXEC"/>
 		</set>
+		<set type="" genset="340" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="INET_ADDRSTRLEN"/>
+			<macro name="INET6_ADDRSTRLEN"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -1235,6 +1247,14 @@
 			<includes>
 				<include file="sys/types.h"/>                    
 				<include file="sys/socket.h"/>
+			</includes>
+		</struct>
+		<struct name="in_addr" ada="s_in_addr" genset="622" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>                    
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
 			</includes>
 		</struct>
 	</structs>
@@ -4205,7 +4225,40 @@
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
-
+		<func name="inet_aton" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Aton"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="saddr"    type="System.Address" from="T'Address"/>
+                        <c_arg   name="iaddr"    type="System.Address" from="Inet_Addr'Address"/>
+                        <ada_arg name="IPv4"      io="in"  type="String"/>
+                        <ada_arg name="Inet_Addr" io="out" type="s_in_addr" from="implied"/>
+                        <ada_arg name="Error"    io="out"  type="errno_t" from="C_Error(R)"/>
+			<temp name="T" type="String" init="C_String(IPv4)"/>
+		</func>
+		<func name="inet_ntop" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Ntop"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="af"       type="int_t"          from="int_t(Addr.sa_family)"/>
+			<c_arg	 name="src"      type="System.Address" from="Addr.sa_data'Address"/>
+                        <c_arg   name="dst"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="size"     type="socklen_t"      from="Buf'Size/8"/> 
+			<ada_arg name="Addr"     io="in"   type="s_sockaddr"/>            
+			<ada_arg name="Buf"      io="out"  type="String" from="implied"/>
+			<ada_arg name="Last"	 io="out"  type="Natural" from="Buf'First + Strlen(Buf'Address)"/>
+                        <ada_arg name="Error"    io="out"  type="errno_t" from="C_Error(R)"/>
+		</func>
 <!--
        int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 
