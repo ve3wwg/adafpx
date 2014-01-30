@@ -45,6 +45,7 @@
 			<include file="sys/ipc.h"/>
 			<include file="sys/sem.h"/>
 			<include file="poll.h"/>
+			<include file="sys/socket.h"/>
 		</includes>
 		<type name="off_t"/>
 		<type name="size_t"/>
@@ -1221,7 +1222,7 @@
 			</members>                  
 		</struct>
 		<struct name="epoll_event" ada="s_epoll_event" genset="618" 
-		 array="Natural range <>">
+		 array="Natural range <>"
 		 os="Linux *">
 			<includes>
 				<include file="sys/epoll.h"/>
