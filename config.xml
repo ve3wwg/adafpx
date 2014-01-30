@@ -785,6 +785,58 @@
 			</includes>
 			<macro name="EPOLL_CLOEXEC"/>
 		</set>
+		<set type="" genset="332" format="16#%08X#" os="Linux *">
+			<includes>
+				<include file="sys/epoll.h"/>
+			</includes>
+			<macro name="EPOLL_CTL_ADD"/>
+			<macro name="EPOLL_CTL_MOD"/>
+			<macro name="EPOLL_CTL_DEL"/>
+		</set>
+		<set type="" genset="334" format="16#%08X#" os="Linux *">
+			<includes>
+				<include file="sys/epoll.h"/>
+			</includes>
+			<macro name="EPOLLIN"/>
+			<macro name="EPOLLOUT"/>
+			<macro name="EPOLLRDHUP"/>
+			<macro name="EPOLLPRI"/>
+			<macro name="EPOLLERR"/>
+			<macro name="EPOLLHUP"/>
+			<macro name="EPOLLET"/>
+			<macro name="EPOLLONESHOT"/>
+		</set>
+		<set type="" genset="336" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<macro name="AF_UNIX"/>
+			<macro name="AF_LOCAL"/>
+			<macro name="AF_INET"/>
+			<macro name="AF_INET6"/>
+			<macro name="AF_IPX"/>
+			<macro name="AF_NETLINK"/>
+			<macro name="AF_X25"/>
+			<macro name="AF_AX25"/>
+			<macro name="AF_ATMPVC"/>
+			<macro name="AF_APPLETALK"/>
+			<macro name="AF_PACKET"/>
+		</set>
+		<set type="" genset="338" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<macro name="SOCK_STREAM"/>
+			<macro name="SOCK_DGRAM"/>
+			<macro name="SOCK_SEQPACKET"/>
+			<macro name="SOCK_RAW"/>
+			<macro name="SOCK_RDM"/>
+			<macro name="SOCK_PACKET"/>
+			<macro name="SOCK_NONBLOCK"/>
+			<macro name="SOCK_CLOEXEC"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -1166,6 +1218,16 @@
 			<members>
 				<member name="ss_flags" pref="uint32_t" when="int32_t"/>
 			</members>                  
+		</struct>
+		<struct name="epoll_event" ada="s_epoll_event" genset="618" 
+		 array="Natural range <>">
+		 os="Linux *">
+			<includes>
+				<include file="sys/epoll.h"/>
+			</includes>
+			<members>
+				<override name="data" ada="data" type="uint64_t" struct="2"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -4050,7 +4112,7 @@
 			<c_arg	 name="maxevts" type="int_t" from="int_t(Events'Length)"/>
 			<c_arg   name="timeout" type="int_t" from="Timeout"/>
 			<ada_arg name="EPoll_Fd" io="in" type="fd_t"/>
-			<ada_arg name="Events"   io="out" type="s_epoll_event_array"/>
+			<ada_arg name="Events"   io="out" type="s_epoll_event_array" from="implied"/>
 			<ada_arg name="Timeout"  io="in"  type="int_t"/>
 			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
 			<ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
@@ -4061,17 +4123,33 @@
 			<includes>
 				<include file="sys/epoll.h"/>
 			</includes>
-			<c_arg	 name="epfd"  type="fd_t" from="EPoll_Fd"/>
-			<c_arg	 name="evts"  type="System.Address" from="Events'Address"/>
-			<c_arg	 name="maxevts" type="int_t" from="int_t(Events'Length)"/>
-			<c_arg   name="timeout" type="int_t" from="Timeout"/>
-			<c_arg	 name="sigmask" type="System.Address" from="Sig_Mask'Address"/>
-			<ada_arg name="EPoll_Fd" io="in" type="fd_t"/>
-			<ada_arg name="Events"   io="out" type="s_epoll_event_array"/>
-			<ada_arg name="Timeout"  io="in"  type="int_t"/>
-			<ada_arg name="Sig_Mask" io="in"  type="s_sigset"/>
-			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
-			<ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+                        <c_arg   name="epfd"  type="fd_t" from="EPoll_Fd"/>
+                        <c_arg   name="evts"  type="System.Address" from="Events'Address"/>
+                        <c_arg   name="maxevts" type="int_t" from="int_t(Events'Length)"/> 
+                        <c_arg   name="timeout" type="int_t" from="Timeout"/>
+                        <c_arg   name="sigmask" type="System.Address" from="Sig_Mask'Address"/>
+                        <ada_arg name="EPoll_Fd" io="in" type="fd_t"/>
+                        <ada_arg name="Events"   io="out" type="s_epoll_event_array" from="implied"/>
+                        <ada_arg name="Timeout"  io="in"  type="int_t"/>
+                        <ada_arg name="Sig_Mask" io="in"  type="sigset_t"/>
+                        <ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="epoll_ctl" return="int_t" ada_type="procedure" rname="R" ada_name="EPoll_Ctl"
+		 inline="1" 
+		 os="Linux *">
+			<includes>
+				<include file="sys/epoll.h"/>
+			</includes>
+                        <c_arg   name="epfd"  type="fd_t"  from="EPoll_Fd"/>
+                        <c_arg   name="op"    type="int_t" from="Op"/>
+                        <c_arg   name="fd"    type="fd_t"  from="Fd"/>
+                        <c_arg   name="event" type="System.Address" from="Event'Address"/>
+                        <ada_arg name="EPoll_Fd" io="in" type="fd_t"/>
+                        <ada_arg name="Op"       io="in"  type="int_t"/>
+                        <ada_arg name="Fd"       io="in"  type="fd_t"/>
+                        <ada_arg name="Event"    io="in"  type="s_epoll_event"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 	</section2>
 	<!-- Outstanding functions:

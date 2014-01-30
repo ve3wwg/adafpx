@@ -199,6 +199,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				s_node& nnode = Get(znode.next);
 				assert(nnode.type == Ident);
 				member = lex_revsym(nnode.symbol);
+
 				auto it = node.override_type.find(member);
 				if ( it != node.override_type.end() ) {
 					typemap[member] = it->second;
@@ -223,8 +224,16 @@ emit_struct(s_config::s_structs::s_struct& node) {
 				s_node& nnode = Get(znode.next);
 				switch ( nnode.type ) {
 				case Ident :
-					member = lex_revsym(nnode.symbol);
-					ptr = znode.ptr;
+					{
+						member = lex_revsym(nnode.symbol);
+
+						auto it = node.override_type.find(member);
+						if ( it != node.override_type.end() ) {
+							typemap[member] = it->second;
+						} else	{
+							ptr = znode.ptr;
+						}
+					}
 					break;
 				case ArrayRef :
 					{
