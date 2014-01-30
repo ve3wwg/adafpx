@@ -67,6 +67,7 @@
 		<type name="rlim_t"/>
 		<type name="key_t" os="Linux *|FreeBSD *|Darwin *"/>
 		<type name="nfds_t" os="Linux *|FreeBSD *|Darwin *"/>
+		<type name="socklen_t"/>
 	</posix_types>
 	<ada_types genset="105">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
@@ -1228,6 +1229,12 @@
 			<members>
 				<override name="data" ada="data" type="uint64_t" struct="2"/>
 			</members>
+		</struct>
+		<struct name="sockaddr" ada="s_sockaddr" genset="620" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>                    
+				<include file="sys/socket.h"/>
+			</includes>
 		</struct>
 	</structs>
 	<section2 genset="700">
@@ -4166,6 +4173,47 @@
                         <ada_arg name="Protocol" io="in"      type="int_t"/>
                         <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="accept" return="int_t" ada_type="procedure" rname="R" ada_name="Accept_Connect"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="accept" return="int_t" ada_type="procedure" rname="R" ada_name="Accept_Connect"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+
+<!--
+       int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
+       #define _GNU_SOURCE
+       #include <sys/socket.h>
+
+       int accept4(int sockfd, struct sockaddr *addr,
+		   socklen_t *addrlen, int flags);
+-->
 	</section2>
 	<!-- Outstanding functions:
 		initgroups
