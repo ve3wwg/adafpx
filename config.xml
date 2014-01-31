@@ -4323,6 +4323,42 @@
 			<c_arg	 name="inaddr"  type="s_in_addr" from="In_Addr"/>
 			<ada_arg name="In_Addr" io="in" type="s_in_addr"/>
 		</func>
+		<func name="htonl" return="uint32_t" ada_type="function" rname="R" ada_name="Htonl"
+		 ada_return="uint32_t" ada_return_from="R" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="hostlong"  type="uint32_t" from="Host_Long"/>
+			<ada_arg name="Host_Long" io="in" type="uint32_t"/>
+		</func>
+		<func name="htons" return="uint16_t" ada_type="function" rname="R" ada_name="Htons"
+		 ada_return="uint16_t" ada_return_from="R" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="hostshort"  type="uint16_t" from="Host_Short"/>
+			<ada_arg name="Host_Short" io="in" type="uint16_t"/>
+		</func>
+		<func name="ntohl" return="uint32_t" ada_type="function" rname="R" ada_name="Ntohl"
+		 ada_return="uint32_t" ada_return_from="R" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="netlong"  type="uint32_t" from="Net_Long"/>
+			<ada_arg name="Net_Long" io="in" type="uint32_t"/>
+		</func>
+		<func name="ntohs" return="uint16_t" ada_type="function" rname="R" ada_name="Ntohs"
+		 ada_return="uint16_t" ada_return_from="R" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<c_arg	 name="netshort"  type="uint16_t" from="Net_Short"/>
+			<ada_arg name="Net_Short" io="in" type="uint16_t"/>
+		</func>
 	</section2>
 	<!-- Outstanding functions:
 		initgroups
