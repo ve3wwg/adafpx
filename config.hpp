@@ -62,6 +62,9 @@ struct s_config {
 			std::string	type;
 			std::string	subtype;
 			std::string	range;
+
+			std::string	array;
+			std::string	array_range;
 		};
 		int			genset;
 		std::vector<s_ada_type> adavec;

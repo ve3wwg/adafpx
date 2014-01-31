@@ -73,6 +73,11 @@ emit_sys_types() {
 				ads << " range " << atype.range;
 		}
 		ads << ";\n";
+
+		if ( atype.array != "" ) {
+			ads << "   type " << atype.array << " is array (" << atype.array_range << ") of "
+			    << atype.name << ";\n";
+		}
 	}
 }
 

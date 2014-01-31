@@ -330,6 +330,9 @@ loadconfig() {
 			decl.type    = tnode.attribute("type").value();
 			decl.range   = tnode.attribute("range").value();
 
+			decl.array       = tnode.attribute("array").value();
+			decl.array_range = tnode.attribute("array_range").value();
+
 			config.ada_types.adavec.push_back(decl);
 		}
 	}
