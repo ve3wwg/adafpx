@@ -862,6 +862,25 @@
 			<macro name="SHUT_RD"/>
 			<macro name="SHUT_RDWR"/>
 		</set>
+		<set type="" genset="344" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="MSG_CMSG_CLOEXEC"/>
+			<macro name="MSG_DONTWAIT"/>
+			<macro name="MSG_ERRQUEUE"/>
+			<macro name="MSG_OOB"/>
+			<macro name="MSG_PEEK"/>
+			<macro name="MSG_TRUNC"/>
+			<macro name="MSG_WAITALL"/>
+			<macro name="MSG_EOR"/>
+			<macro name="MSG_TRUNC"/>
+			<macro name="MSG_CTRUNC"/>
+			<macro name="MSG_OOB"/>
+			<macro name="MSG_ERRQUEUE"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -4401,6 +4420,45 @@
                         <ada_arg name="How"      io="in"  type="int_t"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="recv" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recv"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="buf"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="len"      type="size_t" from="size_t(Buf'Length)"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Buf"      io="out" type="uchar_array" from="implied"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="recvfrom" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recvfrom"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="buf"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="len"      type="size_t" from="size_t(Buf'Length)"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+			<c_arg	 name="src_addr" type="System.Address" from="Addr'Address"/>
+			<c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Buf"      io="out" type="uchar_array" from="implied"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Addr"     io="out" type="s_sockaddr" from="implied"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
 		<func name="inet_aton" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Aton"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
@@ -4510,6 +4568,9 @@
 			<ada_arg name="Net_Short" io="in" type="uint16_t"/>
 		</func>
 	</section2>
+
+<!--    ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags); -->
+
 	<!-- Outstanding functions:
 		initgroups
 		select
