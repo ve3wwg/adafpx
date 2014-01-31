@@ -74,7 +74,9 @@
 		<type name="in_addr_t"/>         
 	</posix_types>
 	<ada_types genset="105">
-		<type name="fd_t" type="int_t" range="-1..int_t'Last"/>
+		<type name="fd_t" type="int_t" range="-1..int_t'Last"
+			array="fd_array_t"     array_range="Natural range <>"
+		/>
 	</ada_types>
 	<macro_constants>
 		<set type="errno_t" format="%ld" genset="110">
@@ -850,6 +852,15 @@
 			</includes>
 			<macro name="INET_ADDRSTRLEN"/>
 			<macro name="INET6_ADDRSTRLEN"/>
+		</set>
+		<set type="" genset="342" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="SHUT_RD"/>
+			<macro name="SHUT_RDWR"/>
 		</set>
 	</macro_constants>
 	<structs>
@@ -4202,6 +4213,25 @@
                         <ada_arg name="Protocol" io="in"      type="int_t"/>
                         <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="socketpair" return="int_t" ada_type="procedure" rname="R" ada_name="Socketpair"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="domain"   type="int_t" from="Domain"/>
+                        <c_arg   name="typ"      type="int_t" from="Typ"/>
+                        <c_arg   name="protocol" type="int_t" from="Protocol"/>
+			<c_arg	 name="sv"       type="System.Address" from="T'Address"/>
+                        <ada_arg name="Domain"   io="in"      type="int_t"/>
+                        <ada_arg name="Typ"      io="in"      type="int_t"/>
+                        <ada_arg name="Protocol" io="in"      type="int_t"/>
+			<ada_arg name="Sock_Fd1" io="out"     type="fd_t"    from="T(0)"/>
+			<ada_arg name="Sock_Fd2" io="out"     type="fd_t"    from="T(1)"/>
+                        <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
+			<temp name="T" type="fd_array_t(0..1)" init="(-1,-1)"/>
+		</func>
 		<func name="accept" return="int_t" ada_type="procedure" rname="R" ada_name="Accept_Connect"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
@@ -4250,6 +4280,126 @@
 			<ada_arg name="Flags"    io="in"  type="uint_t"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="bind" return="int_t" ada_type="procedure" rname="R" ada_name="Bind"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="bind" return="int_t" ada_type="procedure" rname="R" ada_name="Bind"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="connect" return="int_t" ada_type="procedure" rname="R" ada_name="Connect"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="connect" return="int_t" ada_type="procedure" rname="R" ada_name="Connect"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="listen" return="int_t" ada_type="procedure" rname="R" ada_name="Listen"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="backlog"  type="int_t" from="Backlog"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Backlog"  io="in"  type="int_t"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="getsockname" return="int_t" ada_type="procedure" rname="R" ada_name="Getsockname"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="getpeername" return="int_t" ada_type="procedure" rname="R" ada_name="Getpeername"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="shutdown" return="int_t" ada_type="procedure" rname="R" ada_name="Shutdown"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="how"      type="int_t" from="How"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="How"      io="in"  type="int_t"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="inet_aton" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Aton"
 		 inline="1" 
