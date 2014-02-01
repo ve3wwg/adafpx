@@ -4590,6 +4590,10 @@
 
 <!--    ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags); -->
 
+	accept(), bind(), connect(), getpeername(), getsockname(), getsockopt(),
+	listen(), recv(), recvfrom(), recvmsg(), send(), sendmsg(), sendto(),
+	setsockopt(), shutdown(), socket(), socketpair().
+
 	<!-- Outstanding functions:
 		initgroups
 		select
