@@ -1,3 +1,5 @@
+static void break_me() { return; }
+
 ///////////////////////////////////////////////////////////////////////
 // structs.cpp -- Compile struct Definitions
 // Date: Wed Dec  4 07:44:18 2013
@@ -154,6 +156,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
 	s_node& snode = Get(yytarget_struct);
 	s_node& node2 = Get(snode.next);	
 
+if ( yytarget == "msghdr" ) break_me();
+
 	assert(node2.type == List);
 
 	c	<< "\tprintf(\"%u\\n\",(unsigned)(sizeof(test_struct))"
@@ -190,7 +194,7 @@ emit_struct(s_config::s_structs::s_struct& node) {
 					typemap[member] = it->second;
 				} else	{
 					typemap[member] = lex_revsym(znode.symbol);
-					ptr = znode.ptr;
+					ptr = nnode.ptr;
 				}
 			}
 			break;
@@ -263,6 +267,10 @@ emit_struct(s_config::s_structs::s_struct& node) {
 			continue;	// Skip this one
 		default :
 			assert(0);
+		}
+
+		if ( node.omits.find(member) != node.omits.end() ) {
+			continue;	// Skip this member (prolly zero sized)
 		}
 
 		if ( node.is_struct.find(member) != node.is_struct.end() ) {
@@ -368,6 +376,8 @@ emit_struct(s_config::s_structs::s_struct& node) {
        		ads.width(32);
 		ads << std::left << fmt_name << " ";
 	
+if ( member.a_name == "msg_iov" ) break_me();
+
 		if ( !member.union_struct ) {
 			std::string ada_type;
 			bool subbed = false, prefs = false;
@@ -403,12 +413,16 @@ emit_struct(s_config::s_structs::s_struct& node) {
 
 			ads << ada_type;
 		} else	{
-			auto cit = c_ada_map.find(member.tname); // Lookup C name
-			if ( cit != c_ada_map.end() ) 
-				ads << cit->second;		// Known Ada name
-			else if ( member.union_struct == 2 )
-				ads << member.tname;		// Cheat from config.xml
-			else 	ads << "s_" << member.tname;	// Unknown
+			if ( member.ptr <= 0 ) {
+				auto cit = c_ada_map.find(member.tname); // Lookup C name
+				if ( cit != c_ada_map.end() ) 
+					ads << cit->second;		// Known Ada name
+				else if ( member.union_struct == 2 )
+					ads << member.tname;		// Cheat from config.xml
+				else 	ads << "s_" << member.tname;	// Unknown
+			} else	{
+				ads << "System.Address";
+			}
 		}
 		ads << ";\n";
 	}

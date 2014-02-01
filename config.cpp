@@ -546,6 +546,13 @@ loadconfig() {
 							if ( ada_name != "" )
 								stype.nprefs[member] = ada_name;
 						}
+					} else if ( ntype == "omit" ) {
+						const std::string& member = mnode.attribute("name").value();
+						const std::string& mem_os = mnode.attribute("os").value();
+
+						if ( mem_os == "" || match(mem_os,platform) ) {
+							stype.omits.insert(member);
+						}
 					}
 				}
 			}
