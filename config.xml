@@ -1295,6 +1295,25 @@
 				<include file="arpa/inet.h"/>
 			</includes>
 		</struct>
+		<struct name="msghdr" ada="s_msghdr" genset="626" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>                    
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+		</struct>
+		<struct name="cmsghdr" ada="s_cmsghdr" genset="628" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>                    
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<members>
+				<omit name="__cmsg_data"/>
+			</members>
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
