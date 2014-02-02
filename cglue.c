@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 //////////////////////////////////////////////////////////////////////
 // cglue.c -- C Glue Code for Ada Package POSIX
 // Date: Mon Dec  2 22:02:37 2013
@@ -49,14 +47,6 @@ c_put_cmsg(void *buf,uint64_t buflen,uint64_t curlen,struct cmsghdr *cmsg,void *
 
 	uint64_t new_length = curlen + CMSG_SPACE(datalen);
 
-printf("put curlen = %u, space = %u, new_length = %u, buflen = %u, datalen = %u, cmsg_len = %u\n",
-(unsigned)curlen,
-(unsigned)CMSG_SPACE(datalen),
-(unsigned)new_length,
-(unsigned)buflen,
-(unsigned)datalen,
-(unsigned)CMSG_LEN(datalen));
-
 	if ( new_length <= buflen ) {
 		p->cmsg_level = cmsg->cmsg_level;
 		p->cmsg_type = cmsg->cmsg_type;
@@ -84,13 +74,6 @@ c_get_cmsg(void *buf,uint64_t buflen,uint64_t offset,struct cmsghdr *cmsg,void *
 	f = CMSG_FIRSTHDR(&mhdr);
 	p = CALC_POINTR(f,offset);		/* Point to current message */
 	
-printf("get offset = %u, space = %u, buflen = %u, datalen = %u, cmsg_len = %u\n",
-(unsigned)offset,
-(unsigned)CMSG_SPACE(p->cmsg_len),
-(unsigned)buflen,
-(unsigned)datalen,
-(unsigned)p->cmsg_len);
-
 	if ( offset + CMSG_SPACE(datalen) > mhdr.msg_controllen )
 		return 0;				/* No message was returned */
 
