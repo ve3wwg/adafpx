@@ -420,3 +420,72 @@ package body Posix is
    begin
       return To_Array(S);
    end To_uchar_array;
+
+   procedure Put_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Cur_Len :         in out uint64_t;        -- Current control message content length
+      Cmsg_Level :      in     int_t;           -- Required message level
+      Cmsg_Type :       in     int_t;           -- Required message type
+      Data :            in     System.Address;  -- Source data to put into control message buffer
+      Data_Length :     in     uint64_t;        -- Source data length (bytes)
+      Accepted :        out    Boolean          -- Value was accepted
+   ) is
+
+      function UX_Put_Cmsg(buf : System.Address; buflen, curlen : uint64_t; cmsg, data : System.Address;
+         datalen : uint64_t) return uint64_t;
+      pragma import(C,UX_Put_Cmsg,"c_put_cmsg");
+
+      Cmsg :   s_cmsghdr;
+      
+   begin
+
+      Cmsg.cmsg_level := Cmsg_Level;
+      Cmsg.cmsg_type  := Cmsg_Type;
+
+      Cur_Len := UX_Put_Cmsg(
+         buf    => Control_Msg_Buf'Address,
+         buflen => uint64_t(Control_Msg_Buf'Length),
+         curlen => Cur_Len,
+         cmsg   => Cmsg'Address,
+         data   => Data,
+         datalen => Data_Length
+      );
+
+      Accepted := Cur_Len > 0;
+
+   end Put_Cmsg;
+
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Cmsg_Level :      out    int_t;           -- Returned message level
+      Cmsg_Type :       out    int_t;           -- Returned message type
+      Data :            in     System.Address;  -- Data destination address
+      Data_Length :     in     uint64_t;        -- Data destinaton length (bytes)
+      Received :        out    Boolean          -- True when a message was received
+   ) is
+
+      function UX_Get_Cmsg(buf : System.Address; buflen, offset : uint64_t; cmsg, data : System.Address;
+         datalen : uint64_t) return uint64_t;
+      pragma import(C,UX_Get_Cmsg,"c_get_cmsg");
+
+      Cmsg :   s_cmsghdr;
+      
+   begin
+
+      Offset := UX_Get_Cmsg(
+         buf    => Control_Msg_Buf'Address,
+         buflen => uint64_t(Control_Msg_Buf'Length),
+         offset => Offset,
+         cmsg   => Cmsg'Address,
+         data   => Data,
+         datalen => Data_Length
+      );
+
+      Cmsg_Level := Cmsg.cmsg_level;
+      Cmsg_Type  := Cmsg.cmsg_type;
+
+      Received := Offset /= 0;
+
+   end Get_Cmsg;
+

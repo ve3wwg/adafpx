@@ -17,3 +17,23 @@
 
    function Error_Pointer return System.Address;
 
+   procedure Put_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Cur_Len :         in out uint64_t;        -- Current control message content length
+      Cmsg_Level :      in     int_t;           -- Required message level
+      Cmsg_Type :       in     int_t;           -- Required message type
+      Data :            in     System.Address;  -- Source data to put into control message buffer
+      Data_Length :     in     uint64_t;        -- Source data length (bytes)
+      Accepted :        out    Boolean          -- True when value was accepted
+   );
+
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Cmsg_Level :      out    int_t;           -- Returned message level
+      Cmsg_Type :       out    int_t;           -- Returned message type
+      Data :            in     System.Address;  -- Data destination address
+      Data_Length :     in     uint64_t;        -- Data destinaton length (bytes)
+      Received :        out    Boolean          -- True when a message is received
+   );
+
