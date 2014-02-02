@@ -6,7 +6,7 @@
 --
 -- Protected under the GNU GENERAL PUBLIC LICENSE v2, June 1991
 
-with Ada.Text_IO;
+with Ada.Text_IO, System;
 
 with Posix;
 use Posix;
@@ -26,6 +26,8 @@ procedure T0047 is
    Received :  Boolean;
 
    Fd1, Fd2 :  fd_t := -1;
+   Fd3 :       fd_t := -1;
+   Child :     pid_t := -1;
    Error :     errno_t;
 begin
 
@@ -103,6 +105,65 @@ begin
    pragma Assert(Error = 0);
    pragma Assert(Fd1 >= 0);
    pragma Assert(Fd2 >= 0);
+
+   Fork(Child,Error);
+   pragma Assert(Error = 0);
+
+   if Child > 0 then
+      -- Child process
+      Close(Fd1,Error);
+      pragma Assert(Error = 0);
+
+      pragma Warnings(Off);
+      Fd1 := -1;
+      pragma Warnings(On);
+
+      return;
+   end if;
+
+   -- Parent process      
+   Close(Fd2,Error);
+   pragma Assert(Error = 0);
+
+   pragma Warnings(Off);
+   Fd2 := -1;
+   pragma Warnings(On);
+
+   -- Send File Descriptor to Child process
+   Open("Makefile",O_RDONLY,Fd3,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(Fd3 >= 0);
+
+   declare
+      Fds : constant fd_array_t(1..1) := ( 1 => Fd3 );
+   begin
+      Ctl_Len := 0;
+      Put_Cmsg(Ctl_Buf,Ctl_Len,Fds,Accepted);
+      pragma Assert(Accepted);
+      pragma Assert(Ctl_Len > 0);
+   end;
+
+   declare
+      Byte :   String(1..1) := "X";
+      Iov :    s_iovec_array := (
+                  0 => ( iov_base => Byte'Address, iov_len => Byte'Length )
+               );
+      Msg :    s_msghdr;
+   begin
+      Msg.msg_name := System.Null_Address;
+      Msg.msg_namelen := 0;
+      Msg.msg_iov := Iov'Address;
+      Msg.msg_iovlen := Iov'Length;
+      Msg.msg_control := Ctl_Buf'Address;
+      Msg.msg_controllen := uint_t(Ctl_Len);
+      Msg.msg_flags := 0;
+
+      Sendmsg(Fd1,Msg,0,Error);
+      pragma Assert(Error = 0);
+   end;
+
+   Shutdown(Fd1,SHUT_RD,Error);
+   pragma Assert(Error = 0);
 
    Put_Line("Test 0047 Passed.");
 
