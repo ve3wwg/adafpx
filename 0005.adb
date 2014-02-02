@@ -455,6 +455,16 @@ package body Posix is
 
    end Put_Cmsg;
 
+   procedure Put_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Cur_Len :         in out uint64_t;        -- Current control message content length
+      Fds :             in     fd_array_t;      -- Array of file descriptors
+      Accepted :        out    Boolean          -- Value was accepted
+   ) is
+   begin
+      Put_Cmsg(Control_Msg_Buf,Cur_Len,SOL_SOCKET,SCM_RIGHTS,Fds'Address,Fds'Size/8,Accepted);
+   end Put_Cmsg;
+
    procedure Get_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
       Offset :          in out uint64_t;        -- Current control message offset
