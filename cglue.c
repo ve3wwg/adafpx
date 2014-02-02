@@ -74,17 +74,21 @@ c_get_cmsg(void *buf,uint64_t buflen,uint64_t offset,struct cmsghdr *cmsg,void *
 	f = CMSG_FIRSTHDR(&mhdr);
 	p = CALC_POINTR(f,offset);		/* Point to current message */
 	
-	if ( offset + CMSG_SPACE(datalen) > mhdr.msg_controllen )
-		return 0;				/* No message was returned */
+	if ( CALC_OFFSET(f,p) >= buflen ) {
+		return 0;			/* There is no current message */
+	}
 
 	cmsg->cmsg_level = p->cmsg_level;
 	cmsg->cmsg_type  = p->cmsg_type;
 	cmsg->cmsg_len   = p->cmsg_len;
 
-	if ( cmsg->cmsg_len < datalen )
-		datalen = cmsg->cmsg_len;	/* Use smaller actual length */
+	uint64_t actual_data = cmsg->cmsg_len - sizeof *cmsg;
 
-	memcpy(data,CMSG_DATA(p),datalen);	/* Copy over data */
+	if ( actual_data < datalen )
+		datalen = actual_data;		/* Use smaller actual length */
+
+	if ( data && datalen > 0 )
+		memcpy(data,CMSG_DATA(p),datalen);	/* Copy over data */
 
 	n = CMSG_NXTHDR(&mhdr,p);
 	if ( !n )
