@@ -31,6 +31,13 @@
       Accepted :        out    Boolean          -- True when value was accepted
    );
 
+   procedure Put_Cmsg(                          -- Send file descriptors
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Cur_Len :         in out uint64_t;        -- Current control message content length
+      Fds :             in     fd_array_t;      -- Array of file descriptors
+      Accepted :        out    Boolean          -- Value was accepted
+   );
+
    procedure Get_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
       Offset :          in out uint64_t;        -- Current control message offset
