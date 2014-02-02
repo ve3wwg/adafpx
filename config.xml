@@ -4440,7 +4440,7 @@
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="recv" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recv"
-		 inline="1" 
+		 test="47" inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
