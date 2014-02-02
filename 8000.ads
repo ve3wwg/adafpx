@@ -17,6 +17,10 @@
 
    function Error_Pointer return System.Address;
 
+   -------------------------------------------------------------------
+   -- See test program t0047.adb for an example of use:
+   -------------------------------------------------------------------
+
    procedure Put_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
       Cur_Len :         in out uint64_t;        -- Current control message content length
