@@ -24,6 +24,9 @@ procedure T0047 is
    Offset :    uint64_t;
    Accepted :  Boolean;
    Received :  Boolean;
+
+   Fd1, Fd2 :  fd_t := -1;
+   Error :     errno_t;
 begin
 
    Put_Line("Test 0047 - Put/Get_Cmsg");
@@ -93,6 +96,13 @@ begin
    Ctl_Len := 0;
    Put_Cmsg(Ctl_Buf(1..12),Ctl_Len,1,11,I'Address,I'Size/8,Accepted);
    pragma Assert(not Accepted);
+
+   -- Perform a networked test of the control message
+
+   Socketpair(PF_LOCAL,SOCK_STREAM,0,Fd1,Fd2,Error);
+   pragma Assert(Error = 0);
+   pragma Assert(Fd1 >= 0);
+   pragma Assert(Fd2 >= 0);
 
    Put_Line("Test 0047 Passed.");
 
