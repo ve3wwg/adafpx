@@ -467,11 +467,41 @@ package body Posix is
 
    procedure Get_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
-      Offset :          in out uint64_t;        -- Current control message offset
+      Offset :          in     uint64_t;        -- Current control message offset
       Cmsg_Level :      out    int_t;           -- Returned message level
       Cmsg_Type :       out    int_t;           -- Returned message type
+      Received :        out    Boolean          -- True when a message was received
+   ) is
+      function UX_Get_Cmsg(buf : System.Address; buflen, offset : uint64_t; cmsg, data : System.Address;
+         datalen : uint64_t) return uint64_t;
+      pragma import(C,UX_Get_Cmsg,"c_get_cmsg");
+
+      Cmsg :         s_cmsghdr;
+      New_Offset :   uint64_t;
+      
+   begin
+
+      New_Offset := UX_Get_Cmsg(
+         buf    => Control_Msg_Buf'Address,
+         buflen => uint64_t(Control_Msg_Buf'Length),
+         offset => Offset,
+         cmsg   => Cmsg'Address,
+         data   => System.Null_Address,
+         datalen => 0
+      );
+
+      Cmsg_Level := Cmsg.cmsg_level;
+      Cmsg_Type  := Cmsg.cmsg_type;
+
+      Received := New_Offset /= 0;
+
+   end Get_Cmsg;
+
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
       Data :            in     System.Address;  -- Data destination address
-      Data_Length :     in     uint64_t;        -- Data destinaton length (bytes)
+      Data_Length :     in out uint64_t;        -- Data destinaton length (bytes)
       Received :        out    Boolean          -- True when a message was received
    ) is
 
@@ -492,9 +522,43 @@ package body Posix is
          datalen => Data_Length
       );
 
-      Cmsg_Level := Cmsg.cmsg_level;
-      Cmsg_Type  := Cmsg.cmsg_type;
+      Received := Offset /= 0;
+      if Received then
+         Data_Length := Cmsg.cmsg_len;
+      else
+         Data_Length := 0;
+      end if;
 
+   end Get_Cmsg;
+
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Fds :             out    fd_array_t;      -- Returned File descriptors
+      Count :           out    Natural;         -- Number of returned File descriptors
+      Received :        out    Boolean          -- True when a message was received
+   ) is
+
+      function UX_Get_Cmsg(buf : System.Address; buflen, offset : uint64_t; cmsg, data : System.Address;
+         datalen : uint64_t) return uint64_t;
+      pragma import(C,UX_Get_Cmsg,"c_get_cmsg");
+
+      Cmsg :      s_cmsghdr;
+      Cmsg_Size : constant Natural := (Cmsg.cmsg_level'Size + Cmsg.cmsg_type'Size + Cmsg.cmsg_len'Size)/8;
+      Unit_Size : constant Natural := Fds(Fds'First)'Size / 8;
+      
+   begin
+
+      Offset := UX_Get_Cmsg(
+         buf    => Control_Msg_Buf'Address,
+         buflen => uint64_t(Control_Msg_Buf'Length),
+         offset => Offset,
+         cmsg   => Cmsg'Address,
+         data   => Fds'Address,
+         datalen => uint64_t(Fds'Length) * uint64_t(Unit_Size)
+      );
+
+      Count := (Natural(Cmsg.cmsg_len) - Cmsg_Size) / Unit_Size;
       Received := Offset /= 0;
 
    end Get_Cmsg;

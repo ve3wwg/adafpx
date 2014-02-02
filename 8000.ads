@@ -31,6 +31,7 @@
       Accepted :        out    Boolean          -- True when value was accepted
    );
 
+   -- Put array of file descriptors
    procedure Put_Cmsg(                          -- Send file descriptors
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
       Cur_Len :         in out uint64_t;        -- Current control message content length
@@ -38,13 +39,30 @@
       Accepted :        out    Boolean          -- Value was accepted
    );
 
+   -- Determine cmsg type
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in     uint64_t;        -- Current control message offset
+      Cmsg_Level :      out    int_t;           -- Returned message level
+      Cmsg_Type :       out    int_t;           -- Returned message type
+      Received :        out    Boolean          -- True when a message is received
+   );
+
+   -- Fetch cmsg data & advance offset
    procedure Get_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer
       Offset :          in out uint64_t;        -- Current control message offset
-      Cmsg_Level :      out    int_t;           -- Returned message level
-      Cmsg_Type :       out    int_t;           -- Returned message type
       Data :            in     System.Address;  -- Data destination address
-      Data_Length :     in     uint64_t;        -- Data destinaton length (bytes)
+      Data_Length :     in out uint64_t;        -- Data destinaton length (bytes)
       Received :        out    Boolean          -- True when a message is received
+   );
+
+   -- Fetch cmsg file descriptors & advance offset
+   procedure Get_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Fds :             out    fd_array_t;      -- Returned File descriptors
+      Count :           out    Natural;         -- Number of returned File descriptors
+      Received :        out    Boolean          -- True when a message was received
    );
 
