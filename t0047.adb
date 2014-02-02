@@ -244,7 +244,7 @@ Put_Line("Child: LEV_OTHER");
       Msg.msg_controllen := Ctl_Len;
 #end if;
 #if POSIX_FAMILY = "FreeBSD"
-      Msg.msg_controllen := Ctl_Len;
+      Msg.msg_controllen := uint_t(Ctl_Len);
 #end if;
 #if POSIX_FAMILY = "Darwin"
       Msg.msg_controllen := uint_t(Ctl_Len);

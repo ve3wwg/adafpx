@@ -539,12 +539,15 @@ package body Posix is
       Received :        out    Boolean          -- True when a message was received
    ) is
 
+      function UX_Get_Cmsg_Overhead return uint64_t;
+      pragma import(C,UX_Get_Cmsg_Overhead,"c_get_cmsg_overhead");
+
       function UX_Get_Cmsg(buf : System.Address; buflen, offset : uint64_t; cmsg, data : System.Address;
          datalen : uint64_t) return uint64_t;
       pragma import(C,UX_Get_Cmsg,"c_get_cmsg");
 
       Cmsg :      s_cmsghdr;
-      Cmsg_Size : constant Natural := (Cmsg.cmsg_level'Size + Cmsg.cmsg_type'Size + Cmsg.cmsg_len'Size)/8;
+      Cmsg_Size : constant Natural := Natural(UX_Get_Cmsg_Overhead);
       Unit_Size : constant Natural := Fds(Fds'First)'Size / 8;
       
    begin

@@ -59,6 +59,21 @@ c_put_cmsg(void *buf,uint64_t buflen,uint64_t curlen,struct cmsghdr *cmsg,void *
 	return new_length;
 }
 
+/* Return cmsghdr overhead (excluding data) */
+uint64_t
+c_get_cmsg_overhead() {
+	char buf[1];
+	struct msghdr mhdr;
+	struct cmsghdr *p = 0;
+
+	mhdr.msg_control = buf;
+	mhdr.msg_controllen = 256;
+	mhdr.msg_flags = 0;
+	
+	p = CMSG_FIRSTHDR(&mhdr);
+	return ((char *)(CMSG_DATA(p)) - ((char *)p));
+}
+
 uint64_t
 c_get_cmsg(void *buf,uint64_t buflen,uint64_t offset,struct cmsghdr *cmsg,void *data,uint64_t datalen) {
 	struct msghdr mhdr;
