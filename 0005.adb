@@ -524,7 +524,7 @@ package body Posix is
 
       Received := Offset /= 0;
       if Received then
-         Data_Length := Cmsg.cmsg_len;
+         Data_Length := uint64_t(Cmsg.cmsg_len);
       else
          Data_Length := 0;
       end if;
