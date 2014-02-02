@@ -970,8 +970,19 @@
 			<macro name="SOL_ATM"/>
 			<macro name="SOL_AAL"/>
 			<macro name="SOL_IRDA"/>
+			<macro name="SOL_SOCKET"/>
 		</set>
 		<set type="" genset="350" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			       	<include file="sys/un.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="SCM_RIGHTS"/>
+			<macro name="SCM_CREDENTIALS"/>
+		</set>
+		<set type="" genset="352" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -4272,6 +4283,7 @@
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
+			<ada_arg name="PID"   io="out" type="pid_t" from="R"/>
 			<ada_arg name="Error" io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="epoll_create1" return="int_t" ada_type="procedure" rname="R" ada_name="EPoll_Create"
