@@ -161,38 +161,28 @@ begin
          Len := Natural(Msg.msg_controllen);
          Fd3 := -1;
 
-Put_Line("Child: Read msg with controllen=" & Natural'Image(Len));
-
          loop
             Get_Cmsg(Ctl_Buf(1..Len),Offset,Ctl_Level,Ctl_Type,Received);
             exit when not Received;
 
-Put_Line("Child: Read Level=" & int_t'Image(Ctl_Level) & ", Type=" & int_t'Image(Ctl_Type));
-
             case Ctl_Level is
                when SOL_SOCKET =>
-Put_Line("Child: SOL_SOCKET");
                   case Ctl_Type is
                      when SCM_RIGHTS =>
-Put_Line("Child: SCM_RIGHTS");
                         declare
                            Rights :    fd_array_t(1..8);
                            Fd_Count :  Natural := 0;
                         begin
                            Get_Cmsg(Ctl_Buf(1..Len),Offset,Rights,Fd_Count,Received);
                            pragma Assert(Error = 0);
-Put_Line("Child: Count =" & Natural'Image(Fd_Count));
                            pragma Assert(Fd_Count = 1);
 
                            Fd3 := Rights(Rights'First);
-Put_Line("Child: Fd3 =" & fd_t'Image(Fd3));
                         end;
                      when others =>
-Put_Line("Child: SCM_OTHER");
                         null;
                   end case;
                when others =>
-Put_Line("Child: LEV_OTHER");
                   null;
             end case;
          end loop;
@@ -253,12 +243,10 @@ Put_Line("Child: LEV_OTHER");
 
       Sendmsg(Fd1,Msg,0,Error);
       pragma Assert(Error = 0);
-Put_Line("Parent sent msg..");
    end;
 
    Shutdown(Fd1,SHUT_RD,Error);
    pragma Assert(Error = 0);
-Put_Line("Parent SHUT_RD for " & fd_t'Image(Fd3));
 
    Close(Fd3,Error);
    pragma Assert(Error = 0);
@@ -273,7 +261,6 @@ Put_Line("Parent SHUT_RD for " & fd_t'Image(Fd3));
       Wait_Pid(Child,0,Status,Error);
       pragma Assert(WIFEXITED(Status));
       pragma Assert(WEXITSTATUS(Status) = 0);
-Put_Line("Child" & pid_t'Image(Child) & " exited with rc=" & int_t'Image(WEXITSTATUS(Status)));
    end;
 
    Put_Line("Test 0047 Passed.");
