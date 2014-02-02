@@ -818,17 +818,45 @@
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
 			</includes>
-			<macro name="AF_UNIX"/>
+			<macro name="AF_UNSPEC"/>
 			<macro name="AF_LOCAL"/>
+			<macro name="AF_UNIX"/>
+			<macro name="AF_FILE"/>
 			<macro name="AF_INET"/>
-			<macro name="AF_INET6"/>
-			<macro name="AF_IPX"/>
-			<macro name="AF_NETLINK"/>
-			<macro name="AF_X25"/>
 			<macro name="AF_AX25"/>
-			<macro name="AF_ATMPVC"/>
+			<macro name="AF_IPX"/>
 			<macro name="AF_APPLETALK"/>
+			<macro name="AF_NETROM"/>
+			<macro name="AF_BRIDGE"/>
+			<macro name="AF_ATMPVC"/>
+			<macro name="AF_X25"/>
+			<macro name="AF_INET6"/>
+			<macro name="AF_ROSE"/>
+			<macro name="AF_DECnet"/>
+			<macro name="AF_NETBEUI"/>
+			<macro name="AF_SECURITY"/>
+			<macro name="AF_KEY"/>
+			<macro name="AF_NETLINK"/>
+			<macro name="AF_ROUTE"/>
 			<macro name="AF_PACKET"/>
+			<macro name="AF_ASH"/>
+			<macro name="AF_ECONET"/>
+			<macro name="AF_ATMSVC"/>
+			<macro name="AF_RDS"/>
+			<macro name="AF_SNA"/>
+			<macro name="AF_IRDA"/>
+			<macro name="AF_PPPOX"/>
+			<macro name="AF_WANPIPE"/>
+			<macro name="AF_LLC"/>
+			<macro name="AF_CAN"/>
+			<macro name="AF_TIPC"/>
+			<macro name="AF_BLUETOOTH"/>
+			<macro name="AF_IUCV"/>
+			<macro name="AF_RXRPC"/>
+			<macro name="AF_ISDN"/>
+			<macro name="AF_PHONET"/>
+			<macro name="AF_IEEE802154"/>
+			<macro name="AF_MAX"/>
 		</set>
 		<set type="" genset="338" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
@@ -880,6 +908,77 @@
 			<macro name="MSG_CTRUNC"/>
 			<macro name="MSG_OOB"/>
 			<macro name="MSG_ERRQUEUE"/>
+		</set>
+		<set type="" genset="346" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			       	<include file="sys/un.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="PF_UNSPEC"/>
+			<macro name="PF_LOCAL"/>
+			<macro name="PF_UNIX"/>
+			<macro name="PF_FILE"/>
+			<macro name="PF_INET"/>
+			<macro name="PF_AX25"/>
+			<macro name="PF_IPX"/>
+			<macro name="PF_APPLETALK"/>
+			<macro name="PF_NETROM"/>
+			<macro name="PF_BRIDGE"/>
+			<macro name="PF_ATMPVC"/>
+			<macro name="PF_X25"/>
+			<macro name="PF_INET6"/>
+			<macro name="PF_ROSE"/>
+			<macro name="PF_DECnet"/>
+			<macro name="PF_NETBEUI"/>
+			<macro name="PF_SECURITY"/>
+			<macro name="PF_KEY"/>
+			<macro name="PF_NETLINK"/>
+			<macro name="PF_ROUTE"/>
+			<macro name="PF_PACKET"/>
+			<macro name="PF_ASH"/>
+			<macro name="PF_ECONET"/>
+			<macro name="PF_ATMSVC"/>
+			<macro name="PF_RDS"/>
+			<macro name="PF_SNA"/>
+			<macro name="PF_IRDA"/>
+			<macro name="PF_PPPOX"/>
+			<macro name="PF_WANPIPE"/>
+			<macro name="PF_LLC"/>
+			<macro name="PF_CAN"/>
+			<macro name="PF_TIPC"/>
+			<macro name="PF_BLUETOOTH"/>
+			<macro name="PF_IUCV"/>
+			<macro name="PF_RXRPC"/>
+			<macro name="PF_ISDN"/>
+			<macro name="PF_PHONET"/>
+			<macro name="PF_IEEE802154"/>
+			<macro name="PF_MAX"/>
+		</set>
+		<set type="" genset="348" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			       	<include file="sys/un.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="SOL_RAW"/>
+			<macro name="SOL_DECNET"/>
+			<macro name="SOL_X25"/>
+			<macro name="SOL_PACKET"/>
+			<macro name="SOL_ATM"/>
+			<macro name="SOL_AAL"/>
+			<macro name="SOL_IRDA"/>
+		</set>
+		<set type="" genset="350" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			       	<include file="sys/un.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+			<macro name="SOMAXCONN"/>
 		</set>
 	</macro_constants>
 	<structs>
@@ -4456,6 +4555,23 @@
 			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
+		<func name="send" return="ssize_t" ada_type="procedure" rname="R" ada_name="Send"
+		 test="47" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="buf"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="len"      type="size_t" from="size_t(Buf'Length)"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Buf"      io="in"  type="uchar_array"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
 		<func name="recvfrom" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recvfrom"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
@@ -4477,6 +4593,56 @@
 			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
+		</func>
+		<func name="sendto" return="ssize_t" ada_type="procedure" rname="R" ada_name="Sendto"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="buf"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="len"      type="size_t" from="size_t(Buf'Length)"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+			<c_arg	 name="src_addr" type="System.Address" from="Addr'Address"/>
+			<c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Buf"      io="in"  type="uchar_array"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr" from="implied"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="recvmsg" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recvmsg"
+		 test="47" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="msg"      type="System.Address" from="Msg'Address"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Msg"      io="in"  type="s_msghdr" from="implied"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sendmsg" return="ssize_t" ada_type="procedure" rname="R" ada_name="Sendmsg"
+		 test="47" inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="msg"      type="System.Address" from="Msg'Address"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Msg"      io="in"  type="s_msghdr" from="implied"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="inet_aton" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Aton"
 		 inline="1" 
