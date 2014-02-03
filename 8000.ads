@@ -48,6 +48,13 @@
       Received :        out    Boolean          -- True when a message is received
    );
 
+   -- Skip current message
+   procedure Skip_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Received :        out    Boolean          -- True when a message is received
+   );
+
    -- Fetch cmsg data & advance offset
    procedure Get_Cmsg(
       Control_Msg_Buf : in     uchar_array;     -- Control message buffer

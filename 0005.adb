@@ -566,3 +566,29 @@ package body Posix is
 
    end Get_Cmsg;
 
+   procedure Skip_Cmsg(
+      Control_Msg_Buf : in     uchar_array;     -- Control message buffer
+      Offset :          in out uint64_t;        -- Current control message offset
+      Received :        out    Boolean          -- True when a message was received
+   ) is
+      function UX_Get_Cmsg(buf : System.Address; buflen, offset : uint64_t; cmsg, data : System.Address;
+         datalen : uint64_t) return uint64_t;
+      pragma import(C,UX_Get_Cmsg,"c_get_cmsg");
+
+      Cmsg :         s_cmsghdr;
+   begin
+
+      Offset := UX_Get_Cmsg(
+         buf    => Control_Msg_Buf'Address,
+         buflen => uint64_t(Control_Msg_Buf'Length),
+         offset => Offset,
+         cmsg   => Cmsg'Address,
+         data   => System.Null_Address,
+         datalen => 0
+      );
+
+      Received := Offset /= 0;
+
+   end Skip_Cmsg;
+
+
