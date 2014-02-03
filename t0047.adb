@@ -14,6 +14,7 @@ use Posix;
 procedure T0047 is
    use Ada.Text_IO;
 
+   F :         Float := 9.99;
    I, J, L :   int_t;
    K :         ushort_t;
    Ctl_Buf :   uchar_array(1..128);
@@ -41,6 +42,8 @@ begin
 
    -- Put control messages into Ctl_Buf
    Ctl_Len := 0;
+   Put_Cmsg(Ctl_Buf,Ctl_Len,9,99,F'Address,F'Size/8,Accepted);
+   pragma Assert(Accepted);
    Put_Cmsg(Ctl_Buf,Ctl_Len,1,11,I'Address,I'Size/8,Accepted);
    pragma Assert(Accepted);
    Put_Cmsg(Ctl_Buf,Ctl_Len,2,12,J'Address,J'Size/8,Accepted);
@@ -49,7 +52,7 @@ begin
    pragma Assert(Accepted);
    Put_Cmsg(Ctl_Buf,Ctl_Len,4,14,L'Address,L'Size/8,Accepted);
    pragma Assert(Accepted);
-   pragma Assert(Ctl_Len > 8);
+   pragma Assert(Ctl_Len > 12);
 
    Put_Line("Ctl_Len =" & uint64_t'Image(Ctl_Len));
 
@@ -62,6 +65,18 @@ begin
 
    Offset := 0;
    Len := Natural(Ctl_Len);
+
+   -- Test level and type of 1st msg
+   Get_Cmsg(Ctl_Buf(1..Len),Offset,Ctl_Level,Ctl_Type,Received);
+   pragma Assert(Received);
+   pragma Assert(Ctl_Level = 9);
+   pragma Assert(Ctl_Type = 99);
+
+   -- Skip the 1st msg
+   Skip_Cmsg(Ctl_Buf(1..Len),Offset,Received);
+   pragma Assert(Received);
+
+   -- Check and fetch all remaining data
    Get_Cmsg(Ctl_Buf(1..Len),Offset,Ctl_Level,Ctl_Type,Received);
    pragma Assert(Received);
    pragma Assert(Ctl_Level = 1);
@@ -180,10 +195,12 @@ begin
                            Fd3 := Rights(Rights'First);
                         end;
                      when others =>
-                        null;
+                        Skip_Cmsg(Ctl_Buf(1..Len),Offset,Received);
+                        pragma Assert(Received);
                   end case;
                when others =>
-                  null;
+                  Skip_Cmsg(Ctl_Buf(1..Len),Offset,Received);
+                  pragma Assert(Received);
             end case;
          end loop;
       end;
