@@ -124,7 +124,7 @@ gcc_compile(std::fstream& fs,int genset) {
 
 	{
 		std::stringstream s;
-		s 	<< "gcc " << config.gcc_options
+		s	<< config.gcc << config.gcc_options
 			<< " ./staging/" << filename << ".c -o ./staging/" << filename << ".xeq"
 			<< " 2>./staging/" << filename << ".err ";
 	
@@ -186,7 +186,7 @@ gcc_precompile(std::fstream& fs,int genset,const std::string& variation) {
 	}
 	{
 		std::stringstream s;
-		s 	<< "gcc -P -E " << config.gcc_options << " " << path
+		s 	<< config.gcc << " -P -E " << config.gcc_options << " " << path
 			<< " | sed '/^ *#.*$/d' "
 			<< " > ./staging/" << filename << ".out"
 			<< " 2>./staging/" << filename << ".err ";

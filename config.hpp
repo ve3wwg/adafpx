@@ -15,6 +15,7 @@
 struct s_config {
 	bool					debug;		// Show debug info
 	std::string				gcc_options;
+	std::string				gcc;		// Name of gcc (gcc / gnatgcc etc.)
 	std::set<int>				tests;		// Tests to perform
 
 	std::unordered_set<std::string>		copies;		// Files to be copied
