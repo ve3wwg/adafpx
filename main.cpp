@@ -40,6 +40,7 @@ usage(const char *cmd) {
 		<< "  -D define     gcc macro declare option\n"
 		<< "  -I path       gcc include path\n"
 		<< "  -p            Just show platform details and exit\n"
+		<< "  -G gcc	    Name of gcc (e.g. gnatgcc)\n"
 		<< "  -h            This help info and exit.\n";
 }
 
@@ -53,7 +54,9 @@ main(int argc,char **argv) {
 
 	config.debug = false;
 
-	while ( (optch = getopt(argc,argv,"dyI:D:g:ph")) != -1) {
+	config.gcc = "gcc";
+
+	while ( (optch = getopt(argc,argv,"dyI:D:g:pP:G:h")) != -1) {
 		switch ( optch ) {
 		case 'd' :
 			yydebug = 1;
@@ -73,6 +76,9 @@ main(int argc,char **argv) {
 			break;
 		case 'p' :
 			opt_show_platform = true;
+			break;
+		case 'G' :
+			config.gcc = optarg;
 			break;
 		case 'h' :
 		default:
