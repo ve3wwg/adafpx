@@ -33,7 +33,7 @@ main:	ansi-c-lex.cpp ansi-c-yacc.cpp $(OBJS)
 	rm -f atest atest.o *.ali b~* cglue.o
 
 run:	main
-	./main
+	./main -G "$(CC)"
 
 atest::	libadafpx.a
 	gnatmake -Wall atest.adb -o atest -largs libadafpx.a
