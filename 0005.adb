@@ -6,7 +6,6 @@
 -- This is generated source code. Edit at your own risk.
 
 with Ada.Characters.Latin_1;
-with Ada.Unchecked_Conversion;
 
 package body Posix is
    
@@ -590,5 +589,4 @@ package body Posix is
       Received := Offset /= 0;
 
    end Skip_Cmsg;
-
 

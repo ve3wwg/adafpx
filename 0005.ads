@@ -11,5 +11,6 @@
 -- No warranty is expressed or implied.
 
 with System;
+with Ada.Unchecked_Conversion;
 
 package Posix is
