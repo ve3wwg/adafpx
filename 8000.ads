@@ -73,3 +73,10 @@
       Received :        out    Boolean          -- True when a message was received
    );
 
+   -- Convert IPv4 Address to s_sockaddr
+   function To_Sock_Addr is new
+      Ada.Unchecked_Conversion(Source => s_sockaddr_in,Target => s_sockaddr);
+
+   function To_Inet_Addr is new
+      Ada.Unchecked_Conversion(Source => s_sockaddr,Target => s_sockaddr_in);
+
