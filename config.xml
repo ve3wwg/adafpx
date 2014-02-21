@@ -4423,15 +4423,14 @@
 			</includes>
                         <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="Addr_Len'Address"/>
 			<c_arg	 name="flags"    type="uint_t" from="Flags"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="out" type="s_sockaddr"/>
-			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Addr"     io="out" type="s_sockaddr" from="implied"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="implied"/>
 			<ada_arg name="Flags"    io="in"  type="uint_t"/>
 			<ada_arg name="Fd"       io="out" type="fd_t"    from="fd_t(R)"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
 		<func name="bind" return="int_t" ada_type="procedure" rname="R" ada_name="Bind"
 		 inline="1" 
