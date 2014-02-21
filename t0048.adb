@@ -38,7 +38,7 @@ begin
       pragma Assert(S >= 0);
 
       -- Create address to connect with:
-      Inet_C_Addr.sin_len := 0;
+--    Inet_C_Addr.sin_len := 0;
       Inet_C_Addr.sin_family := AF_INET;
       Inet_C_Addr.sin_port   := Htons(Port_C_No);
       Inet_Aton(Connect_Addr,Inet_C_Addr.sin_addr,Error);
@@ -92,7 +92,7 @@ begin
       pragma Assert(L >= 0);
 
       -- Create the address to bind to:
-      Inet_C_Addr.sin_len := Inet_C_Addr.sin_addr'Size / 8;
+--    Inet_C_Addr.sin_len := Inet_C_Addr.sin_addr'Size / 8;
       Inet_C_Addr.sin_family := AF_INET;
       Inet_C_Addr.sin_port   := Htons(Port_C_No);
       Inet_Aton(Connect_Addr,Inet_C_Addr.sin_addr,Error);
