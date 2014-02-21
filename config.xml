@@ -4360,6 +4360,7 @@
                         <ada_arg name="Domain"   io="in"      type="int_t"/>
                         <ada_arg name="Typ"      io="in"      type="int_t"/>
                         <ada_arg name="Protocol" io="in"      type="int_t"/>
+			<ada_arg name="Fd"       io="out"     type="fd_t"    from="fd_t(R)"/>
                         <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="socketpair" return="int_t" ada_type="procedure" rname="R" ada_name="Socketpair"
@@ -4392,7 +4393,8 @@
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
                         <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Addr"     io="out"  type="s_sockaddr" from="implied"/>
+			<ada_arg name="Fd"       io="out" type="fd_t"    from="fd_t(R)"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
@@ -4405,12 +4407,12 @@
 			</includes>
                         <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <c_arg   name="addrlen"  type="System.Address" from="Addr_Len'Address"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
-			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
+                        <ada_arg name="Addr"     io="out"  type="s_sockaddr" from="implied"/>
+			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="implied"/>
+			<ada_arg name="Fd"       io="out" type="fd_t"    from="fd_t(R)"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
 		<func name="accept4" return="int_t" ada_type="procedure" rname="R" ada_name="Accept4"
 		 inline="1" 
@@ -4424,9 +4426,10 @@
                         <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
 			<c_arg	 name="flags"    type="uint_t" from="Flags"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Addr"     io="out" type="s_sockaddr"/>
 			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
 			<ada_arg name="Flags"    io="in"  type="uint_t"/>
+			<ada_arg name="Fd"       io="out" type="fd_t"    from="fd_t(R)"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
@@ -4439,30 +4442,13 @@
 			</includes>
                         <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
                         <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
-		</func>
-		<func name="bind" return="int_t" ada_type="procedure" rname="R" ada_name="Bind"
-		 inline="1" 
-		 os="Linux *|FreeBSD *|Darwin *">
-			<includes>
-				<include file="sys/types.h"/>
-				<include file="sys/socket.h"/>
-			</includes>
-                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
-                        <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
-                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
-			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
-                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
 		<func name="connect" return="int_t" ada_type="procedure" rname="R" ada_name="Connect"
-		 inline="1" 
+		 inline="1" test="48"
 		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
@@ -4470,27 +4456,24 @@
 			</includes>
                         <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
                         <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
-		<func name="connect" return="int_t" ada_type="procedure" rname="R" ada_name="Connect"
-		 inline="1" 
-		 os="Linux *|FreeBSD *|Darwin *">
+		<func name="connectat" return="int_t" ada_type="procedure" rname="R" ada_name="Connect_At"
+		 inline="1" os="FreeBSD *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
+				<include file="fcntl.h"/>
 			</includes>
                         <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
-                        <c_arg   name="addrlen"  type="System.Address" from="L'Address"/>
+                        <c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
                         <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
-			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
-			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
 		</func>
 		<func name="listen" return="int_t" ada_type="procedure" rname="R" ada_name="Listen"
 		 inline="1" 
@@ -4672,7 +4655,7 @@
                         <ada_arg name="Error"    io="out"  type="errno_t" from="C_Error(R)"/>
 			<temp name="T" type="String" init="C_String(IPv4)"/>
 		</func>
-		<func name="inet_ntop" return="int_t" ada_type="procedure" rname="R" ada_name="Inet_Ntop"
+		<func name="inet_ntop" return="System.Address" ada_type="procedure" rname="R" ada_name="Inet_Ntop"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
 			<includes>
@@ -4681,11 +4664,11 @@
 				<include file="netinet/in.h"/>
 				<include file="arpa/inet.h"/>
 			</includes>
-			<c_arg	 name="af"       type="int_t"          from="int_t(Addr.sa_family)"/>
-			<c_arg	 name="src"      type="System.Address" from="Addr.sa_data'Address"/>
+			<c_arg	 name="af"       type="int_t"          from="int_t(AF_INET)"/>
+			<c_arg	 name="src"      type="System.Address" from="Addr'Address"/>
                         <c_arg   name="dst"      type="System.Address" from="Buf'Address"/>
-			<c_arg   name="size"     type="socklen_t"      from="Buf'Size/8"/> 
-			<ada_arg name="Addr"     io="in"   type="s_sockaddr"/>            
+			<c_arg   name="size"     type="socklen_t"      from="Buf'Length"/> 
+			<ada_arg name="Addr"     io="in"   type="s_in_addr"/>            
 			<ada_arg name="Buf"      io="out"  type="String" from="implied"/>
 			<ada_arg name="Last"	 io="out"  type="Natural" from="Buf'First + Strlen(Buf'Address) - 1"/>
                         <ada_arg name="Error"    io="out"  type="errno_t" from="C_Error(R)"/>
