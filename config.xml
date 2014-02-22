@@ -1005,7 +1005,6 @@
 			<macro name="SCM_CREDS"/>
 			<macro name="SCM_HCI_RAW_DIRECTION"/>
 			<macro name="SCM_RIGHTS"/>
-			<macro name="SCM_SRCRT"/>
 			<macro name="SCM_TIMESTAMP"/>
 			<macro name="SCM_TIMESTAMPING"/>
 			<macro name="SCM_TIMESTAMPNS"/>
