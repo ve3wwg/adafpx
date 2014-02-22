@@ -147,7 +147,7 @@ begin
 
          Get_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
          pragma Assert(Error = 0);
-         pragma Assert(Keep_Alive = 0 or Keep_Alive = 1);
+         pragma Assert(Keep_Alive >= 0);
 
          if Keep_Alive /= 0 then
             Keep_Alive := 0;        -- Turn it off
@@ -166,7 +166,7 @@ begin
             Keep_Alive := -95;
             Get_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
             pragma Assert(Error = 0);
-            pragma Assert(Keep_Alive = 1);
+            pragma Assert(Keep_Alive /= 0);
          end if;
       end;
 
