@@ -1,3 +1,16 @@
 atest
 *.a
 *.o
+*.ali
+t????
+b~*
+Makefile.tests
+adafpx.c
+ansi-c-lex.cpp
+ansi-c-yacc.cpp
+ansi-c-yacc.hpp
+main
+posix.adb
+posix.ads
+posix.defs
+staging
