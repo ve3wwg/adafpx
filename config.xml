@@ -1110,6 +1110,336 @@
 			<macro name="SO_WANTMORE"/>
 			<macro name="SO_WANTOOBFLAG"/>
 		</set>
+		<set type="" genset="356" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+                        <includes>
+                                <include file="sys/types.h"/>
+                                <include file="sys/socket.h"/>
+                                <include file="sys/un.h"/>
+                                <include file="arpa/inet.h"/>
+                        </includes>
+			<macro name="IPPROTO_3PC"/>
+			<macro name="IPPROTO_ADFS"/>
+			<macro name="IPPROTO_AH"/>
+			<macro name="IPPROTO_AHIP"/>
+			<macro name="IPPROTO_APES"/>
+			<macro name="IPPROTO_ARGUS"/>
+			<macro name="IPPROTO_AX25"/>
+			<macro name="IPPROTO_BEETPH"/>
+			<macro name="IPPROTO_BHA"/>
+			<macro name="IPPROTO_BLT"/>
+			<macro name="IPPROTO_BRSATMON"/>
+			<macro name="IPPROTO_CARP"/>
+			<macro name="IPPROTO_CFTP"/>
+			<macro name="IPPROTO_CHAOS"/>
+			<macro name="IPPROTO_CMTP"/>
+			<macro name="IPPROTO_COMP"/>
+			<macro name="IPPROTO_CPHB"/>
+			<macro name="IPPROTO_CPNX"/>
+			<macro name="IPPROTO_DCCP"/>
+			<macro name="IPPROTO_DDP"/>
+			<macro name="IPPROTO_DGP"/>
+			<macro name="IPPROTO_DIVERT"/>
+			<macro name="IPPROTO_DONE"/>
+			<macro name="IPPROTO_DSTOPTS"/>
+			<macro name="IPPROTO_EGP"/>
+			<macro name="IPPROTO_EMCON"/>
+			<macro name="IPPROTO_ENCAP"/>
+			<macro name="IPPROTO_EON"/>
+			<macro name="IPPROTO_ESP"/>
+			<macro name="IPPROTO_ETHERIP"/>
+			<macro name="IPPROTO_FRAGMENT"/>
+			<macro name="IPPROTO_GGP"/>
+			<macro name="IPPROTO_GMTP"/>
+			<macro name="IPPROTO_GRE"/>
+			<macro name="IPPROTO_HELLO"/>
+			<macro name="IPPROTO_HMP"/>
+			<macro name="IPPROTO_HOPOPTS"/>
+			<macro name="IPPROTO_ICMP"/>
+			<macro name="IPPROTO_ICMPV6"/>
+			<macro name="IPPROTO_IDP"/>
+			<macro name="IPPROTO_IDPR"/>
+			<macro name="IPPROTO_IDRP"/>
+			<macro name="IPPROTO_IGMP"/>
+			<macro name="IPPROTO_IGP"/>
+			<macro name="IPPROTO_IGRP"/>
+			<macro name="IPPROTO_IL"/>
+			<macro name="IPPROTO_INLSP"/>
+			<macro name="IPPROTO_INP"/>
+			<macro name="IPPROTO_IP"/>
+			<macro name="IPPROTO_IPCOMP"/>
+			<macro name="IPPROTO_IPCV"/>
+			<macro name="IPPROTO_IPEIP"/>
+			<macro name="IPPROTO_IPIP"/>
+			<macro name="IPPROTO_IPPC"/>
+			<macro name="IPPROTO_IPV4"/>
+			<macro name="IPPROTO_IPV6"/>
+			<macro name="IPPROTO_IRTP"/>
+			<macro name="IPPROTO_KRYPTOLAN"/>
+			<macro name="IPPROTO_LARP"/>
+			<macro name="IPPROTO_LEAF1"/>
+			<macro name="IPPROTO_LEAF2"/>
+			<macro name="IPPROTO_MAX"/>
+			<macro name="IPPROTO_MAXID"/>
+			<macro name="IPPROTO_MEAS"/>
+			<macro name="IPPROTO_MH"/>
+			<macro name="IPPROTO_MHRP"/>
+			<macro name="IPPROTO_MICP"/>
+			<macro name="IPPROTO_MOBILE"/>
+			<macro name="IPPROTO_MOBILITY"/>
+			<macro name="IPPROTO_MPLS"/>
+			<macro name="IPPROTO_MTP"/>
+			<macro name="IPPROTO_MUX"/>
+			<macro name="IPPROTO_ND"/>
+			<macro name="IPPROTO_NHRP"/>
+			<macro name="IPPROTO_NONE"/>
+			<macro name="IPPROTO_NSP"/>
+			<macro name="IPPROTO_NVPII"/>
+			<macro name="IPPROTO_OLD_DIVERT"/>
+			<macro name="IPPROTO_OSPFIGP"/>
+			<macro name="IPPROTO_PFSYNC"/>
+			<macro name="IPPROTO_PGM"/>
+			<macro name="IPPROTO_PIGP"/>
+			<macro name="IPPROTO_PIM"/>
+			<macro name="IPPROTO_PRM"/>
+			<macro name="IPPROTO_PUP"/>
+			<macro name="IPPROTO_PVP"/>
+			<macro name="IPPROTO_RAW"/>
+			<macro name="IPPROTO_RCCMON"/>
+			<macro name="IPPROTO_RDP"/>
+			<macro name="IPPROTO_ROUTING"/>
+			<macro name="IPPROTO_RSVP"/>
+			<macro name="IPPROTO_RVD"/>
+			<macro name="IPPROTO_SATEXPAK"/>
+			<macro name="IPPROTO_SATMON"/>
+			<macro name="IPPROTO_SCCSP"/>
+			<macro name="IPPROTO_SCTP"/>
+			<macro name="IPPROTO_SDRP"/>
+			<macro name="IPPROTO_SEND"/>
+			<macro name="IPPROTO_SEP"/>
+			<macro name="IPPROTO_SKIP"/>
+			<macro name="IPPROTO_SPACER"/>
+			<macro name="IPPROTO_SRPC"/>
+			<macro name="IPPROTO_ST"/>
+			<macro name="IPPROTO_SVMTP"/>
+			<macro name="IPPROTO_SWIPE"/>
+			<macro name="IPPROTO_TCF"/>
+			<macro name="IPPROTO_TCP"/>
+			<macro name="IPPROTO_TLSP"/>
+			<macro name="IPPROTO_TP"/>
+			<macro name="IPPROTO_TPXX"/>
+			<macro name="IPPROTO_TRUNK1"/>
+			<macro name="IPPROTO_TRUNK2"/>
+			<macro name="IPPROTO_TTP"/>
+			<macro name="IPPROTO_UDP"/>
+			<macro name="IPPROTO_UDPLITE"/>
+			<macro name="IPPROTO_VINES"/>
+			<macro name="IPPROTO_VISA"/>
+			<macro name="IPPROTO_VMTP"/>
+			<macro name="IPPROTO_WBEXPAK"/>
+			<macro name="IPPROTO_WBMON"/>
+			<macro name="IPPROTO_WSN"/>
+			<macro name="IPPROTO_XNET"/>
+			<macro name="IPPROTO_XTP"/>
+			<macro name="IPV6PROTO_MAXID"/>
+		</set>
+		<set type="" genset="358" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+                        <includes>
+                                <include file="sys/types.h"/>
+                                <include file="sys/socket.h"/>
+                                <include file="sys/un.h"/>
+                                <include file="arpa/inet.h"/>
+                        </includes>
+		</set>
+		<macro name="IP_ADD_MEMBERSHIP"/>
+		<macro name="IP_ADD_SOURCE_MEMBERSHIP"/>
+		<macro name="IP_ALLOWBROADCAST"/>
+		<macro name="IP_BINDANY"/>
+		<macro name="IP_BLOCK_SOURCE"/>
+		<macro name="IP_BOUND_IF"/>
+		<macro name="IP_CT_TCP_FLAG_BE_LIBERAL"/>
+		<macro name="IP_CT_TCP_FLAG_CLOSE_INIT"/>
+		<macro name="IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED"/>
+		<macro name="IP_CT_TCP_FLAG_MAXACK_SET"/>
+		<macro name="IP_CT_TCP_FLAG_SACK_PERM"/>
+		<macro name="IP_CT_TCP_FLAG_WINDOW_SCALE"/>
+		<macro name="IP_DEFAULT_MULTICAST_LOOP"/>
+		<macro name="IP_DEFAULT_MULTICAST_TTL"/>
+		<macro name="IP_DF"/>
+		<macro name="IP_DONTFRAG"/>
+		<macro name="IP_DROP_MEMBERSHIP"/>
+		<macro name="IP_DROP_SOURCE_MEMBERSHIP"/>
+		<macro name="IP_DUMMYNET3"/>
+		<macro name="IP_DUMMYNET_CONFIGURE"/>
+		<macro name="IP_DUMMYNET_DEL"/>
+		<macro name="IP_DUMMYNET_FLUSH"/>
+		<macro name="IP_DUMMYNET_GET"/>
+		<macro name="IP_FAITH"/>
+		<macro name="IP_FORWARDING"/>
+		<macro name="IP_FREEBIND"/>
+		<macro name="IP_FW3"/>
+		<macro name="IP_FW_ADD"/>
+		<macro name="IP_FW_DEL"/>
+		<macro name="IP_FW_FLUSH"/>
+		<macro name="IP_FW_GET"/>
+		<macro name="IP_FW_IPOPT_LSRR"/>
+		<macro name="IP_FW_IPOPT_RR"/>
+		<macro name="IP_FW_IPOPT_SSRR"/>
+		<macro name="IP_FW_IPOPT_TS"/>
+		<macro name="IP_FW_NAT_CFG"/>
+		<macro name="IP_FW_NAT_DEL"/>
+		<macro name="IP_FW_NAT_GET_CONFIG"/>
+		<macro name="IP_FW_NAT_GET_LOG"/>
+		<macro name="IP_FW_RESETLOG"/>
+		<macro name="IP_FW_TABLEARG"/>
+		<macro name="IP_FW_TABLE_ADD"/>
+		<macro name="IP_FW_TABLE_DEL"/>
+		<macro name="IP_FW_TABLE_FLUSH"/>
+		<macro name="IP_FW_TABLE_GETSIZE"/>
+		<macro name="IP_FW_TABLE_LIST"/>
+		<macro name="IP_FW_TABLE_XADD"/>
+		<macro name="IP_FW_TABLE_XDEL"/>
+		<macro name="IP_FW_TABLE_XGETSIZE"/>
+		<macro name="IP_FW_TABLE_XLIST"/>
+		<macro name="IP_FW_TCPOPT_CC"/>
+		<macro name="IP_FW_TCPOPT_MSS"/>
+		<macro name="IP_FW_TCPOPT_SACK"/>
+		<macro name="IP_FW_TCPOPT_TS"/>
+		<macro name="IP_FW_TCPOPT_WINDOW"/>
+		<macro name="IP_FW_ZERO"/>
+		<macro name="IP_HDRINCL"/>
+		<macro name="IP_HDR_SIZE"/>
+		<macro name="IP_IPSEC_POLICY"/>
+		<macro name="IP_MAKE_VHL(v,"/>
+		<macro name="IP_MAXPACKET"/>
+		<macro name="IP_MAX_GROUP_SRC_FILTER"/>
+		<macro name="IP_MAX_MEMBERSHIPS"/>
+		<macro name="IP_MAX_SOCK_MUTE_FILTER"/>
+		<macro name="IP_MAX_SOCK_SRC_FILTER"/>
+		<macro name="IP_MAX_SOURCE_FILTER"/>
+		<macro name="IP_MF"/>
+		<macro name="IP_MINTTL"/>
+		<macro name="IP_MIN_MEMBERSHIPS"/>
+		<macro name="IP_MSFILTER"/>
+		<macro name="IP_MSS"/>
+		<macro name="IP_MTU"/>
+		<macro name="IP_MTU_DISCOVER"/>
+		<macro name="IP_MULTICAST_ALL"/>
+		<macro name="IP_MULTICAST_IF"/>
+		<macro name="IP_MULTICAST_IFINDEX"/>
+		<macro name="IP_MULTICAST_LOOP"/>
+		<macro name="IP_MULTICAST_TTL"/>
+		<macro name="IP_MULTICAST_VIF"/>
+		<macro name="IP_NAT__XXX"/>
+		<macro name="IP_OFFMASK"/>
+		<macro name="IP_OLD_FW_ADD"/>
+		<macro name="IP_OLD_FW_DEL"/>
+		<macro name="IP_OLD_FW_FLUSH"/>
+		<macro name="IP_OLD_FW_GET"/>
+		<macro name="IP_OLD_FW_RESETLOG"/>
+		<macro name="IP_OLD_FW_ZERO"/>
+		<macro name="IP_ONESBCAST"/>
+		<macro name="IP_OPTIONS"/>
+		<macro name="IP_ORIGDSTADDR"/>
+		<macro name="IP_PASSSEC"/>
+		<macro name="IP_PKTINFO"/>
+		<macro name="IP_PKTOPTIONS"/>
+		<macro name="IP_PMTUDISC"/>
+		<macro name="IP_PMTUDISC_DO"/>
+		<macro name="IP_PMTUDISC_DONT"/>
+		<macro name="IP_PMTUDISC_PROBE"/>
+		<macro name="IP_PMTUDISC_WANT"/>
+		<macro name="IP_PORTRANGE"/>
+		<macro name="IP_PORTRANGE_DEFAULT"/>
+		<macro name="IP_PORTRANGE_HIGH"/>
+		<macro name="IP_PORTRANGE_LOW"/>
+		<macro name="IP_RAWOUTPUT"/>
+		<macro name="IP_RECVDSTADDR"/>
+		<macro name="IP_RECVERR"/>
+		<macro name="IP_RECVIF"/>
+		<macro name="IP_RECVOPTS"/>
+		<macro name="IP_RECVORIGDSTADDR"/>
+		<macro name="IP_RECVPKTINFO"/>
+		<macro name="IP_RECVRETOPTS"/>
+		<macro name="IP_RECVTOS"/>
+		<macro name="IP_RECVTTL"/>
+		<macro name="IP_RETOPTS"/>
+		<macro name="IP_RF"/>
+		<macro name="IP_ROUTER_ALERT"/>
+		<macro name="IP_ROUTETOIF"/>
+		<macro name="IP_RSVP_OFF"/>
+		<macro name="IP_RSVP_ON"/>
+		<macro name="IP_RSVP_VIF_OFF"/>
+		<macro name="IP_RSVP_VIF_ON"/>
+		<macro name="IP_SENDONES"/>
+		<macro name="IP_SENDSRCADDR"/>
+		<macro name="IP_SENDTOIF"/>
+		<macro name="IP_STRIPHDR"/>
+		<macro name="IP_TOS"/>
+		<macro name="IP_TRAFFIC_MGT_BACKGROUND"/>
+		<macro name="IP_TRANSPARENT"/>
+		<macro name="IP_TTL"/>
+		<macro name="IP_UNBLOCK_SOURCE"/>
+		<macro name="IP_VHL_BORING"/>
+		<macro name="IP_VS_BASE_CTL"/>
+		<macro name="IP_VS_CONN_F_BACKUP_MASK"/>
+		<macro name="IP_VS_CONN_F_BACKUP_UPD_MASK"/>
+		<macro name="IP_VS_CONN_F_BYPASS"/>
+		<macro name="IP_VS_CONN_F_DEST_MASK"/>
+		<macro name="IP_VS_CONN_F_DROUTE"/>
+		<macro name="IP_VS_CONN_F_FWD_MASK"/>
+		<macro name="IP_VS_CONN_F_HASHED"/>
+		<macro name="IP_VS_CONN_F_INACTIVE"/>
+		<macro name="IP_VS_CONN_F_IN_SEQ"/>
+		<macro name="IP_VS_CONN_F_LOCALNODE"/>
+		<macro name="IP_VS_CONN_F_MASQ"/>
+		<macro name="IP_VS_CONN_F_NOOUTPUT"/>
+		<macro name="IP_VS_CONN_F_NO_CPORT"/>
+		<macro name="IP_VS_CONN_F_ONE_PACKET"/>
+		<macro name="IP_VS_CONN_F_OUT_SEQ"/>
+		<macro name="IP_VS_CONN_F_SEQ_MASK"/>
+		<macro name="IP_VS_CONN_F_SYNC"/>
+		<macro name="IP_VS_CONN_F_TEMPLATE"/>
+		<macro name="IP_VS_CONN_F_TUNNEL"/>
+		<macro name="IP_VS_DEST_F_AVAILABLE"/>
+		<macro name="IP_VS_DEST_F_OVERLOAD"/>
+		<macro name="IP_VS_IFNAME_MAXLEN"/>
+		<macro name="IP_VS_PEDATA_MAXLEN"/>
+		<macro name="IP_VS_PENAME_MAXLEN"/>
+		<macro name="IP_VS_SCHEDNAME_MAXLEN"/>
+		<macro name="IP_VS_SO_GET_DAEMON"/>
+		<macro name="IP_VS_SO_GET_DEST"/>
+		<macro name="IP_VS_SO_GET_DESTS"/>
+		<macro name="IP_VS_SO_GET_INFO"/>
+		<macro name="IP_VS_SO_GET_MAX"/>
+		<macro name="IP_VS_SO_GET_SERVICE"/>
+		<macro name="IP_VS_SO_GET_SERVICES"/>
+		<macro name="IP_VS_SO_GET_TIMEOUT"/>
+		<macro name="IP_VS_SO_GET_VERSION"/>
+		<macro name="IP_VS_SO_SET_ADD"/>
+		<macro name="IP_VS_SO_SET_ADDDEST"/>
+		<macro name="IP_VS_SO_SET_DEL"/>
+		<macro name="IP_VS_SO_SET_DELDEST"/>
+		<macro name="IP_VS_SO_SET_EDIT"/>
+		<macro name="IP_VS_SO_SET_EDITDEST"/>
+		<macro name="IP_VS_SO_SET_FLUSH"/>
+		<macro name="IP_VS_SO_SET_INSERT"/>
+		<macro name="IP_VS_SO_SET_LIST"/>
+		<macro name="IP_VS_SO_SET_MAX"/>
+		<macro name="IP_VS_SO_SET_NONE"/>
+		<macro name="IP_VS_SO_SET_RESTORE"/>
+		<macro name="IP_VS_SO_SET_SAVE"/>
+		<macro name="IP_VS_SO_SET_STARTDAEMON"/>
+		<macro name="IP_VS_SO_SET_STOPDAEMON"/>
+		<macro name="IP_VS_SO_SET_TIMEOUT"/>
+		<macro name="IP_VS_SO_SET_ZERO"/>
+		<macro name="IP_VS_STATE_BACKUP"/>
+		<macro name="IP_VS_STATE_MASTER"/>
+		<macro name="IP_VS_STATE_NONE"/>
+		<macro name="IP_VS_SVC_F_HASHED"/>
+		<macro name="IP_VS_SVC_F_ONEPACKET"/>
+		<macro name="IP_VS_SVC_F_PERSISTENT"/>
+		<macro name="IP_VS_VERSION_CODE"/>
+		<macro name="IP_XFRM_POLICY"/>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
@@ -4571,6 +4901,29 @@
 				<case name="SO_LINGER"/>
 			</cases>
 		</func>
+		<func name="getsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Get_Sockopt"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<c_arg   name="fd"       type="fd_t"  from="Fd"/>
+                        <c_arg   name="level"    type="int_t" from="Level"/>
+                        <c_arg   name="optname"  type="int_t" from="Opt_Name"/>
+			<c_arg   name="optval"   type="System.Address" from="Opt_Val'Address"/>
+                        <c_arg   name="optlen"   type="System.Address" from="L'Address"/>
+                        <ada_arg name="Fd"       io="in"      type="fd_t"/>
+                        <ada_arg name="Level"    io="in"      type="int_t"/>
+                        <ada_arg name="Opt_Name" io="in"      type="int_t"/>
+			<ada_arg name="Opt_Val"  io="out"     type="s_timeval" from="implied"/>
+                        <ada_arg name="Error"    io="out"     type="errno_t"  from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Opt_Val'Size/8"/>
+			<cases name="Opt_Name" on_error="Opt_Val := ( tv_sec => 0, tv_usec => 0)">
+				<case name="SO_RCVTIMEO"/>
+				<case name="SO_SNDTIMEO"/>
+			</cases>
+		</func>
 		<func name="setsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Set_Sockopt"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
@@ -4628,6 +4981,28 @@
                         <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
 			<cases name="Opt_Name">
 				<case name="SO_LINGER"/>
+			</cases>
+		</func>
+		<func name="setsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Set_Sockopt"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<c_arg   name="fd"       type="fd_t"  from="Fd"/>
+                        <c_arg   name="level"    type="int_t" from="Level"/>
+                        <c_arg   name="optname"  type="int_t" from="Opt_Name"/>
+			<c_arg   name="optval"   type="System.Address" from="Opt_Val'Address"/>
+                        <c_arg   name="optlen"   type="socklen_t" from="Opt_Val'Size/8"/>
+                        <ada_arg name="Fd"       io="in"      type="fd_t"/>
+                        <ada_arg name="Level"    io="in"      type="int_t"/>
+                        <ada_arg name="Opt_Name" io="in"      type="int_t"/>
+			<ada_arg name="Opt_Val"  io="in"      type="s_timeval"/>
+                        <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
+			<cases name="Opt_Name">
+				<case name="SO_RCVTIMEO"/>
+				<case name="SO_SNDTIMEO"/>
 			</cases>
 		</func>
 <!--
