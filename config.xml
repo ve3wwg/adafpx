@@ -1459,6 +1459,14 @@
 				<omit name="__cmsg_data"/>
 			</members>
 		</struct>
+		<struct name="linger" ada="s_linger" genset="630" os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>                    
+				<include file="sys/socket.h"/>
+				<include file="netinet/in.h"/>
+				<include file="arpa/inet.h"/>
+			</includes>
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
@@ -4457,10 +4465,31 @@
 				<case name="SO_PROTOCOL"/>
 			</cases>
 		</func>
+		<func name="getsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Get_Sockopt"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<c_arg   name="fd"       type="fd_t"  from="Fd"/>
+                        <c_arg   name="level"    type="int_t" from="Level"/>
+                        <c_arg   name="optname"  type="int_t" from="Opt_Name"/>
+			<c_arg   name="optval"   type="System.Address" from="Opt_Val'Address"/>
+                        <c_arg   name="optlen"   type="System.Address" from="L'Address"/>
+                        <ada_arg name="Fd"       io="in"      type="fd_t"/>
+                        <ada_arg name="Level"    io="in"      type="int_t"/>
+                        <ada_arg name="Opt_Name" io="in"      type="int_t"/>
+			<ada_arg name="Opt_Val"  io="out"     type="s_linger" from="implied"/>
+                        <ada_arg name="Error"    io="out"     type="errno_t"  from="C_Error(R)"/>
+			<temp name="L" type="socklen_t" init="Opt_Val'Size/8"/>
+			<cases name="Opt_Name" on_error="Opt_Val := ( l_onoff => 0, l_linger => 0)">
+				<case name="SO_LINGER"/>
+			</cases>
+		</func>
 		<func name="setsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Set_Sockopt"
 		 inline="1" 
 		 os="Linux *|FreeBSD *|Darwin *">
-       		<!-- int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen); -->
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -4496,13 +4525,32 @@
 				<case name="SO_PROTOCOL"/>
 			</cases>
 		</func>
+		<func name="setsockopt" return="int_t" ada_type="procedure" rname="R" ada_name="Set_Sockopt"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+			<c_arg   name="fd"       type="fd_t"  from="Fd"/>
+                        <c_arg   name="level"    type="int_t" from="Level"/>
+                        <c_arg   name="optname"  type="int_t" from="Opt_Name"/>
+			<c_arg   name="optval"   type="System.Address" from="Opt_Val'Address"/>
+                        <c_arg   name="optlen"   type="socklen_t" from="Opt_Val'Size/8"/>
+                        <ada_arg name="Fd"       io="in"      type="fd_t"/>
+                        <ada_arg name="Level"    io="in"      type="int_t"/>
+                        <ada_arg name="Opt_Name" io="in"      type="int_t"/>
+			<ada_arg name="Opt_Val"  io="in"      type="s_linger"/>
+                        <ada_arg name="Error"    io="out"     type="errno_t" from="C_Error(R)"/>
+			<cases name="Opt_Name">
+				<case name="SO_LINGER"/>
+			</cases>
+		</func>
 <!--
 SO_SNDTIMEO  struct timeval
 Reports the timeout value specifying the amount of time that an output function blocks because flow control prevents data from being sent. If a send operation has blocked for this time, it shall return with a partial count or with errno set to [EAGAIN] or [EWOULDBLOCK] if no data was sent. The default for this option is zero, which indicates that a send operation shall not time out. The option shall store a timeval structure. Note that not all implementations allow this option to be retrieved.
 SO_RCVTIMEO struct timeval
 Reports the timeout value for input operations. This option shall store a timeval structure with the number of seconds and microseconds specifying the limit on how long to wait for an input operation to complete. If a receive operation has blocked for this much time without receiving additional data, it shall return with a partial count or errno set to [EAGAIN] or [EWOULDBLOCK] if no data was received. The default for this option is zero, which indicates that a receive operation shall not time out. Note that not all implementations allow this option to be retrieved.
-SO_LINGER
-Reports whether the socket lingers on close() if data is present. If SO_LINGER is set, the system shall block the calling thread during close() until it can transmit the data or until the end of the interval indicated by the l_linger member, whichever comes first. If SO_LINGER is not specified, and close() is issued, the system handles the call in a way that allows the calling thread to continue as quickly as possible. This option shall store a linger structure.
 SO_BINDTODEVICE
 SO_MARK 
 SO_PEERCRED

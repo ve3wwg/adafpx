@@ -170,6 +170,20 @@ begin
          end if;
       end;
 
+      declare
+         Linger : s_linger := ( l_onoff => 1, l_linger => 2 );
+      begin
+         Set_Sockopt(S,SOL_SOCKET,SO_LINGER,Linger,Error);
+         pragma Assert(Error = 0);
+
+         Linger.l_onoff := 0;
+         Linger.l_linger := 23;
+         Get_Sockopt(S,SOL_SOCKET,SO_LINGER,Linger,Error);
+         pragma Assert(Error = 0);
+         pragma Assert(Linger.l_onoff /= 0);
+         pragma Assert(Linger.l_linger = 2);
+      end;
+
       -- Close accepted socket
       Close(S,Error);
       pragma Assert(Error = 0);
