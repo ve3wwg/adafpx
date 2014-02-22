@@ -136,6 +136,40 @@ begin
       Close(L,Error);
       pragma Assert(Error = 0);
 
+      -- Test getsockopt(2)
+      declare
+         Sock_Error : int_t := -33;
+         Keep_Alive : int_t := -33;
+      begin
+         Get_Sockopt(S,SOL_SOCKET,SO_ERROR,Sock_Error,Error);
+         pragma Assert(Error = 0);
+         pragma Assert(Sock_Error = 0);
+
+         Get_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
+         pragma Assert(Error = 0);
+         pragma Assert(Keep_Alive = 0 or Keep_Alive = 1);
+
+         if Keep_Alive /= 0 then
+            Keep_Alive := 0;        -- Turn it off
+            Set_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
+            pragma Assert(Error = 0);
+
+            Keep_Alive := -95;
+            Get_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
+            pragma Assert(Error = 0);
+            pragma Assert(Keep_Alive = 0);
+         else
+            Keep_Alive := 1;        -- Turn it on
+            Set_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
+            pragma Assert(Error = 0);
+
+            Keep_Alive := -95;
+            Get_Sockopt(S,SOL_SOCKET,SO_KEEPALIVE,Keep_Alive,Error);
+            pragma Assert(Error = 0);
+            pragma Assert(Keep_Alive = 1);
+         end if;
+      end;
+
       -- Close accepted socket
       Close(S,Error);
       pragma Assert(Error = 0);
