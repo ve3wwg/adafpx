@@ -1118,7 +1118,7 @@
                                 <include file="arpa/inet.h"/>
 				<include file="netinet/in.h"/>
 				<include file="net/if.h"/>
-				<include file="netinet/ip_compat.h"/>
+				<include file="netinet/ip_compat.h" os="FreeBSD *"/>
                         </includes>
 			<macro name="IPPROTO_3PC"/>
 			<macro name="IPPROTO_ADFS"/>
@@ -1253,11 +1253,11 @@
                                 <include file="arpa/inet.h"/>
 				<include file="netinet/in.h"/>
 				<include file="net/if.h"/>
-				<include file="netinet/ip_compat.h"/>
-				<include file="netinet/ip_fw.h"/>
+				<include file="netinet/ip_compat.h" os="FreeBSD *"/>
+				<include file="netinet/ip_fw.h" os="FreeBSD *"/>
 				<include file="netinet/ip.h"/>
-				<include file="netinet/ip_fil.h"/>
-				<include file="netinet/ip_pool.h"/>
+				<include file="netinet/ip_fil.h" os="FreeBSD *"/>
+				<include file="netinet/ip_pool.h" os="FreeBSD *"/>
                         </includes>
 			<macro name="IP_ADD_MEMBERSHIP"/>
 			<macro name="IP_ADD_SOURCE_MEMBERSHIP"/>
