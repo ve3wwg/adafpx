@@ -5269,7 +5269,7 @@ SO_SNDBUFFORCE
                         <ada_arg name="Buf"      io="out" type="uchar_array" from="implied"/>
 			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
 			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
-                        <ada_arg name="Addr"     io="out" type="s_sockaddr" from="implied"/>
+                        <ada_arg name="Addr"     io="out" type="u_sockaddr" from="implied"/>
 			<ada_arg name="Addr_Len" io="out" type="socklen_t" from="L"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 			<temp name="L" type="socklen_t" init="Addr'Size/8"/>
@@ -5291,7 +5291,27 @@ SO_SNDBUFFORCE
                         <ada_arg name="Buf"      io="in"  type="uchar_array"/>
 			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
 			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr" from="implied"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr_in" from="implied"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="sendto" return="ssize_t" ada_type="procedure" rname="R" ada_name="Sendto"
+		 inline="1" 
+		 os="Linux *|FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/socket.h"/>
+			</includes>
+                        <c_arg   name="sockfd"   type="fd_t"  from="Sock_Fd"/>
+                        <c_arg   name="buf"      type="System.Address" from="Buf'Address"/>
+			<c_arg   name="len"      type="size_t" from="size_t(Buf'Length)"/>
+			<c_arg	 name="flags"	 type="uint_t" from="Flags"/>
+			<c_arg	 name="src_addr" type="System.Address" from="Addr'Address"/>
+			<c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
+                        <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
+                        <ada_arg name="Buf"      io="in"  type="uchar_array"/>
+			<ada_arg name="Flags"	 io="in"  type="uint_t"/>
+			<ada_arg name="Count"    io="out" type="Natural" from="Pos_Natural(R)"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr_un" from="implied"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="recvmsg" return="ssize_t" ada_type="procedure" rname="R" ada_name="Recvmsg"
