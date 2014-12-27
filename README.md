@@ -19,3 +19,10 @@ include:
 
 but not necessarily in that priority.
 
+
+Build and Test:
+===============
+
+    $ make clobber
+    $ make
+    $ make tests
