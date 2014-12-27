@@ -14,3 +14,5 @@ posix.adb
 posix.ads
 posix.defs
 staging
+.errs.t
+t.t
