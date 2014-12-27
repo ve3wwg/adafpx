@@ -5454,15 +5454,11 @@ SO_SNDBUFFORCE
 		</func>
 	</section2>
 
-<!--    ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags); -->
-
-	accept(), bind(), connect(), getpeername(), getsockname(), getsockopt(),
-	listen(), recv(), recvfrom(), recvmsg(), send(), sendmsg(), sendto(),
-	setsockopt(), shutdown(), socket(), socketpair().
-
 	<!-- Outstanding functions:
+		kqueue(2), epoll(2)
+	
 		initgroups
-		select
+		select, poll
 		reboot : Linux
 		scandir(3) : Linux
 		vm86plus_struct : Linux i386
