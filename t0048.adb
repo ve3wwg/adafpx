@@ -11,6 +11,9 @@ with Ada.Text_IO;
 with Posix;
 use Posix;
 
+with System;
+use System;
+
 procedure T0048 is
    use Ada.Text_IO;
 
@@ -67,6 +70,16 @@ begin
       -- Connect to the client process
       Connect(S,Inet_C_Addr,Error);
       pragma Assert(Error = 0);
+
+      -- Write something
+      declare
+         Msg :    constant uchar_array := To_uchar_array("Hello!");
+         Count :  Natural;
+      begin
+         Write(S,uchar_array(Msg),Count,Error);
+         pragma Assert(Error = 0);
+         pragma Assert(Count = Msg'Length);
+      end;
 
       -- Close the socket
       Close(S,Error);
@@ -164,6 +177,58 @@ begin
             end;      
          end;
       end;
+
+#if POSIX_FAMILY = "FreeBSD" or POSIX_FAMILY = "Darwin"
+
+      -- Test KQueue
+      declare
+         Kq :        fd_t;
+         Chgs :      s_kevent_array(1..1);
+         Evts :      s_kevent_array(1..1);
+         N_Evts :    Natural := 0;
+         Timeout :   constant s_timespec := ( tv_sec => 1, tv_nsec => 0 );
+      begin
+         KQueue(Kq,Error);
+         pragma Assert(Kq >= 0);
+
+         Chgs(1).ident := uint64_t(S);
+         Chgs(1).filter := EVFILT_READ;
+         Chgs(1).flags := EV_ADD;
+         Chgs(1).fflags := 0;
+         Chgs(1).udata := Null_Address;
+         
+         loop
+            KEvent(Kq,Chgs,1,Timeout,Evts,N_Evts,Error);
+            pragma assert(Error = 0);
+
+            exit when N_Evts > 0;
+         end loop;
+
+         pragma Assert(N_Evts > 0);
+         pragma Assert(Evts(1).ident = uint64_t(S));
+         pragma Assert(Evts(1).filter = EVFILT_READ);
+         pragma Assert(Evts(1).data > 0);
+         pragma Assert(Evts(1).udata = Null_Address);
+
+         declare
+            Rx_Avail :  constant Natural := Natural(Evts(1).data);
+            Rx_Buf :    uchar_array(1..Rx_Avail);
+            Last :      Natural;
+         begin
+            Read(S,Rx_Buf,Last,Error);
+            pragma Assert(Error = 0);
+            pragma Assert(Last = Rx_Avail);
+            
+            Put("Got msg '");
+            Put(To_String(Rx_Buf(1..Last)));
+            Put_Line("'");
+         end;
+
+         Close(Kq,Error);
+         pragma Assert(Error = 0);
+      end;
+
+#end if;
 
       -- Close listening socket
       Close(L,Error);
