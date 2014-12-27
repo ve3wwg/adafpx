@@ -118,6 +118,21 @@ begin
 
          pragma Assert(S >= 0);
 
+         -- Display local socket address
+         declare
+            Local_Addr :   u_sockaddr;
+            Addr_Len :     socklen_t;
+            Str_Addr :  String(1..300);
+            Last :      Natural := 0;
+         begin
+            Getsockname(S,Local_Addr,Addr_Len,Error);
+            pragma Assert(Error = 0);
+            pragma Assert(Local_Addr.addr_sock.sa_family = AF_INET);
+            Inet_Ntop(Local_Addr.addr_in.sin_addr,Str_Addr,Last,Error);
+            pragma Assert(Error = 0);
+            Put_Line("Local name is " & Str_Addr(1..Last) & ":" & ushort_t'Image(Ntohs(Local_Addr.addr_in.sin_port)));
+         end;
+
          -- Display peer's address
          declare
             Peer_Addr : constant s_sockaddr_in := To_Inet_Addr(Peer);
@@ -129,6 +144,23 @@ begin
             pragma Assert(Error = 0);
 
             Put_Line("Received connect from " & Str_Addr(1..Last) & ":" & ushort_t'Image(Port));
+
+            -- Test Getpeername
+            declare
+               Peer_Name : u_sockaddr;
+               Name_Len :  socklen_t;
+               Buf2 :      String(1..300);
+               Last2 :     Natural := 0;
+            begin
+               Getpeername(S,Peer_Name,Name_Len,Error);
+               pragma Assert(Error = 0);
+               pragma Assert(Peer_Name.addr_sock.sa_family = AF_INET);
+               Inet_Ntop(Peer_Name.addr_in.sin_addr,Buf2,Last2,Error);
+               pragma Assert(Error = 0);
+               pragma Assert(Buf2(1..Last2) = Str_Addr(1..Last));         
+
+               Put_Line("Peer name is " & Str_Addr(1..Last) & ":" & ushort_t'Image(Ntohs(Peer_Name.addr_in.sin_port)));
+            end;      
          end;
       end;
 
