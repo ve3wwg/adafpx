@@ -1900,6 +1900,13 @@
 				<include file="arpa/inet.h"/>
 			</includes>
 		</struct>
+		<struct name="kevent" ada="s_kevent" genset="632" os="FreeBSD *|Darwin *" array="Natural range <>">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/event.h"/>
+				<include file="sys/time.h"/>
+			</includes>
+		</struct>
 	</structs>
 	<section2 genset="700">
 		<func name="open" return="int_t" ada_type="procedure" rname="R" ada_name="Open" inline="1" test="1">
@@ -5452,10 +5459,41 @@ SO_SNDBUFFORCE
 			<c_arg	 name="netshort"  type="uint16_t" from="Net_Short"/>
 			<ada_arg name="Net_Short" io="in" type="uint16_t"/>
 		</func>
+		<func name="kqueue" return="int_t" ada_type="procedure" rname="R" ada_name="Kqueue" os="FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/event.h"/>
+				<include file="sys/time.h"/>
+			</includes>
+			<ada_arg name="Fd"	 io="out" type="fd_t" from="fd_t(R)"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+		</func>
+		<func name="kevent" return="int_t" ada_type="procedure" rname="R" ada_name="Kevent" os="FreeBSD *|Darwin *">
+			<includes>
+				<include file="sys/types.h"/>
+				<include file="sys/event.h"/>
+				<include file="sys/time.h"/>
+			</includes>
+                        <c_arg   name="kq"       type="fd_t"  from="Kq_Fd"/>
+			<c_arg   name="chglst"   type="System.Address" from="Changes'Address"/>
+			<c_arg   name="n_chg"    type="int_t" from="int_t(N_Chgs)"/>
+                        <c_arg   name="evts"     type="System.Address" from="Events'Address"/>
+			<c_arg   name="nevt"	 type="int_t" from="NEvt"/>
+			<c_arg	 name="timout"   type="System.Address" from="Timeout'Address"/>
+
+                        <ada_arg name="Kq_Fd"    io="in"  type="fd_t"/>
+			<ada_arg name="Changes"  io="in"  type="s_kevent_array"/>
+			<ada_arg name="N_Chgs"   io="in"  type="Natural"/>
+			<ada_arg name="Timeout"  io="in"  type="s_timespec"/>
+                        <ada_arg name="Events"   io="out" type="s_kevent_array" from="implied"/>
+			<ada_arg name="Ret_Evt"  io="out" type="Natural" from="To_Count(R)"/>
+                        <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
+			<temp name="NEvt" type="constant int_t" init="Events'Length"/>
+		</func>
 	</section2>
 
 	<!-- Outstanding functions:
-		kqueue(2), epoll(2)
+		epoll(2) : Linux
 	
 		initgroups
 		select, poll
