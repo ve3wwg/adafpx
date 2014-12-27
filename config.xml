@@ -5090,7 +5090,7 @@ SO_SNDBUFFORCE
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
                         <c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr_in"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="connect" return="int_t" ada_type="procedure" rname="R" ada_name="Connect"
@@ -5104,7 +5104,7 @@ SO_SNDBUFFORCE
                         <c_arg   name="addr"     type="System.Address" from="Addr'Address"/>
                         <c_arg   name="addrlen"  type="socklen_t" from="Addr'Size/8"/>
                         <ada_arg name="Sock_Fd"  io="in"  type="fd_t"/>
-                        <ada_arg name="Addr"     io="in"  type="s_sockaddr"/>
+                        <ada_arg name="Addr"     io="in"  type="s_sockaddr_in"/>
                         <ada_arg name="Error"    io="out" type="errno_t" from="C_Error(R)"/>
 		</func>
 		<func name="connectat" return="int_t" ada_type="procedure" rname="R" ada_name="Connect_At"

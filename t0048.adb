@@ -65,7 +65,7 @@ begin
       Sleep(2);
 
       -- Connect to the client process
-      Connect(S,To_Sock_Addr(Inet_C_Addr),Error);
+      Connect(S,Inet_C_Addr,Error);
       pragma Assert(Error = 0);
 
       -- Close the socket
@@ -97,7 +97,7 @@ begin
       pragma Assert(Error = 0);
 
       -- Bind to the address:
-      Bind(L,To_Sock_Addr(Inet_C_Addr),Error);
+      Bind(L,Inet_C_Addr,Error);
       pragma Assert(Error = 0);
 
       loop
