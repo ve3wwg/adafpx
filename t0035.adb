@@ -61,16 +61,15 @@ begin
 
    pragma Assert(Count1 = Count2);
 
-   Rewinddir(D);
+   -- Ignore the return status of this call
+   Readdir(D,Dirent,Eof,Error); -- Just change the dir pos
+
    Seekdir(D,Dir_Pos,Error);
    pragma Assert(Error = 0);
 
    Telldir(D,Dir_Pos2,Error);
    pragma Assert(Error = 0);
-
-#if not POSIX_FAMILY = "FreeBSD"
    pragma Assert(Dir_Pos = Dir_Pos2);
-#end if;
 
    Readdir(D,Dirent,Eof,Error);
    pragma Assert(Error = 0);
