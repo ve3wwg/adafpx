@@ -6,15 +6,15 @@ V	?= 0
 
 .SUFFIXES: .yacc .flex .cpp .hpp .adb
 
-YACC	?= bison
-FLEX	?= flex
+YACC	= bison # Must use bison
+FLEX	= flex # Must use flex
 
 CSTD	?= -std=c++0x
 OPTZ	?= -O0 -g
 CFLAGS	+= -Wno-deprecated-register
 
-CXX	= g++
-CC	= gcc
+CXX	?= g++
+CC	?= gcc
 
 GNAT	= gnatmake
 GNATOPTS = -Wall -g -gnata -gnatep=gnat.prep
@@ -25,7 +25,7 @@ GNATOPTS = -Wall -g -gnata -gnatep=gnat.prep
 	$(GNAT) $(GNATOPTS) $*.adb -o $* -L. -largs libadafpx.a
 
 .yacc.cpp:
-ifeq	($(V),ne,0)
+ifneq	($(V),0)
 	$(YACC) -o $*.cpp --defines=$*.hpp $<
 else
 	@echo YACC $<
@@ -33,7 +33,7 @@ else
 endif
 
 .flex.cpp:
-ifeq	($(V),ne,0)
+ifneq	($(V),0)
 	$(FLEX) --outfile=$*.cpp $<
 #	$(FLEX) -d --outfile=$*.cpp $<
 else
@@ -42,7 +42,7 @@ else
 endif
 
 .cpp.o:
-ifeq	($(V),ne,0)
+ifneq	($(V),0)
 	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(CFLAGS) $(INCL) $< -o $*.o
 else
 	@echo CXX $<
@@ -50,7 +50,7 @@ else
 endif
 
 .c.o:
-ifeq	($(V),ne,0)
+ifneq	($(V),0)
 	$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(CFLAGS) $(INCL) $< -o $*.o
 else
 	echo CC $<
