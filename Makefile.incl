@@ -2,8 +2,12 @@
 #  Makefile.incl
 ######################################################################
 
-YACC	= bison
-FLEX	= flex
+V	?= 0
+
+.SUFFIXES: .yacc .flex .cpp .hpp .adb
+
+YACC	?= bison
+FLEX	?= flex
 
 CSTD	?= -std=c++0x
 OPTZ	?= -O0 -g
@@ -20,11 +24,37 @@ GNATOPTS = -Wall -g -gnata -gnatep=gnat.prep
 .adb:
 	$(GNAT) $(GNATOPTS) $*.adb -o $* -L. -largs libadafpx.a
 
+.yacc.cpp:
+ifeq	($(V),ne,0)
+	$(YACC) -o $*.cpp --defines=$*.hpp $<
+else
+	@echo YACC $<
+	@$(YACC) -o $*.cpp --defines=$*.hpp $<
+endif
+
+.flex.cpp:
+ifeq	($(V),ne,0)
+	$(FLEX) --outfile=$*.cpp $<
+#	$(FLEX) -d --outfile=$*.cpp $<
+else
+	@echo FLEX $<
+	@$(FLEX) --outfile=$*.cpp $<
+endif
+
 .cpp.o:
+ifeq	($(V),ne,0)
 	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(CFLAGS) $(INCL) $< -o $*.o
+else
+	@echo CXX $<
+	@$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(CFLAGS) $(INCL) $< -o $*.o
+endif
 
 .c.o:
+ifeq	($(V),ne,0)
 	$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(CFLAGS) $(INCL) $< -o $*.o
-
+else
+	echo CC $<
+	@$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(CFLAGS) $(INCL) $< -o $*.o
+endif
 
 # End Makefile.incl

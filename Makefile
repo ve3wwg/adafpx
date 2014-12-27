@@ -5,15 +5,6 @@
 include Makefile.incl
 -include Makefile.tests
 
-.SUFFIXES: .yacc .flex .cpp .hpp .adb
-
-.yacc.cpp:
-	$(YACC) -o $*.cpp --defines=$*.hpp $<
-
-.flex.cpp:
-	$(FLEX) --outfile=$*.cpp $<
-#	$(FLEX) -d --outfile=$*.cpp $<
-
 all:	main run atest
 
 OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \
