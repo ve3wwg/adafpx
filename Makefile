@@ -14,15 +14,6 @@ include Makefile.incl
 	$(FLEX) --outfile=$*.cpp $<
 #	$(FLEX) -d --outfile=$*.cpp $<
 
-.adb:
-	$(GNAT) $(GNATOPTS) $*.adb -o $* -L. -largs libadafpx.a
-
-.cpp.o:
-	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(INCL) $< -o $*.o
-
-.c.o:
-	$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(INCL) $< -o $*.o
-
 all:	main run atest
 
 OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \
@@ -63,6 +54,8 @@ clobber: clean
 	rm -f ansi-c-lex.cpp ansi-c-yacc.cpp ansi-c-yacc.hpp errs.t main core*
 	rm -f posix.ads posix.adb
 	rm -f Makefile.tests
+
+distclean: clobber
 
 ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 
