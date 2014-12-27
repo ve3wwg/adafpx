@@ -108,22 +108,24 @@ begin
 
       -- Accept one connect
       declare
-         Peer :   s_sockaddr;
+         Peer :      u_sockaddr;
+         Peer_Len :  socklen_t;
       begin
          loop
-            Accept_Connect(L,Peer,S,Error);
+            Accept_Connect(L,Peer,Peer_Len,S,Error);
             exit when Error = 0;
             pragma Assert(Error = EINTR);
          end loop;
 
          pragma Assert(S >= 0);
+         pragma Assert(Peer.addr_sock.sa_family = AF_INET);
 
          -- Display local socket address
          declare
             Local_Addr :   u_sockaddr;
             Addr_Len :     socklen_t;
-            Str_Addr :  String(1..300);
-            Last :      Natural := 0;
+            Str_Addr :     String(1..300);
+            Last :         Natural := 0;
          begin
             Getsockname(S,Local_Addr,Addr_Len,Error);
             pragma Assert(Error = 0);
@@ -135,12 +137,11 @@ begin
 
          -- Display peer's address
          declare
-            Peer_Addr : constant s_sockaddr_in := To_Inet_Addr(Peer);
             Str_Addr :  String(1..300);
             Last :      Natural := 0;
-            Port :      constant ushort_t := Ntohs(Peer_Addr.sin_port);
+            Port :      constant ushort_t := Ntohs(Peer.addr_in.sin_port);
          begin
-            Inet_Ntop(Peer_Addr.sin_addr,Str_Addr,Last,Error);
+            Inet_Ntop(Peer.addr_in.sin_addr,Str_Addr,Last,Error);
             pragma Assert(Error = 0);
 
             Put_Line("Received connect from " & Str_Addr(1..Last) & ":" & ushort_t'Image(Port));
