@@ -1,3 +1,5 @@
 "t0016.adb" "posix.defs" -u
 "t0035.adb" "posix.defs" -u
 "t0047.adb" "posix.defs" -u
+"t0048.adb" "posix.defs" -u
+
