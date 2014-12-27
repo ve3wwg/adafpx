@@ -1450,6 +1450,66 @@
 			<macro name="IP_VS_VERSION_CODE"/>
 			<macro name="IP_XFRM_POLICY"/>
 		</set>
+		<set type="int16_t" genset="360" os="FreeBSD *|Darwin *">
+                        <includes>
+			     <include file="sys/types.h"/>
+			     <include file="sys/event.h"/>
+			     <include file="sys/time.h"/>
+                        </includes>
+			<macro name="EVFILT_READ"/>
+			<macro name="EVFILT_WRITE"/>
+			<macro name="EVFILT_AIO"/>
+			<macro name="EVFILT_VNODE"/>
+			<macro name="EVFILT_PROC"/>
+			<macro name="EVFILT_SIGNAL"/>
+			<macro name="EVFILT_TIMER"/>
+			<macro name="EVFILT_USER"/>
+               </set>
+		<set genset="361" format="16#%08X#" os="FreeBSD *|Darwin *">
+                        <includes>
+			     <include file="sys/types.h"/>
+			     <include file="sys/event.h"/>
+			     <include file="sys/time.h"/>
+                        </includes>
+
+			<macro name="EV_ADD"/>
+			<macro name="EV_ENABLE"/>
+			<macro name="EV_DISABLE"/>
+			<macro name="EV_DISPATCH"/>
+			<macro name="EV_DELETE"/>
+			<macro name="EV_RECEIPT"/>
+			<macro name="EV_ONESHOT"/>
+			<macro name="EV_CLEAR"/>
+			<macro name="EV_EOF"/>
+		</set>
+		<set genset="362" format="16#%08X#" os="FreeBSD *|Darwin *">
+                        <includes>
+			     <include file="sys/types.h"/>
+			     <include file="sys/event.h"/>
+			     <include file="sys/time.h"/>
+                        </includes>
+			<macro name="EV_ERROR"/>
+
+			<macro name="NOTE_DELETE"/>
+			<macro name="NOTE_WRITE"/>
+			<macro name="NOTE_EXTEND"/>
+			<macro name="NOTE_ATTRIB"/>
+			<macro name="NOTE_LINK"/>
+			<macro name="NOTE_RENAME"/>
+			<macro name="NOTE_REVOKE"/>
+			<macro name="NOTE_EXIT"/>
+			<macro name="NOTE_FORK"/>
+			<macro name="NOTE_EXEC"/>
+			<macro name="NOTE_TRACK"/>
+			<macro name="NOTE_CHILD"/>
+			<macro name="NOTE_FFNOP"/>
+			<macro name="NOTE_FFAND"/>
+			<macro name="NOTE_FFOR"/>
+			<macro name="NOTE_FFCOPY"/>
+			<macro name="NOTE_FFCTRLMASK"/>
+			<macro name="NOTE_FFLAGSMASK"/>
+			<macro name="NOTE_TRIGGER"/>
+		</set>
 	</macro_constants>
 	<structs>
 		<struct name="timespec" alt="_timespec" ada="s_timespec" genset="400">
