@@ -7,6 +7,7 @@ FLEX	= flex
 
 CSTD	?= -std=c++0x
 OPTZ	?= -O0 -g
+CFLAGS	+= -Wno-deprecated-register
 
 CXX	= g++
 CC	= gcc
@@ -15,5 +16,15 @@ GNAT	= gnatmake
 GNATOPTS = -Wall -g -gnata -gnatep=gnat.prep
 
 -include Makefile.custom
+
+.adb:
+	$(GNAT) $(GNATOPTS) $*.adb -o $* -L. -largs libadafpx.a
+
+.cpp.o:
+	$(CXX) -c -Wall -Wno-unused-function $(OPTZ) $(CSTD) $(CFLAGS) $(INCL) $< -o $*.o
+
+.c.o:
+	$(CC) -c -Wall -Wno-unused-function $(OPTZ) $(CFLAGS) $(INCL) $< -o $*.o
+
 
 # End Makefile.incl
