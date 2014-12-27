@@ -18,7 +18,6 @@ procedure T0017 is
    Old_Mask :  mode_t;
    S :         s_stat;
    Error :     errno_t;
-   Times :     s_utimbuf;
 begin
 
    Put_Line("Test 0017 - Chmod/FChmod");

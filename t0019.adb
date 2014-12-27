@@ -16,7 +16,6 @@ procedure T0019 is
    Path0 :     constant String := "Makefile";
    Path :      constant String := "Test_0019";
    My_Uid :    constant uid_t := Geteuid;
-   Fd :        fd_t;
    S :         s_stat;
    Error :     errno_t;
    Confirms :  Natural := 0;

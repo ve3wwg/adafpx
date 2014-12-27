@@ -43,7 +43,7 @@ package body P0029 is
 
 
    procedure Test is
-      Pid :    pid_t := Getpid;
+      Pid :    constant pid_t := Getpid;
       Sigs :   sigset_t;
       Secs :   uint_t;
       Error :  errno_t;

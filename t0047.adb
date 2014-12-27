@@ -42,6 +42,7 @@ begin
 
    -- Put control messages into Ctl_Buf
    Ctl_Len := 0;
+   Ctl_Buf := ( 0, others => 0 );
    Put_Cmsg(Ctl_Buf,Ctl_Len,9,99,F'Address,F'Size/8,Accepted);
    pragma Assert(Accepted);
    Put_Cmsg(Ctl_Buf,Ctl_Len,1,11,I'Address,I'Size/8,Accepted);

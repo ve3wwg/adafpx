@@ -12,8 +12,6 @@ use Posix;
 
 procedure T0038 is
    use Ada.Text_IO;    
-
-   Error :     errno_t;
 begin
 
    Put_Line("Test 0038 - Syslog");
