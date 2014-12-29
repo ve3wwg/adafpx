@@ -81,6 +81,10 @@ begin
          pragma Assert(Count = Msg'Length);
       end;
 
+      -- Test Shutdown(2)
+      Shutdown(S,SHUT_RD,Error);
+      pragma Assert(Error = 0);
+
       -- Close the socket
       Close(S,Error);
       pragma Assert(Error = 0);
