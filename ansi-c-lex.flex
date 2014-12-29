@@ -110,6 +110,7 @@ static int structunion = 0;
 "__const"		{ count(); return(CONST); }
 "__inline"		{ count(); return(INLINE); }
 "__inline__"		{ count(); return(INLINE); }	/* Mac OSX */
+"deprecated"		{ count(); return(DEPRECATED); }
 
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 

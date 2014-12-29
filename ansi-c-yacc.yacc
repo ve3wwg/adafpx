@@ -62,7 +62,7 @@ extern int yylex();
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%token ATTRIBUTE ASM ASM2
+%token ATTRIBUTE ASM ASM2 DEPRECATED
 
 %start translation_unit
 %%
@@ -89,6 +89,7 @@ attribute_clause_list
 attribute_clause
 	: ATTRIBUTE '(' '(' ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER ')' ')'
+	| ATTRIBUTE '(' '(' DEPRECATED ')' ')'
 	| ATTRIBUTE '(' '(' CONST ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')' ')' ')'
 	;
@@ -101,6 +102,7 @@ attribute_list
 attr_parm
 	: IDENTIFIER
 	| IDENTIFIER '=' attr_const
+	| DEPRECATED '=' attr_const
 	| CONSTANT
 	;
 
@@ -848,6 +850,8 @@ enumerator_list
 enumerator
 	: IDENTIFIER
 	| IDENTIFIER '=' constant_expression
+	| IDENTIFIER ATTRIBUTE '(' '(' DEPRECATED '(' STRING_LITERAL ')' ')' ')'
+	| IDENTIFIER ATTRIBUTE '(' '(' DEPRECATED '(' STRING_LITERAL ')' ')' ')' '=' constant_expression
 	;
 
 type_qualifier
