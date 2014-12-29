@@ -15,6 +15,7 @@ CFLAGS	+= -Wno-deprecated-register
 
 CXX	?= g++
 CC	?= gcc
+SED	?= sed
 
 GNAT	= gnatmake
 GNATOPTS = -Wall -g -gnata -gnatep=gnat.prep
@@ -35,10 +36,11 @@ endif
 .flex.cpp:
 ifneq	($(V),0)
 	$(FLEX) --outfile=$*.cpp $<
-#	$(FLEX) -d --outfile=$*.cpp $<
+	$(SED) 's/for ( i = 0; i < _yybytes_len; ++i )/for ( i = 0; yy_size_t(i) < _yybytes_len; ++i )/' <$*.cpp >.sed && mv .sed $*.cpp
 else
 	@echo FLEX $<
 	@$(FLEX) --outfile=$*.cpp $<
+	@$(SED) 's/for ( i = 0; i < _yybytes_len; ++i )/for ( i = 0; yy_size_t(i) < _yybytes_len; ++i )/' <$*.cpp >.sed && mv .sed $*.cpp
 endif
 
 .cpp.o:
