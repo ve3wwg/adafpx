@@ -1793,7 +1793,7 @@
 				<member name="sem_ctime" pref="time_t"/>
 			</members>
 		</struct>
-		<struct name="__semid_ds_new" ada="s_semid_ds" genset="600" os="Darwin 13.*|Darwin 14.*">
+		<struct name="__semid_ds_new" ada="s_semid_ds" genset="600" os="Darwin 13.*|Darwin 14.*|Darwin 15.*">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
