@@ -62,7 +62,7 @@ extern int yylex();
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%token ATTRIBUTE ASM ASM2 DEPRECATED
+%token ATTRIBUTE ASM ASM2 DEPRECATED AVAILABILITY UNAVAILABLE INTRODUCED ALIGNED
 
 %start translation_unit
 %%
@@ -90,8 +90,9 @@ attribute_clause
 	: ATTRIBUTE '(' '(' ')' ')'
 	| ATTRIBUTE '(' '(' IDENTIFIER ')' ')'
 	| ATTRIBUTE '(' '(' DEPRECATED ')' ')'
+	| ATTRIBUTE '(' '(' AVAILABILITY '(' attribute_list ')' ')' ')' 
+	| ATTRIBUTE '(' '(' ALIGNED '(' CONSTANT ')' ')' ')' 
 	| ATTRIBUTE '(' '(' CONST ')' ')'
-	| ATTRIBUTE '(' '(' IDENTIFIER '(' attribute_list ')' ')' ')'
 	;
 
 attribute_list
@@ -101,8 +102,10 @@ attribute_list
 
 attr_parm
 	: IDENTIFIER
+	| UNAVAILABLE
 	| IDENTIFIER '=' attr_const
 	| DEPRECATED '=' attr_const
+	| INTRODUCED '=' attr_const
 	| CONSTANT
 	;
 
@@ -426,7 +429,7 @@ declaration
 		if ( $$ )
 			dump($$,"declaration_specifiers ';'");
 	}
-	| attribute_clause declaration_specifiers ';' {
+	| attribute_clause_list declaration_specifiers ';' {
 		$$ = $2;
 		if ( $$ )
 			dump($$,"attr declaration_specifiers ';'");
@@ -474,7 +477,7 @@ declaration
 			$$ = 0;
 		}
 	}
-	| attribute_clause declaration_specifiers init_declarator_list ';' {
+	| attribute_clause_list declaration_specifiers init_declarator_list ';' {
 		if ( $2 != 0 ) {
 			s_node& decl = Get($2);
 
