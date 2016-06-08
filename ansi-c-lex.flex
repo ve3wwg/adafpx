@@ -111,6 +111,10 @@ static int structunion = 0;
 "__inline"		{ count(); return(INLINE); }
 "__inline__"		{ count(); return(INLINE); }	/* Mac OSX */
 "deprecated"		{ count(); return(DEPRECATED); }
+"availability"		{ count(); return(AVAILABILITY); }
+"unavailable"		{ count(); return(UNAVAILABLE); }
+"introduced"		{ count(); return(INTRODUCED); }
+"aligned"		{ count(); return(ALIGNED); }
 
 {L}({L}|{D})*		{ count(); return ident_type(reg_sym(yytext)); }
 
