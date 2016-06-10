@@ -1,9 +1,9 @@
-static void break_me() { return; }
-
 ///////////////////////////////////////////////////////////////////////
 // structs.cpp -- Compile struct Definitions
 // Date: Wed Dec  4 07:44:18 2013
 ///////////////////////////////////////////////////////////////////////
+
+static void break_me() { return; }
 
 #include <stdlib.h>
 #include <unistd.h>
