@@ -6,10 +6,10 @@
 		<define symbol="POSIX_VERSION" string="%version"/>
 	</gnatprep>
 	<copies>
-		<copy name="0005.ads"/>
-		<copy name="0005.adb"/>
-		<copy name="0060.ads"/>
-		<copy name="0077.ads"/>
+		<copy name="0050.ads"/>
+		<copy name="0050.adb"/>
+		<copy name="0600.ads"/>
+		<copy name="0790.ads"/>
 		<copy name="4990.ads"/>
 		<copy name="8000.ads"/>
 		<copy name="9900.ads"/>
@@ -20,7 +20,7 @@
 		<builtin type="__builtin_va_list" os="Darwin *"/>
 		<builtin type="__builtin_va_list" os="FreeBSD *"/>
 	</builtin_types>
-	<basic_types genset="50">
+	<basic_types genset="500">
 		<type name="char" ada="char_t"/>
 		<type name="short" ada="short_t"/>
 		<type name="int" ada="int_t"/>
@@ -28,7 +28,7 @@
 		<type name="long long" ada="llong_t"/>
 	<!--	<type name="void*"/>  -->
 	</basic_types>
-	<posix_types genset="75">
+	<posix_types genset="750">
 		<includes>
 			<include file="stdint.h"/>
 			<include file="time.h"/>
@@ -73,13 +73,13 @@
 		<type name="socklen_t"/>
 		<type name="in_addr_t"/>         
 	</posix_types>
-	<ada_types genset="105">
+	<ada_types genset="1005">
 		<type name="fd_t" type="int_t" range="-1..int_t'Last"
 			array="fd_array_t"     array_range="Natural range <>"
 		/>
 	</ada_types>
 	<macro_constants>
-		<set type="errno_t" format="%ld" genset="110">
+		<set type="errno_t" format="%ld" genset="1010">
 			<includes>
 				<include file="errno.h" os="Darwin 13.*.*"/>
 				<include file="errno.h"/>
@@ -192,7 +192,7 @@
 			<macro name="EOWNERDEAD"/>
 			<macro name="ELAST"/>
 		</set>
-		<set type="fcntl_t" genset="120">
+		<set type="fcntl_t" genset="1020">
 			<includes>
 				<include file="fcntl.h"/>
 			</includes>
@@ -223,7 +223,7 @@
 			<macro name="F_ALLOCATECONTIG"/>
 			<macro name="F_ALLOCATEALL"/>
 		</set>
-                <set type="" genset="125">
+                <set type="" genset="1025">
 			<includes>
 				<include file="fcntl.h"/>
 			</includes>
@@ -231,7 +231,7 @@
 			<macro name="F_WRLCK"/>
 			<macro name="F_UNLCK"/>
 		</set>
-		<set type="" genset="130">
+		<set type="" genset="1030">
 			<includes>
 				<include file="sys/wait.h"/>
 			</includes>
@@ -239,7 +239,7 @@
 			<macro name="WUNTRACED"/>
 			<macro name="WCONTINUED"/>
 		</set>
-		<set type = "" genset="140" format="8#%06o#">
+		<set type = "" genset="1040" format="8#%06o#">
 			<includes>
 				<include file="sys/stat.h"/>
 			</includes>
@@ -267,7 +267,7 @@
 			<macro name="S_IFCHR"/>
 			<macro name="S_IFIFO"/>
 		</set>
-		<set type="uchar_t" genset="143" format="%d">
+		<set type="uchar_t" genset="1043" format="%d">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="dirent.h"/>
@@ -282,7 +282,7 @@
 			<macro name="DT_SOCK"/>
 			<macro name="DT_UNKNOWN"/>
 		</set>
-		<set type="prio_t" genset="145" format="16#%08X#">
+		<set type="prio_t" genset="1045" format="16#%08X#">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -293,12 +293,12 @@
 			<macro name="PRIO_DARWIN_PROCESS"/>
 			<macro name="PRIO_DARWIN_BG"/>
 		</set>
-		<set type="whence_t" genset="150">
+		<set type="whence_t" genset="1050">
 			<macro name="SEEK_SET"/>
 			<macro name="SEEK_CUR"/>
 			<macro name="SEEK_END"/>
 		</set>
-		<set type="mntflags_t" genset="160" format="16#%08X#">
+		<set type="mntflags_t" genset="1060" format="16#%08X#">
 			<includes>
 				<include file="sys/param.h"/>
 				<include file="sys/mount.h"/>
@@ -331,7 +331,7 @@
 			<macro name="MNT_RELOAD"/>
 			<macro name="UMOUNT_NOFOLOW"/>
 		</set>
-		<set type="ptrace_t" genset="170">
+		<set type="ptrace_t" genset="1070">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ptrace.h"/>
@@ -344,7 +344,7 @@
 			<macro name="PT_ATTACH"/>
 			<macro name="PT_DETACH"/>
 		</set>
-		<set type="amode_t" genset="180">
+		<set type="amode_t" genset="1080">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -352,7 +352,7 @@
 			<macro name="W_OK"/>
 			<macro name="F_OK"/>
 		</set>
-		<set type="sig_t" genset="190">
+		<set type="sig_t" genset="1090">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -394,7 +394,7 @@
 			<macro name="SIG_HOLD"/>
 			<macro name="SIG_ERR"/>
 		</set>
-		<set type="sigpmop_t" genset="192">
+		<set type="sigpmop_t" genset="1092">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -402,7 +402,7 @@
 			<macro name="SIG_UNBLOCK"/>
 			<macro name="SIG_SETMASK"/>
 		</set>
-		<set type="" genset="194">
+		<set type="" genset="1094">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
@@ -414,25 +414,25 @@
 			<macro name="SA_RESTART"/>
 			<macro name="SA_SIGINFO"/>
 		</set>
-		<set type="" genset="200">
+		<set type="" genset="2000">
 			<includes>
 				<include file="sys/param.h"/>
 			</includes>
 			<macro name="MAXPATHLEN"/>
 		</set>
-		<set type="" genset="210">
+		<set type="" genset="2010">
 			<includes>
 				<include file="fcntl.h"/>
 			</includes>
 			<macro name="FD_CLOEXEC"/>
 		</set>
-		<set type="" genset="220">
+		<set type="" genset="2020">
 			<includes>
 				<include file="sys/utsname.h"/>
 			</includes>
 			<macro name="SYS_NAMELEN" alt="_SYS_NAMELEN"/>
 		</set>
-		<set type="" genset="230" format="16#%08X#">
+		<set type="" genset="2030" format="16#%08X#">
 			<includes>
 				<include file="fcntl.h"/>
 			</includes>
@@ -456,7 +456,7 @@
                         <macro name="O_NOATIME"/>
                         <macro name="O_NONBLOCK"/>
 		</set>
-		<set type="rlimkind_t" genset="240" format="16#%08X#">
+		<set type="rlimkind_t" genset="2040" format="16#%08X#">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
@@ -477,20 +477,20 @@
 			<macro name="RLIMIT_RTTIME"/>
 			<macro name="RLIMIT_SIGPENDING"/>
 		</set>
-		<set type="rwho_t" genset="250" format="%d">
+		<set type="rwho_t" genset="2050" format="%d">
 			<includes>
 				<include file="sys/resource.h"/>
 			</includes>
 			<macro name="RUSAGE_SELF"/>
 			<macro name="RUSAGE_CHILDREN"/>
 		</set>
-		<set type="" genset="260" format="%d">
+		<set type="" genset="2060" format="%d">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
 			<macro name="NGROUPS_MAX"/>
 		</set>
-		<set type="mprot_t" genset="270" format="16#%04X#">
+		<set type="mprot_t" genset="2070" format="16#%04X#">
 			<includes>
 				<include file="sys/mman.h"/>
 			</includes>
@@ -499,7 +499,7 @@
 			<macro name="PROT_WRITE" desc="Pages may be written."/>
 			<macro name="PROT_EXEC" desc="Pages may be executed."/>
 		</set>
-		<set type="mmap_t" genset="280" format="16#%08X#">
+		<set type="mmap_t" genset="2080" format="16#%08X#">
 			<includes>
 				<include file="sys/mman.h"/>
 			</includes>
@@ -524,7 +524,7 @@
                         <macro name="MAP_POPULATE" desc="Populate (prefault) page tables for a mapping"/>
                         <macro name="MAP_STACK" desc="(since Linux 2.6.27)"/>
 		</set>
-		<set type="sysc_t" genset="290" format="%ld">
+		<set type="sysc_t" genset="2090" format="%ld">
 			<includes>
 				<include file="unistd.h"/>
 			</includes>
@@ -585,7 +585,7 @@
 			<macro name="SC_NPROCESSORS_CONF" alt="_SC_NPROCESSORS_CONF"/>
 			<macro name="SC_NPROCESSORS_ONLN" alt="_SC_NPROCESSORS_ONLN"/>
 		</set>
-		<set genset="295" format="16#%08X#" os="Linux *">
+		<set genset="2095" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/vfs.h"/>
 			</includes>
@@ -634,7 +634,7 @@
 			<macro name="XFS_SUPER_MAGIC"/>
 			<macro name="_XIAFS_SUPER_MAGIC"/>
 		</set>
-		<set type="logopt_t" genset="300" format="16#%08X#">
+		<set type="logopt_t" genset="3000" format="16#%08X#">
 			<includes>
 				<include file="syslog.h"/>
 			</includes>
@@ -643,7 +643,7 @@
 			<macro name="LOG_PERROR"/>
 			<macro name="LOG_PID"/>
 		</set>
-		<set type="logfac_t" genset="305" format="16#%08X#">
+		<set type="logfac_t" genset="3005" format="16#%08X#">
 			<includes>
 				<include file="syslog.h"/>
 			</includes>
@@ -678,7 +678,7 @@
 			<macro name="LOG_LOCAL6"/>
 			<macro name="LOG_LOCAL7"/>
 		</set>
-		<set type="itim_t" genset="307" format="16#%08X#">
+		<set type="itim_t" genset="3007" format="16#%08X#">
 			<includes>
 				<include file="sys/time.h"/>
 			</includes>
@@ -686,7 +686,7 @@
 			<macro name="ITIMER_VIRTUAL"/>
 			<macro name="ITIMER_PROF"/>
 		</set>
-		<set type="ipccmd_t" genset="310" format="16#%08X#">
+		<set type="ipccmd_t" genset="3010" format="16#%08X#">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -708,7 +708,7 @@
 			<macro name="SHM_RND"/>
 			<macro name="SHM_RDONLY"/>
 		</set>
-		<set type="" genset="315" format="16#%08X#">
+		<set type="" genset="3015" format="16#%08X#">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/ipc.h"/>
@@ -723,7 +723,7 @@
 			<macro name="MSG_EXCEPT"/>
 			<macro name="SEM_UNDO"/>
 		</set>
-		<set type="quotcmd_t" genset="317" format="16#%08X#">
+		<set type="quotcmd_t" genset="3017" format="16#%08X#">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/quota.h" os="Linux *|Darwin *"/>
@@ -738,7 +738,7 @@
 			<macro name="Q_SYNC"/>
 			<macro name="Q_QUOTASTAT"/>
 		</set>
-		<set type="" genset="320" format="16#%08X#">
+		<set type="" genset="3020" format="16#%08X#">
 			<includes>
 				<include file="poll.h"/>
 			</includes>
@@ -753,14 +753,14 @@
 			<macro name="POLLWRBAND"/>
 			<macro name="POLLWRNORM"/>
 		</set>
-		<set type="" genset="322" format="16#%08X#">
+		<set type="" genset="3022" format="16#%08X#">
 			<includes>
 				<include file="sys/mman.h"/>
 			</includes>
 			<macro name="MCL_CURRENT"/>
 			<macro name="MCL_FUTURE"/>
 		</set>
-		<set type="" genset="324" format="16#%08X#">
+		<set type="" genset="3024" format="16#%08X#">
 			<includes>
 				<include file="sched.h"/>
 			</includes>
@@ -770,7 +770,7 @@
 			<macro name="SCHED_FIFO"/>
 			<macro name="SCHED_RR"/>
 		</set>
-		<set type="" genset="326" format="16#%08X#" os="Linux *">
+		<set type="" genset="3026" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/mman.h"/>
 			</includes>
@@ -779,20 +779,20 @@
 			<macro name="MREMAP_MAYMOVE"/>
 			<macro name="MREMAP_FIXED"/>
 		</set>
-		<set type="" genset="328" format="%d" os="Linux *|FreeBSD *">
+		<set type="" genset="3028" format="%d" os="Linux *|FreeBSD *">
 			<includes>
 				<include file="signal.h"/>
 			</includes>
 			<macro name="SIGSTKSZ"/>
 			<macro name="MINSIGSTKSZ"/>
 		</set>
-		<set type="" genset="330" format="16#%08X#" os="Linux *">
+		<set type="" genset="3030" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/epoll.h"/>
 			</includes>
 			<macro name="EPOLL_CLOEXEC"/>
 		</set>
-		<set type="" genset="332" format="16#%08X#" os="Linux *">
+		<set type="" genset="3032" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/epoll.h"/>
 			</includes>
@@ -800,7 +800,7 @@
 			<macro name="EPOLL_CTL_MOD"/>
 			<macro name="EPOLL_CTL_DEL"/>
 		</set>
-		<set type="" genset="334" format="16#%08X#" os="Linux *">
+		<set type="" genset="3034" format="16#%08X#" os="Linux *">
 			<includes>
 				<include file="sys/epoll.h"/>
 			</includes>
@@ -813,7 +813,7 @@
 			<macro name="EPOLLET"/>
 			<macro name="EPOLLONESHOT"/>
 		</set>
-		<set type="" genset="336" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3036" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -858,7 +858,7 @@
 			<macro name="AF_IEEE802154"/>
 			<macro name="AF_MAX"/>
 		</set>
-		<set type="" genset="338" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3038" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -872,7 +872,7 @@
 			<macro name="SOCK_NONBLOCK"/>
 			<macro name="SOCK_CLOEXEC"/>
 		</set>
-		<set type="" genset="340" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3040" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -881,7 +881,7 @@
 			<macro name="INET_ADDRSTRLEN"/>
 			<macro name="INET6_ADDRSTRLEN"/>
 		</set>
-		<set type="" genset="342" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3042" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -890,7 +890,7 @@
 			<macro name="SHUT_RD"/>
 			<macro name="SHUT_RDWR"/>
 		</set>
-		<set type="" genset="344" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3044" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -909,7 +909,7 @@
 			<macro name="MSG_OOB"/>
 			<macro name="MSG_ERRQUEUE"/>
 		</set>
-		<set type="" genset="346" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3046" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -956,7 +956,7 @@
 			<macro name="PF_IEEE802154"/>
 			<macro name="PF_MAX"/>
 		</set>
-		<set type="" genset="348" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3048" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -993,7 +993,7 @@
 			<macro name="SOL_UDP"/>
 			<macro name="SOL_X25"/>
 		</set>
-		<set type="" genset="350" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3050" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -1011,7 +1011,7 @@
 			<macro name="SCM_TIMESTAMP_MONOTONIC"/>
 			<macro name="SCM_WAIT_INTERVAL"/>
 		</set>
-		<set type="" genset="352" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3052" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/socket.h"/>
@@ -1020,7 +1020,7 @@
 			</includes>
 			<macro name="SOMAXCONN"/>
 		</set>
-		<set type="" genset="354" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3054" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
                         <includes>
                                 <include file="sys/types.h"/>
                                 <include file="sys/socket.h"/>
@@ -1110,7 +1110,7 @@
 			<macro name="SO_WANTMORE"/>
 			<macro name="SO_WANTOOBFLAG"/>
 		</set>
-		<set type="" genset="356" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3056" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
                         <includes>
                                 <include file="sys/types.h"/>
                                 <include file="sys/socket.h"/>
@@ -1245,7 +1245,7 @@
 			<macro name="IPPROTO_XTP"/>
 			<macro name="IPV6PROTO_MAXID"/>
 		</set>
-		<set type="" genset="358" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
+		<set type="" genset="3058" format="16#%08X#" os="Linux *|FreeBSD *|Darwin *">
                         <includes>
                                 <include file="sys/types.h"/>
                                 <include file="sys/socket.h"/>
@@ -1450,7 +1450,7 @@
 			<macro name="IP_VS_VERSION_CODE"/>
 			<macro name="IP_XFRM_POLICY"/>
 		</set>
-		<set type="int16_t" genset="360" os="FreeBSD *|Darwin *">
+		<set type="int16_t" genset="3060" os="FreeBSD *|Darwin *">
                         <includes>
 			     <include file="sys/types.h"/>
 			     <include file="sys/event.h"/>
@@ -1465,7 +1465,7 @@
 			<macro name="EVFILT_TIMER"/>
 			<macro name="EVFILT_USER"/>
                </set>
-		<set genset="361" format="16#%08X#" os="FreeBSD *|Darwin *">
+		<set genset="3061" format="16#%08X#" os="FreeBSD *|Darwin *">
                         <includes>
 			     <include file="sys/types.h"/>
 			     <include file="sys/event.h"/>
@@ -1482,7 +1482,7 @@
 			<macro name="EV_CLEAR"/>
 			<macro name="EV_EOF"/>
 		</set>
-		<set genset="362" format="16#%08X#" os="FreeBSD *|Darwin *">
+		<set genset="3062" format="16#%08X#" os="FreeBSD *|Darwin *">
                         <includes>
 			     <include file="sys/types.h"/>
 			     <include file="sys/event.h"/>
