@@ -12,10 +12,16 @@ with Ada.Text_IO;
 
 procedure PugiTest is
    Doc:  Xml_Document;
+   Node: Xml_Node;
 begin
 
    Ada.Text_IO.Put_Line("Running");
    Load(Doc,"config.xml");
+   Ada.Text_IO.Put_Line("Getting Child");
+   Child(Doc,"entities",Node);
+   Ada.Text_IO.Put("Node name is '");
+   Ada.Text_IO.Put(Node.Name);
+   Ada.Text_IO.Put_Line("'");
    Ada.Text_IO.Put_Line("Done");
 
 end PugiTest;

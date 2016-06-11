@@ -5,6 +5,11 @@
 include Makefile.incl
 -include Makefile.tests
 
+x:   xrm pugitest
+
+xrm:
+	rm -f pugixml_c.o pugi_xml.o
+
 all:	main run atest
 
 OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \

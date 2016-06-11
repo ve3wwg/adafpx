@@ -9,11 +9,18 @@
 
 package body Pugi_Xml is
 
+   function Strlen(C_Ptr : System.Address) return Natural is
+      function UX_strlen(cstr : System.Address) return uint_t; -- From posix support
+      pragma Import(C,UX_strlen,"c_strlen");
+   begin
+      return Natural(UX_strlen(C_Ptr));
+   end Strlen;
+
    procedure Initialize(Obj: in out Xml_Document) is
       function new_xml_document return System.Address;
       pragma Import(C,new_xml_document,"pugi_new_xml_document");
    begin
-      Obj.doc := new_xml_document;
+      Obj.Doc := new_xml_document;
    end Initialize;
 
    procedure Finalize(Obj: in out Xml_Document) is
@@ -21,7 +28,25 @@ package body Pugi_Xml is
       pragma Import(C,delete_xml_document,"pugi_delete_xml_document");
    begin
       delete_xml_document(Obj.Doc);
-      Obj.doc := System.Null_Address;
+      Obj.Doc := System.Null_Address;
+   end Finalize;
+
+   procedure Initialize(Obj: in out Xml_Node) is
+      function new_xml_node return System.Address;
+      pragma Import(C,new_xml_node,"pugi_new_xml_node");
+   begin
+      Obj.Node := System.Null_Address;
+   end Initialize;
+
+   procedure Finalize(Obj: in out Xml_Node) is
+      use System;
+      procedure pugi_delete_node(node: System.Address);
+      pragma Import(C,pugi_delete_node,"pugi_delete_node");
+   begin
+      if ( Obj.Node /= System.Null_Address ) then
+         pugi_delete_node(Obj.Node);
+         Obj.Node := System.Null_Address;   
+      end if;
    end Finalize;
 
    procedure Load(Obj: in out Xml_Document; Pathname: in String) is
@@ -32,5 +57,24 @@ package body Pugi_Xml is
    begin
       Ignored := load_xml_file(Obj.Doc,C_Path'Address);
    end Load;
+
+   procedure Child(Obj: in out Xml_Document; Name: String; Node: out XML_Node'Class) is
+      function xml_child(Doc: System.Address; Name: System.Address) return System.Address;
+      pragma Import(C,xml_child,"pugi_xml_child");
+      C_Name:  aliased String := C_String(Name);
+   begin
+      Node.Node := xml_child(Obj.Doc,C_Name'Address);
+   end Child;
+
+   function Name(Obj: XML_Node) return String is
+      function node_name(Node: System.Address) return System.Address;
+      pragma Import(C,node_name,"pugi_node_name");
+      C_Str :  constant System.Address := node_name(Obj.Node);
+      Len :    constant Natural := Strlen(C_Str);
+      Name :   String(1..Len);
+      for Name'Address use C_Str;
+   begin
+      return Name;
+   end Name;
 
 end Pugi_Xml;

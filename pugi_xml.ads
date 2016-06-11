@@ -10,17 +10,30 @@ use Posix;
 
 package Pugi_Xml is
 
-   type Xml_Document is new Ada.Finalization.Controlled with private;
+   type XML_Document is new Ada.Finalization.Controlled with private;
+   type XML_Node is new Ada.Finalization.Controlled with private;
 
-   procedure Initialize(Obj: in out Xml_Document);
-   procedure Finalize(Obj: in out Xml_Document);
    procedure Load(Obj: in out Xml_Document; Pathname: string);
+   procedure Child(Obj: in out Xml_Document; Name: String; Node: out XML_Node'Class);
+
+   function Name(Obj: XML_Node) return String;
 
 private
 
-   type Xml_Document is new Ada.Finalization.Controlled with
+   type XML_Document is new Ada.Finalization.Controlled with
       record
-         doc:           System.Address;   -- ptr to pugixml::xml_document
+         Doc:        System.Address;   -- ptr to pugi::xml_document
       end record;
+
+   procedure Initialize(Obj: in out Xml_Document);
+   procedure Finalize(Obj: in out Xml_Document);
+
+   type XML_Node is new Ada.Finalization.Controlled with
+      record
+         Node:       System.Address;   -- ptr to pugi::xml_node
+      end record;
+
+   procedure Initialize(Obj: in out Xml_Node);
+   procedure Finalize(Obj: in out Xml_Node);
 
 end Pugi_Xml;
