@@ -44,9 +44,15 @@ clobber: clean
 	rm -f b~* *.ali posix.defs
 	rm -f ansi-c-lex.cpp ansi-c-yacc.cpp ansi-c-yacc.hpp errs.t main core*
 	rm -f posix.ads posix.adb
-	rm -f Makefile.tests
+	rm -f Makefile.tests pugitest
 
 distclean: clobber
+
+pugi_xml.o:
+	$(GNAT) -c pugi_xml.adb
+	
+pugitest: pugixml_c.o pugi_xml.o pugixml.o
+	$(GNAT) -g pugitest pugi_xml -largs pugixml_c.o pugixml.o -L. -ladafpx --LINK=g++
 
 ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 
