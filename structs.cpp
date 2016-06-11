@@ -24,6 +24,17 @@ static std::unordered_map<std::string,std::string> c_ada_map;
 
 bool
 use_preferred_type(unsigned size,bool is_unsigned,const std::string pref_type) {
+
+	//////////////////////////////////////////////////////////////
+	// Allow System.Address if the size matches
+	//////////////////////////////////////////////////////////////
+
+	if ( !strcasecmp(pref_type.c_str(),"System.Address") && size == sizeof(void *) )
+		return true;
+
+	//////////////////////////////////////////////////////////////
+	// Otherwise, see if we know this as a system type
+	//////////////////////////////////////////////////////////////
 	{
 		auto pit = config.sys_types.info.find(pref_type);
 		if ( pit != config.sys_types.info.end() ) {
@@ -33,11 +44,14 @@ use_preferred_type(unsigned size,bool is_unsigned,const std::string pref_type) {
 		}
 	}
 
+	//////////////////////////////////////////////////////////////
 	// Try for a basic type
+	//////////////////////////////////////////////////////////////
 	{
 		auto pit = config.basic_types.a2cmap.find(pref_type);
 		if ( pit == config.basic_types.a2cmap.end() )
 			return false;
+
 		const std::string& c_name = pit->second;
 		const s_config::s_basic_types::s_basic_type& btype = config.basic_types.info[c_name];
 		return btype.size == size;

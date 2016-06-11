@@ -1984,6 +1984,9 @@
 				<include file="sys/event.h"/>
 				<include file="sys/time.h"/>
 			</includes>
+			<members>
+				<member name="udata" pref="System.Address"/>
+			</members>
 		</struct>
 	</structs>
 	<section2 genset="5000">
