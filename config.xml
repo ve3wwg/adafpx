@@ -1462,6 +1462,7 @@
 			<macro name="EVFILT_VNODE"/>
 			<macro name="EVFILT_PROC"/>
 			<macro name="EVFILT_SIGNAL"/>
+			<macro name="EVFILT_MACHPORT"/>
 			<macro name="EVFILT_TIMER"/>
 			<macro name="EVFILT_USER"/>
                </set>
@@ -1481,6 +1482,8 @@
 			<macro name="EV_ONESHOT"/>
 			<macro name="EV_CLEAR"/>
 			<macro name="EV_EOF"/>
+			<macro name="EV_OOBAND"/>
+			<macro name="EV_ERROR"/>
 		</set>
 		<set genset="3062" format="16#%08X#" os="FreeBSD *|Darwin *">
                         <includes>
@@ -1488,8 +1491,6 @@
 			     <include file="sys/event.h"/>
 			     <include file="sys/time.h"/>
                         </includes>
-			<macro name="EV_ERROR"/>
-
 			<macro name="NOTE_DELETE"/>
 			<macro name="NOTE_WRITE"/>
 			<macro name="NOTE_EXTEND"/>
@@ -1498,8 +1499,11 @@
 			<macro name="NOTE_RENAME"/>
 			<macro name="NOTE_REVOKE"/>
 			<macro name="NOTE_EXIT"/>
+			<macro name="NOTE_EXITSTATUS"/>
 			<macro name="NOTE_FORK"/>
 			<macro name="NOTE_EXEC"/>
+			<macro name="NOTE_SIGNAL"/>
+			<macro name="NOTE_REAP"/>
 			<macro name="NOTE_TRACK"/>
 			<macro name="NOTE_CHILD"/>
 			<macro name="NOTE_FFNOP"/>
@@ -1509,6 +1513,13 @@
 			<macro name="NOTE_FFCTRLMASK"/>
 			<macro name="NOTE_FFLAGSMASK"/>
 			<macro name="NOTE_TRIGGER"/>
+			<macro name="NOTE_SECONDS"/>
+			<macro name="NOTE_USECONDS"/>
+			<macro name="NOTE_NSECONDS"/>
+			<macro name="NOTE_ABSOLUTE"/>
+			<macro name="NOTE_CRITICAL"/>
+			<macro name="NOTE_BACKGROUND"/>
+			<macro name="NOTE_LEEWAY"/>
 		</set>
 	</macro_constants>
 	<structs>
