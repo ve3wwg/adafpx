@@ -1,4 +1,4 @@
--- t0048.adb - Thu Feb 20 16:54:37 2014
+-- t0049.adb - Fri Jun 10 21:25:59 2016
 --
 -- (c) Warren W. Gay VE3WWG  ve3wwg@gmail.com
 --
@@ -12,7 +12,7 @@ use Posix;
 with System;
 use System;
 
-procedure T0048 is
+procedure T0049 is
    use Ada.Text_IO;
 
    Connect_Addr : constant String := "127.0.0.1";
@@ -25,7 +25,7 @@ procedure T0048 is
    Error :     errno_t;
 begin
 
-   Put_Line("Test 0048 - IPv4 socket/connect/etc.");
+   Put_Line("Test 0049 - IPv4 socket/connect/etc.");
 
    Fork(Child,Error);
    pragma Assert(Error = 0);
@@ -96,7 +96,7 @@ begin
          pragma Assert(WEXITSTATUS(Status) = 0);
       end;
 
-      Put_Line("Test 0048 Passed.");
+      Put_Line("Test 0049 Passed.");
    else
       -- Child process
 
@@ -185,8 +185,8 @@ begin
       -- Test KQueue
       declare
          Kq :        fd_t;
-         Chgs :      s_kevent_array(1..1);
-         Evts :      s_kevent_array(1..1);
+         Chgs :      s_kevent64_array(1..1);
+         Evts :      s_kevent64_array(1..1);
          N_Evts :    Natural := 0;
          Timeout :   constant s_timespec := ( tv_sec => 1, tv_nsec => 0 );
       begin
@@ -200,7 +200,7 @@ begin
          Chgs(1).udata := Null_Address;
          
          loop
-            KEvent(Kq,Chgs,1,Evts,N_Evts,Timeout,Error);
+            KEvent(Kq,Chgs,1,Evts,N_Evts,0,Timeout,Error);
             pragma assert(Error = 0);
 
             exit when N_Evts > 0;
@@ -290,4 +290,4 @@ begin
 
    end if;
 
-end T0048;
+end T0049;

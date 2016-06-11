@@ -5577,7 +5577,7 @@ SO_SNDBUFFORCE
 		</func>
 		<func name="kevent64" return="int_t" ada_type="procedure" rname="R" ada_name="Kevent" 
 		 inline="1"
-		 os="Darwin 1*.*">
+		 os="Darwin 1*.*" test="49">
 			<includes>
 				<include file="sys/types.h"/>
 				<include file="sys/event.h"/>
