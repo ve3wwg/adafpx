@@ -35,6 +35,15 @@ begin
    Ada.Text_IO.Put(Gnat_Prep.Name);
    Ada.Text_IO.Put_Line("'");
 
+   pragma Assert(Gnat_Prep = Gnat_Prep);
+   declare
+      Other : XML_Node;
+   begin
+      Child(Node,"gnatprep",Other);
+      pragma Assert(Gnat_Prep = Other);
+      pragma Assert(Other /= Par_Node);
+   end;
+
    declare
       V : String := Gnat_Prep.Node_Value;
    begin

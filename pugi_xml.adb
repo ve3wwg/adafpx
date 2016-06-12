@@ -214,4 +214,39 @@ package body Pugi_Xml is
       OK := set_value(Obj.Node,C_Data'Address) /= 0;
    end Set_Value;
 
+   function "="(Left: XML_Node; Right: XML_Node) return Boolean is
+      function is_eq(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_eq,"pugi_is_eq");
+   begin
+      return is_eq(Left.Node'Address,Right.Node'Address) /= 0;
+   end "=";
+
+   function "<"(Left: XML_Node; Right: XML_Node) return Boolean is
+      function is_lt(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_lt,"pugi_is_lt");
+   begin
+      return is_lt(Left.Node'Address,Right.Node'Address) /= 0;
+   end "<";
+
+   function "<="(Left: XML_Node; Right: XML_Node) return Boolean is
+      function is_le(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_le,"pugi_is_le");
+   begin
+      return is_le(Left.Node'Address,Right.Node'Address) /= 0;
+   end "<=";
+
+   function ">"(Left: XML_Node; Right: XML_Node) return Boolean is
+      function is_gt(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_gt,"pugi_is_gt");
+   begin
+      return is_gt(Left.Node'Address,Right.Node'Address) /= 0;
+   end ">";
+
+   function ">="(Left: XML_Node; Right: XML_Node) return Boolean is
+      function is_ge(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_ge,"pugi_is_ge");
+   begin
+      return is_ge(Left.Node'Address,Right.Node'Address) /= 0;
+   end ">=";
+
 end Pugi_Xml;

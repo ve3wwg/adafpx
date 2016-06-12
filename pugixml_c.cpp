@@ -39,6 +39,12 @@ extern "C" {
 
 	int pugi_set_name(pugi::xml_node obj,const char *data);
 	int pugi_set_value(pugi::xml_node obj,const char *data);
+
+	int pugi_is_eq(pugi::xml_node left,pugi::xml_node right);
+	int pugi_is_lt(pugi::xml_node left,pugi::xml_node right);
+	int pugi_is_le(pugi::xml_node left,pugi::xml_node right);
+	int pugi_is_gt(pugi::xml_node left,pugi::xml_node right);
+	int pugi_is_ge(pugi::xml_node left,pugi::xml_node right);
 }
 
 pugi::xml_document *
@@ -155,6 +161,31 @@ pugi_set_name(pugi::xml_node obj,const char *data) {
 int
 pugi_set_value(pugi::xml_node obj,const char *data) {
 	return obj.set_value(data) ? 1 : 0;
+}
+
+int
+pugi_is_eq(pugi::xml_node left,pugi::xml_node right) {
+	return left == right ? 1 : 0;
+}
+
+int
+pugi_is_lt(pugi::xml_node left,pugi::xml_node right) {
+	return left < right ? 1 : 0;
+}
+
+int
+pugi_is_le(pugi::xml_node left,pugi::xml_node right) {
+	return left <= right ? 1 : 0;
+}
+
+int
+pugi_is_gt(pugi::xml_node left,pugi::xml_node right) {
+	return left > right ? 1 : 0;
+}
+
+int
+pugi_is_ge(pugi::xml_node left,pugi::xml_node right) {
+	return left >= right ? 1 : 0;
 }
 
 // End pugixml_c.cpp

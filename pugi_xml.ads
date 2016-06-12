@@ -63,15 +63,12 @@ package Pugi_Xml is
    procedure Set_Name(Obj: XML_Node; Data: String; OK: out Boolean);
    procedure Set_Value(Obj: XML_Node; Data: String; OK: out Boolean);
 
+   function "="(Left: XML_Node; Right: XML_Node) return Boolean;
+   function "<"(Left: XML_Node; Right: XML_Node) return Boolean;
+   function "<="(Left: XML_Node; Right: XML_Node) return Boolean;
+   function ">"(Left: XML_Node; Right: XML_Node) return Boolean;
+   function ">="(Left: XML_Node; Right: XML_Node) return Boolean;
 
-   -- // Comparison operators (compares wrapped node pointers)
-   -- bool operator==(const xml_node& r) const;
-   -- bool operator!=(const xml_node& r) const;
-   -- bool operator<(const xml_node& r) const;
-   -- bool operator>(const xml_node& r) const;
-   -- bool operator<=(const xml_node& r) const;
-   -- bool operator>=(const xml_node& r) const;
-   -- 
    -- // Get attribute list
    -- xml_attribute first_attribute() const;
    -- xml_attribute last_attribute() const;
