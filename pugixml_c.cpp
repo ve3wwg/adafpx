@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 // pugixml_c.cpp -- C Interface to PugiXml
 // Date: Fri Jun 10 22:15:37 2016  (C) Warren W. Gay VE3WWG 
 ///////////////////////////////////////////////////////////////////////
@@ -50,6 +50,11 @@ extern "C" {
 	pugi::xml_attribute pugi_prepend_attr(pugi::xml_node obj,const char *name);
 	pugi::xml_attribute pugi_append_after(pugi::xml_node obj,const char *name,pugi::xml_attribute attr);
 	pugi::xml_attribute pugi_append_before(pugi::xml_node obj,const char *name,pugi::xml_attribute attr);
+
+	pugi::xml_attribute pugi_append_copy(pugi::xml_node obj,pugi::xml_attribute proto);
+	pugi::xml_attribute pugi_prepend_copy(pugi::xml_node obj,pugi::xml_attribute proto);
+	pugi::xml_attribute pugi_insert_copy_after(pugi::xml_node obj,pugi::xml_attribute after,pugi::xml_attribute proto);
+	pugi::xml_attribute pugi_insert_copy_before(pugi::xml_node obj,pugi::xml_attribute before,pugi::xml_attribute proto);
 
 	pugi::xml_attribute pugi_first_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
@@ -301,6 +306,26 @@ pugi_next_attr(pugi::xml_attribute obj) {
 pugi::xml_attribute
 pugi_prev_attr(pugi::xml_attribute obj) {
 	return obj.previous_attribute();
+}
+
+pugi::xml_attribute
+pugi_append_copy(pugi::xml_node obj,pugi::xml_attribute proto) {
+      return obj.append_copy(proto);
+}
+
+pugi::xml_attribute
+pugi_prepend_copy(pugi::xml_node obj,pugi::xml_attribute proto) {
+      return obj.prepend_copy(proto);
+}
+
+pugi::xml_attribute
+pugi_insert_copy_after(pugi::xml_node obj,pugi::xml_attribute after,pugi::xml_attribute proto) {
+      return obj.insert_copy_after(proto,after);
+}
+
+pugi::xml_attribute
+pugi_insert_copy_before(pugi::xml_node obj,pugi::xml_attribute before,pugi::xml_attribute proto) {
+      return obj.insert_copy_before(proto,before);
 }
 
 // End pugixml_c.cpp
