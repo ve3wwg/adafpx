@@ -434,4 +434,32 @@ package body Pugi_Xml is
       Attr.Attr := insert(Obj.Node,Before.Attr,Proto.Attr);
    end Insert_Copy_Before;
 
+   procedure Append_Child(Obj: in out XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class) is
+      function append(Obj: System.Address; Node_Type: Standard.Integer) return System.Address;
+      pragma Import(C,append,"pugi_append_child_type");
+   begin
+      Node.Node := append(Obj.Node,XML_Node_Type'Pos(Node_Type));
+   end Append_Child;
+   
+   procedure Prepend_Child(Obj: in out XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class) is
+      function prepend(Obj: System.Address; Node_Type: Standard.Integer) return System.Address;
+      pragma Import(C,prepend,"pugi_prepend_child_type");
+   begin
+      Node.Node := prepend(Obj.Node,XML_Node_Type'Pos(Node_Type));
+   end Prepend_Child;
+   
+   procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class) is
+      function insert(Obj, After: System.Address; Node_Type: Standard.Integer) return System.Address;
+      pragma Import(C,insert,"pugi_insert_child_type_after");
+   begin
+      Node.Node := insert(Obj.Node,After.Node,XML_Node_Type'Pos(Node_Type));
+   end Insert_Child_After;
+   
+   procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class) is
+      function insert(Obj, Before: System.Address; Node_Type: Standard.Integer) return System.Address;
+      pragma Import(C,insert,"pugi_insert_child_type_before");
+   begin
+      Node.Node := insert(Obj.Node,Before.Node,XML_Node_Type'Pos(Node_Type));
+   end Insert_Child_Before;
+
 end Pugi_Xml;
