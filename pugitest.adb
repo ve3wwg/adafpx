@@ -152,6 +152,10 @@ begin
       pragma Assert(Two.Value = "Two");
       pragma Assert(Last.Value = "Three");
 
+      pragma Assert(First.Empty = False);
+      pragma Assert(Two.Empty = False);
+      pragma Assert(Last.Empty = False);
+
       Put_Line("Attributes passed.");
    end;
 

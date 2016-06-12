@@ -301,4 +301,11 @@ package body Pugi_Xml is
       return V;
    end Value;
 
+   function Empty(Obj: XML_Attribute) return Boolean is
+      function attr_empty(Node: System.Address) return Standard.Integer;
+      pragma Import(C,attr_empty,"pugi_attr_empty");
+   begin
+      return attr_empty(Obj'Address) /= 0;
+   end Empty;
+
 end Pugi_Xml;

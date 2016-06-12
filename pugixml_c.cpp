@@ -52,6 +52,8 @@ extern "C" {
 
 	const char *pugi_attr_name(pugi::xml_node obj);
 	const char *pugi_attr_value(pugi::xml_node obj);
+
+	int pugi_attr_empty(pugi::xml_attribute obj);
 }
 
 pugi::xml_document *
@@ -218,6 +220,11 @@ pugi_attr_name(pugi::xml_node obj) {
 const char *
 pugi_attr_value(pugi::xml_node obj) {
 	return obj.value();
+}
+
+int
+pugi_attr_empty(pugi::xml_attribute obj) {
+	return obj.empty();
 }
 
 // End pugixml_c.cpp
