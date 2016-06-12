@@ -308,4 +308,39 @@ package body Pugi_Xml is
       return attr_empty(Obj'Address) /= 0;
    end Empty;
 
+   function "="(Left, Right: XML_Attribute) return Boolean is
+      function is_eq(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_eq,"pugi_is_attr_eq");
+   begin
+      return is_eq(Left.Attr'Address,Right.Attr'Address) /= 0;
+   end "=";
+
+   function "<"(Left, Right: XML_Attribute) return Boolean is
+      function is_lt(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_lt,"pugi_is_attr_lt");
+   begin
+      return is_lt(Left.Attr'Address,Right.Attr'Address) /= 0;
+   end "<";
+
+   function "<="(Left, Right: XML_Attribute) return Boolean is
+      function is_le(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_le,"pugi_is_attr_le");
+   begin
+      return is_le(Left.Attr'Address,Right.Attr'Address) /= 0;
+   end "<=";
+
+   function ">"(Left, Right: XML_Attribute) return Boolean is
+      function is_gt(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_gt,"pugi_is_attr_gt");
+   begin
+      return is_gt(Left.Attr'Address,Right.Attr'Address) /= 0;
+   end ">";
+
+   function ">="(Left, Right: XML_Attribute) return Boolean is
+      function is_ge(Left, Right: System.Address) return Standard.Integer;
+      pragma Import(C,is_ge,"pugi_is_attr_ge");
+   begin
+      return is_ge(Left.Attr'Address,Right.Attr'Address) /= 0;
+   end ">=";
+
 end Pugi_Xml;

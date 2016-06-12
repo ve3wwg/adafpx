@@ -54,6 +54,12 @@ extern "C" {
 	const char *pugi_attr_value(pugi::xml_node obj);
 
 	int pugi_attr_empty(pugi::xml_attribute obj);
+
+	int pugi_is_attr_eq(pugi::xml_attribute left,pugi::xml_attribute right);
+	int pugi_is_attr_lt(pugi::xml_attribute left,pugi::xml_attribute right);
+	int pugi_is_attr_le(pugi::xml_attribute left,pugi::xml_attribute right);
+	int pugi_is_attr_gt(pugi::xml_attribute left,pugi::xml_attribute right);
+	int pugi_is_attr_ge(pugi::xml_attribute left,pugi::xml_attribute right);
 }
 
 pugi::xml_document *
@@ -225,6 +231,31 @@ pugi_attr_value(pugi::xml_node obj) {
 int
 pugi_attr_empty(pugi::xml_attribute obj) {
 	return obj.empty();
+}
+
+int
+pugi_is_attr_eq(pugi::xml_attribute left,pugi::xml_attribute right) {
+	return left == right;
+}
+
+int
+pugi_is_attr_lt(pugi::xml_attribute left,pugi::xml_attribute right) {
+	return left < right;
+}
+
+int
+pugi_is_attr_le(pugi::xml_attribute left,pugi::xml_attribute right) {
+	return left <= right;
+}
+
+int
+pugi_is_attr_gt(pugi::xml_attribute left,pugi::xml_attribute right) {
+	return left > right;
+}
+
+int
+pugi_is_attr_ge(pugi::xml_attribute left,pugi::xml_attribute right) {
+	return left >= right;
 }
 
 // End pugixml_c.cpp

@@ -81,16 +81,11 @@ package Pugi_Xml is
    function Value(Obj: XML_Attribute) return String;
    function Empty(Obj: XML_Attribute) return Boolean;
 
-   -- xml_attribute
-   -- // Comparison operators (compares wrapped attribute pointers)
-   -- bool operator==(const xml_attribute& r) const;
-   -- bool operator!=(const xml_attribute& r) const;
-   -- bool operator<(const xml_attribute& r) const;
-   -- bool operator>(const xml_attribute& r) const;
-   -- bool operator<=(const xml_attribute& r) const;
-   -- bool operator>=(const xml_attribute& r) const;
-   -- 
-   -- // Check if attribute is empty
+   function "="(Left, Right: XML_Attribute) return Boolean;
+   function "<"(Left, Right: XML_Attribute) return Boolean;
+   function "<="(Left, Right: XML_Attribute) return Boolean;
+   function ">"(Left, Right: XML_Attribute) return Boolean;
+   function ">="(Left, Right: XML_Attribute) return Boolean;
 
 private
 
