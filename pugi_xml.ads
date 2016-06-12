@@ -91,12 +91,11 @@ package Pugi_Xml is
    procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
    procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
 
-   -- // Add child element with specified name. Returns added node, or empty node on errors.
-   -- xml_node append_child(const char_t* name);
-   -- xml_node prepend_child(const char_t* name);
-   -- xml_node insert_child_after(const char_t* name, const xml_node& node);
-   -- xml_node insert_child_before(const char_t* name, const xml_node& node);
-   -- 
+   procedure Append_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
+   procedure Prepend_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
+   procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Name: String; Node: out XML_Node'Class);
+   procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Name: String; Node: out XML_Node'Class);
+
    -- // Add a copy of the specified node as a child. Returns added node, or empty node on errors.
    -- xml_node append_copy(const xml_node& proto);
    -- xml_node prepend_copy(const xml_node& proto);

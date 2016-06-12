@@ -61,6 +61,11 @@ extern "C" {
 	pugi::xml_node pugi_insert_child_type_after(pugi::xml_node obj,pugi::xml_node after,pugi::xml_node_type type);
 	pugi::xml_node pugi_insert_child_type_before(pugi::xml_node obj,pugi::xml_node before,pugi::xml_node_type type);
 
+	pugi::xml_node pugi_append_child_node(pugi::xml_node obj,const char *name);
+	pugi::xml_node pugi_prepend_child_node(pugi::xml_node obj,const char *name);
+	pugi::xml_node pugi_insert_child_node_after(pugi::xml_node obj,pugi::xml_node after,const char *name);
+	pugi::xml_node pugi_insert_child_node_before(pugi::xml_node obj,pugi::xml_node before,const char *name);
+
 	pugi::xml_attribute pugi_first_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_attr(pugi::xml_node obj,const char *name);
@@ -351,6 +356,26 @@ pugi_insert_child_type_after(pugi::xml_node obj,pugi::xml_node after,pugi::xml_n
 pugi::xml_node
 pugi_insert_child_type_before(pugi::xml_node obj,pugi::xml_node before,pugi::xml_node_type type) {
 	return obj.insert_child_before(type,before);
+}
+
+pugi::xml_node
+pugi_append_child_node(pugi::xml_node obj,const char *name) {
+	return obj.append_child(name);
+}
+
+pugi::xml_node
+pugi_prepend_child_node(pugi::xml_node obj,const char *name) {
+	return obj.prepend_child(name);
+}
+
+pugi::xml_node
+pugi_insert_child_node_after(pugi::xml_node obj,pugi::xml_node after,const char *name) {
+	return obj.insert_child_after(name,after);
+}
+
+pugi::xml_node
+pugi_insert_child_node_before(pugi::xml_node obj,pugi::xml_node before,const char *name) {
+	return obj.insert_child_after(name,before);
 }
 
 // End pugixml_c.cpp

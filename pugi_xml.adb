@@ -462,4 +462,36 @@ package body Pugi_Xml is
       Node.Node := insert(Obj.Node,Before.Node,XML_Node_Type'Pos(Node_Type));
    end Insert_Child_Before;
 
+   procedure Append_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class) is
+      function append(Obj, Name: System.Address) return System.Address;
+      pragma Import(C,append,"pugi_append_child_node");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Node.Node := append(Obj.Node,C_Name'Address);
+   end Append_Child;
+   
+   procedure Prepend_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class) is
+      function prepend(Obj, Name: System.Address) return System.Address;
+      pragma Import(C,prepend,"pugi_prepend_child_node");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Node.Node := prepend(Obj.Node,C_Name'Address);
+   end Prepend_Child;
+   
+   procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Name: String; Node: out XML_Node'Class) is
+      function insert(Obj, After, Name: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_insert_child_node_after");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Node.Node := insert(Obj.Node,After.Node,C_Name'Address);
+   end Insert_Child_After;
+   
+   procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Name: String; Node: out XML_Node'Class) is
+      function insert(Obj, Before, Name: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_insert_child_node_before");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Node.Node := insert(Obj.Node,Before.Node,C_Name'Address);
+   end Insert_Child_Before;
+   
 end Pugi_Xml;
