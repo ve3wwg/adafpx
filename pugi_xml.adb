@@ -32,8 +32,6 @@ package body Pugi_Xml is
    end Finalize;
 
    procedure Initialize(Obj: in out Xml_Node) is
-      function new_xml_node return System.Address;
-      pragma Import(C,new_xml_node,"pugi_new_xml_node");
    begin
       Obj.Node := System.Null_Address;
    end Initialize;
@@ -41,6 +39,16 @@ package body Pugi_Xml is
    procedure Finalize(Obj: in out Xml_Node) is
    begin
       Obj.Node := System.Null_Address;   
+   end Finalize;
+
+   procedure Initialize(Obj: in out Xml_Attribute) is
+   begin
+      Obj.Attr := System.Null_Address;
+   end Initialize;
+
+   procedure Finalize(Obj: in out Xml_Attribute) is
+   begin
+      Obj.Attr := System.Null_Address;   
    end Finalize;
 
    procedure As_Node(Obj: in out XML_Document; Node: out XML_Node'Class) is
@@ -107,7 +115,7 @@ package body Pugi_Xml is
       return XML_Node_Type'Val(get_xml_node_type(Obj.Node));
    end Node_Type;   
 
-   function Node_Value(Obj: XML_Node) return String is
+   function Value(Obj: XML_Node) return String is
       function node_value(Node: System.Address) return System.Address;
       pragma Import(C,node_value,"pugi_node_value");
       C_Str :  constant System.Address := node_value(Obj.Node);
@@ -116,7 +124,7 @@ package body Pugi_Xml is
       for V'Address use C_Str;
    begin
       return V;
-   end Node_Value;
+   end Value;
 
    procedure First_Child(Obj: XML_Node; Node: out XML_Node) is
       function get_first_child(Node: System.Address) return System.Address;
@@ -248,5 +256,49 @@ package body Pugi_Xml is
    begin
       return is_ge(Left.Node'Address,Right.Node'Address) /= 0;
    end ">=";
+
+   procedure First_Attribute(Obj: XML_Node; Attr: out XML_Attribute'Class) is
+      function get_first(Obj: System.Address) return System.Address;
+      pragma Import(C,get_first,"pugi_first_attr");
+   begin
+      Attr.Attr := get_first(Obj.Node);
+   end First_Attribute;
+
+   procedure Last_Attribute(Obj: XML_Node; Attr: out XML_Attribute'Class) is
+      function get_last(Obj: System.Address) return System.Address;
+      pragma Import(C,get_last,"pugi_last_attr");
+   begin
+      Attr.Attr := get_last(Obj.Node);
+   end Last_Attribute;
+
+   procedure Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class) is
+      function get_attr(Node: System.Address; Name: System.Address) return System.Address;
+      pragma Import(C,get_attr,"pugi_attr");
+      C_Name:  aliased String := C_String(Name);
+   begin
+      Attr.Attr := get_attr(Obj.Node,Name'Address);
+   end Attribute;
+
+   function Name(Obj: XML_Attribute) return String is
+      function get_name(Attr: System.Address) return System.Address;
+      pragma Import(C,get_name,"pugi_attr_name");
+      C_Str :  constant System.Address := get_name(Obj.Attr);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Name;
+
+   function Value(Obj: XML_Attribute) return String is
+      function get_value(Attr: System.Address) return System.Address;
+      pragma Import(C,get_value,"pugi_attr_value");
+      C_Str :  constant System.Address := get_value(Obj.Attr);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Value;
 
 end Pugi_Xml;

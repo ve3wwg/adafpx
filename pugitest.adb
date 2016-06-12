@@ -11,6 +11,8 @@ use Posix, Pugi_Xml;
 with Ada.Text_IO;
 
 procedure PugiTest is
+   use Ada.Text_IO;
+
    Doc:  Xml_Document;
    Node: Xml_Node;
    Gnat_Prep: Xml_Node;
@@ -45,7 +47,7 @@ begin
    end;
 
    declare
-      V : String := Gnat_Prep.Node_Value;
+      V : String := Gnat_Prep.Value;
    begin
       Ada.Text_IO.Put("Value='");
       Ada.Text_IO.Put(V);
@@ -131,8 +133,26 @@ begin
       Root.Set_Value("OINKERS",OK);
       pragma Assert(OK);
       pragma Assert(Root.Name = "Named_Root");
-      pragma Assert(Root.Node_Value = "OINKERS");
+      pragma Assert(Root.Value = "OINKERS");
       Ada.Text_IO.Put_Line("New Document Test passed.");
+   end;
+
+   declare
+      First, Two, Last: XML_Attribute;
+   begin
+      First_Attribute(Gnat_Prep,First);
+      Attribute(Gnat_Prep,"Two",Two);
+      Last_Attribute(Gnat_Prep,Last);
+
+      pragma Assert(First.Name = "attr1");
+      pragma Assert(Two.Name = "attr2");
+      pragma Assert(Last.Name = "attr3");
+
+      pragma Assert(First.Value = "One");
+      pragma Assert(Two.Value = "Two");
+      pragma Assert(Last.Value = "Three");
+
+      Put_Line("Attributes passed.");
    end;
 
    Ada.Text_IO.Put_Line("Done");

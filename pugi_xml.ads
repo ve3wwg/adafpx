@@ -36,6 +36,7 @@ package Pugi_Xml is
 
    type XML_Document is new Ada.Finalization.Controlled with private;
    type XML_Node is new Ada.Finalization.Controlled with private;
+   type XML_Attribute is new Ada.Finalization.Controlled with private;
 
    -- XML_Document
    procedure As_Node(Obj: in out XML_Document; Node: out XML_Node'Class);
@@ -48,7 +49,7 @@ package Pugi_Xml is
    procedure Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
    function Empty(Obj: XML_Node) return Boolean;
    function Node_Type(Obj: XML_Node) return XML_Node_Type;
-   function Node_Value(Obj: XML_Node) return String;
+   function Value(Obj: XML_Node) return String;
    procedure First_Child(Obj: XML_Node; Node: out XML_Node);
    procedure Last_Child(Obj: XML_Node; Node: out XML_Node);
    procedure Root_Node(Obj: XML_Node; Node: out XML_Node);
@@ -60,24 +61,36 @@ package Pugi_Xml is
    function Child_Value(Obj: XML_Node) return String;
    function Child_Value(Obj: XML_Node; Name: String) return String;
 
-   procedure Set_Name(Obj: XML_Node; Data: String; OK: out Boolean);
-   procedure Set_Value(Obj: XML_Node; Data: String; OK: out Boolean);
-
    function "="(Left: XML_Node; Right: XML_Node) return Boolean;
    function "<"(Left: XML_Node; Right: XML_Node) return Boolean;
    function "<="(Left: XML_Node; Right: XML_Node) return Boolean;
    function ">"(Left: XML_Node; Right: XML_Node) return Boolean;
    function ">="(Left: XML_Node; Right: XML_Node) return Boolean;
 
-   -- // Get attribute list
-   -- xml_attribute first_attribute() const;
-   -- xml_attribute last_attribute() const;
-   -- 
+   procedure Set_Name(Obj: XML_Node; Data: String; OK: out Boolean);
+   procedure Set_Value(Obj: XML_Node; Data: String; OK: out Boolean);
+
+   procedure First_Attribute(Obj: XML_Node; Attr: out XML_Attribute'Class);
+   procedure Last_Attribute(Obj: XML_Node; Attr: out XML_Attribute'Class);
+   procedure Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class);
+
    -- // Get text object for the current node
    -- xml_text text() const;
+
+   function Name(Obj: XML_Attribute) return String;
+   function Value(Obj: XML_Attribute) return String;
+
+   -- xml_attribute
+   -- // Comparison operators (compares wrapped attribute pointers)
+   -- bool operator==(const xml_attribute& r) const;
+   -- bool operator!=(const xml_attribute& r) const;
+   -- bool operator<(const xml_attribute& r) const;
+   -- bool operator>(const xml_attribute& r) const;
+   -- bool operator<=(const xml_attribute& r) const;
+   -- bool operator>=(const xml_attribute& r) const;
    -- 
-   -- // Get child, attribute or next/previous sibling with the specified name
-   -- xml_attribute attribute(const char_t* name) const;
+   -- // Check if attribute is empty
+   -- bool empty() const;
 
 private
 
@@ -91,10 +104,18 @@ private
 
    type XML_Node is new Ada.Finalization.Controlled with
       record
-         Node:       System.Address;   -- ptr to pugi::xml_node
+         Node:       System.Address;   -- pugi::xml_node
       end record;
 
    procedure Initialize(Obj: in out XML_Node);
    procedure Finalize(Obj: in out XML_Node);
+
+   type XML_Attribute is new Ada.Finalization.Controlled with
+      record
+         Attr:       System.Address;   -- pugi::xml_attribute
+      end record;
+
+   procedure Initialize(Obj: in out XML_Attribute);
+   procedure Finalize(Obj: in out XML_Attribute);
 
 end Pugi_Xml;
