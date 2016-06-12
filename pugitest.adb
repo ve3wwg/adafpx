@@ -43,12 +43,42 @@ begin
       Ada.Text_IO.Put_line("'");
    end;
 
+   declare
+      First, Last : XML_Node;
+   begin
+      First_Child(Gnat_Prep,First);
+      Last_Child(Gnat_Prep,Last);
+      Ada.Text_IO.Put("First and last child of Gnat_Prep are ");
+      Ada.Text_IO.Put(First.Name);
+      Ada.Text_IO.Put(" and ");
+      Ada.Text_IO.Put_Line(Last.Name);
+   end;
+
    Parent(Gnat_Prep,Par_Node);
    Ada.Text_IO.Put("Parent name is '");
    Ada.Text_IO.Put(Par_Node.Name);
    Ada.Text_IO.Put_Line("'");
 
+   declare
+      Root : XML_Node;
+      Temp : XML_Node;
+   begin
+      Gnat_Prep.Root_Node(Root);
+      Root.First_Child(Temp);
+      pragma Assert(Temp.Name = "entities");
+      Ada.Text_IO.Put_Line("Root passed.");
+   end;
+
+   declare
+      Root : XML_Node;
+      Temp : XML_Node;
+   begin
+      Doc.As_Node(Root);
+      Root.First_Child(Temp);
+      pragma Assert(Temp.Name = "entities");
+      Ada.Text_IO.Put_Line("As_Node passed.");
+   end;
+
    Ada.Text_IO.Put_Line("Done");
 
 end PugiTest;
-

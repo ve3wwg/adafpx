@@ -43,6 +43,13 @@ package body Pugi_Xml is
       Obj.Node := System.Null_Address;   
    end Finalize;
 
+   procedure As_Node(Obj: in out XML_Document; Node: out XML_Node'Class) is
+      function as_node(Doc: System.Address) return System.Address;
+      pragma Import(C,as_node,"pugi_doc_node");
+   begin
+      Node.Node := as_node(Obj.Doc);
+   end As_Node;
+
    procedure Load(Obj: in out Xml_Document; Pathname: in String) is
       function load_xml_file(doc: System.Address; Pathname: System.Address) return System.Address;
       pragma Import(C,load_xml_file,"pugi_load_xml_file");
@@ -110,5 +117,26 @@ package body Pugi_Xml is
    begin
       return V;
    end Node_Value;
+
+   procedure First_Child(Obj: XML_Node; Node: out XML_Node) is
+      function get_first_child(Node: System.Address) return System.Address;
+      pragma Import(C,get_first_child,"pugi_first_child");
+   begin
+      Node.Node := get_first_child(Obj.Node);
+   end First_Child;
+
+   procedure Last_Child(Obj: XML_Node; Node: out XML_Node) is
+      function get_last_child(Node: System.Address) return System.Address;
+      pragma Import(C,get_last_child,"pugi_last_child");
+   begin
+      Node.Node := get_last_child(Obj.Node);
+   end Last_Child;
+
+   procedure Root_Node(Obj: XML_Node; Node: out XML_Node) is
+      function get_root_node(Node: System.Address) return System.Address;
+      pragma Import(C,get_root_node,"pugi_root_node");
+   begin
+      Node.Node := get_root_node(Obj.Node);
+   end Root_Node;
 
 end Pugi_Xml;

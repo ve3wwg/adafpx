@@ -14,6 +14,7 @@
 
 extern "C" {
 	pugi::xml_document *pugi_new_xml_document();
+	pugi::xml_node pugi_doc_node(pugi::xml_document *doc);
 	void pugi_delete_xml_document(pugi::xml_document *doc);
 	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname);
 
@@ -23,6 +24,9 @@ extern "C" {
 	pugi::xml_node pugi_xml_child(pugi::xml_document *obj,const char *name);
 	pugi::xml_node pugi_xml_parent(pugi::xml_node obj);
 	pugi::xml_node pugi_node_child(pugi::xml_node obj,const char *name);
+	pugi::xml_node pugi_first_child(pugi::xml_node obj);
+	pugi::xml_node pugi_last_child(pugi::xml_node obj);
+	pugi::xml_node pugi_root_node(pugi::xml_node obj);
 
 	const char *pugi_node_name(pugi::xml_node xml_node);
 	const char *pugi_node_value(pugi::xml_node xml_node);
@@ -44,6 +48,11 @@ void
 pugi_load_xml_file(pugi::xml_document *obj,const char *pathname) {
 	
 	obj->load_file(pathname);
+}
+
+pugi::xml_node
+pugi_doc_node(pugi::xml_document *doc) {
+	return doc->document_element();
 }
 
 pugi::xml_node
@@ -82,6 +91,21 @@ pugi_node_empty(pugi::xml_node obj) {
 int
 pugi_node_type(pugi::xml_node obj) {
 	return obj.type();
+}
+
+pugi::xml_node
+pugi_first_child(pugi::xml_node obj) {
+	return obj.first_child();
+}
+
+pugi::xml_node 
+pugi_last_child(pugi::xml_node obj) {
+	return obj.last_child();
+}
+
+pugi::xml_node 
+pugi_root_node(pugi::xml_node obj) {
+	return obj.root();
 }
 
 // End pugixml_c.cpp

@@ -38,8 +38,9 @@ package Pugi_Xml is
    type XML_Node is new Ada.Finalization.Controlled with private;
 
    -- XML_Document
-   procedure Load(Obj: in out Xml_Document; Pathname: string);
-   procedure Child(Obj: in out Xml_Document; Name: String; Node: out XML_Node'Class);
+   procedure As_Node(Obj: in out XML_Document; Node: out XML_Node'Class);
+   procedure Load(Obj: in out XML_Document; Pathname: string);
+   procedure Child(Obj: in out XML_Document; Name: String; Node: out XML_Node'Class);
 
    -- XML_Node
    function Name(Obj: XML_Node) return String;
@@ -48,6 +49,9 @@ package Pugi_Xml is
    function Empty(Obj: XML_Node) return Boolean;
    function Node_Type(Obj: XML_Node) return XML_Node_Type;
    function Node_Value(Obj: XML_Node) return String;
+   procedure First_Child(Obj: XML_Node; Node: out XML_Node);
+   procedure Last_Child(Obj: XML_Node; Node: out XML_Node);
+   procedure Root_Node(Obj: XML_Node; Node: out XML_Node);
 
    -- // Comparison operators (compares wrapped node pointers)
    -- bool operator==(const xml_node& r) const;
@@ -61,19 +65,9 @@ package Pugi_Xml is
    -- xml_attribute first_attribute() const;
    -- xml_attribute last_attribute() const;
    -- 
-   -- // Get children list
-   -- xml_node first_child() const;
-   -- xml_node last_child() const;
-   -- 
    -- // Get next/previous sibling in the children list of the parent node
    -- xml_node next_sibling() const;
    -- xml_node previous_sibling() const;
-   -- 
-   -- // Get parent node
-   -- xml_node parent() const;
-   -- 
-   -- // Get root of DOM tree this node belongs to
-   -- xml_node root() const;
    -- 
    -- // Get text object for the current node
    -- xml_text text() const;
@@ -101,15 +95,15 @@ private
          Doc:        System.Address;   -- ptr to pugi::xml_document
       end record;
 
-   procedure Initialize(Obj: in out Xml_Document);
-   procedure Finalize(Obj: in out Xml_Document);
+   procedure Initialize(Obj: in out XML_Document);
+   procedure Finalize(Obj: in out XML_Document);
 
    type XML_Node is new Ada.Finalization.Controlled with
       record
          Node:       System.Address;   -- ptr to pugi::xml_node
       end record;
 
-   procedure Initialize(Obj: in out Xml_Node);
-   procedure Finalize(Obj: in out Xml_Node);
+   procedure Initialize(Obj: in out XML_Node);
+   procedure Finalize(Obj: in out XML_Node);
 
 end Pugi_Xml;
