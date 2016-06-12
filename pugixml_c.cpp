@@ -46,12 +46,19 @@ extern "C" {
 	int pugi_is_gt(pugi::xml_node left,pugi::xml_node right);
 	int pugi_is_ge(pugi::xml_node left,pugi::xml_node right);
 
+	pugi::xml_attribute pugi_append_attr(pugi::xml_node obj,const char *name);
+	pugi::xml_attribute pugi_prepend_attr(pugi::xml_node obj,const char *name);
+	pugi::xml_attribute pugi_append_after(pugi::xml_node obj,const char *name,pugi::xml_attribute attr);
+	pugi::xml_attribute pugi_append_before(pugi::xml_node obj,const char *name,pugi::xml_attribute attr);
+
 	pugi::xml_attribute pugi_first_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_attr(pugi::xml_node obj,const char *name);
 
 	const char *pugi_attr_name(pugi::xml_node obj);
 	const char *pugi_attr_value(pugi::xml_node obj);
+
+	const char *pugi_text(pugi::xml_node obj);
 
 	int pugi_attr_empty(pugi::xml_attribute obj);
 
@@ -60,6 +67,9 @@ extern "C" {
 	int pugi_is_attr_le(pugi::xml_attribute left,pugi::xml_attribute right);
 	int pugi_is_attr_gt(pugi::xml_attribute left,pugi::xml_attribute right);
 	int pugi_is_attr_ge(pugi::xml_attribute left,pugi::xml_attribute right);
+
+	pugi::xml_attribute pugi_next_attr(pugi::xml_attribute obj);
+	pugi::xml_attribute pugi_prev_attr(pugi::xml_attribute obj);
 }
 
 pugi::xml_document *
@@ -228,6 +238,11 @@ pugi_attr_value(pugi::xml_node obj) {
 	return obj.value();
 }
 
+const char *
+pugi_text(pugi::xml_node obj) {
+	return obj.text().get();
+}
+
 int
 pugi_attr_empty(pugi::xml_attribute obj) {
 	return obj.empty();
@@ -256,6 +271,36 @@ pugi_is_attr_gt(pugi::xml_attribute left,pugi::xml_attribute right) {
 int
 pugi_is_attr_ge(pugi::xml_attribute left,pugi::xml_attribute right) {
 	return left >= right;
+}
+
+pugi::xml_attribute
+pugi_append_attr(pugi::xml_node obj,const char *name) {
+	return obj.append_attribute(name);
+}
+
+pugi::xml_attribute
+pugi_prepend_attr(pugi::xml_node obj,const char *name) {
+	return obj.prepend_attribute(name);
+}
+
+pugi::xml_attribute
+pugi_append_after(pugi::xml_node obj,const char *name,pugi::xml_attribute other) {
+	return obj.insert_attribute_after(name,other);
+}
+
+pugi::xml_attribute
+pugi_append_before(pugi::xml_node obj,const char *name,pugi::xml_attribute other) {
+	return obj.insert_attribute_before(name,other);
+}
+
+pugi::xml_attribute
+pugi_next_attr(pugi::xml_attribute obj) {
+	return obj.next_attribute();
+}
+
+pugi::xml_attribute
+pugi_prev_attr(pugi::xml_attribute obj) {
+	return obj.previous_attribute();
 }
 
 // End pugixml_c.cpp

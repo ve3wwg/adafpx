@@ -74,8 +74,60 @@ package Pugi_Xml is
    procedure Last_Attribute(Obj: XML_Node; Attr: out XML_Attribute'Class);
    procedure Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class);
 
-   -- // Get text object for the current node
-   -- xml_text text() const;
+   function Text(Obj: XML_Node) return String;
+
+   procedure Append_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class);
+   procedure Prepend_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class);
+   procedure Insert_Attribute_After(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Insert_Attribute_Before(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+
+   -- // Add a copy of the specified attribute. Returns added attribute, or empty attribute on errors.
+   -- xml_attribute append_copy(const xml_attribute& proto);
+   -- xml_attribute prepend_copy(const xml_attribute& proto);
+   -- xml_attribute insert_copy_after(const xml_attribute& proto, const xml_attribute& attr);
+   -- xml_attribute insert_copy_before(const xml_attribute& proto, const xml_attribute& attr);
+   -- 
+   -- // Add child node with specified type. Returns added node, or empty node on errors.
+   -- xml_node append_child(xml_node_type type = node_element);
+   -- xml_node prepend_child(xml_node_type type = node_element);
+   -- xml_node insert_child_after(xml_node_type type, const xml_node& node);
+   -- xml_node insert_child_before(xml_node_type type, const xml_node& node);
+   -- 
+   -- // Add child element with specified name. Returns added node, or empty node on errors.
+   -- xml_node append_child(const char_t* name);
+   -- xml_node prepend_child(const char_t* name);
+   -- xml_node insert_child_after(const char_t* name, const xml_node& node);
+   -- xml_node insert_child_before(const char_t* name, const xml_node& node);
+   -- 
+   -- // Add a copy of the specified node as a child. Returns added node, or empty node on errors.
+   -- xml_node append_copy(const xml_node& proto);
+   -- xml_node prepend_copy(const xml_node& proto);
+   -- xml_node insert_copy_after(const xml_node& proto, const xml_node& node);
+   -- xml_node insert_copy_before(const xml_node& proto, const xml_node& node);
+   -- 
+   -- // Remove specified attribute
+   -- bool remove_attribute(const xml_attribute& a);
+   -- bool remove_attribute(const char_t* name);
+   -- 
+   -- // Remove specified child
+   -- bool remove_child(const xml_node& n);
+   -- bool remove_child(const char_t* name);
+   -- 
+   -- // Search for a node by path consisting of node names and . or .. elements.
+   -- xml_node first_element_by_path(const char_t* path, char_t delimiter = '/') const;
+   -- 
+   -- // Child nodes iterators
+   -- typedef xml_node_iterator iterator;
+   -- 
+   -- iterator begin() const;
+   -- iterator end() const;
+   -- 
+   -- // Attribute iterators
+   -- typedef xml_attribute_iterator attribute_iterator;
+   -- 
+   -- attribute_iterator attributes_begin() const;
+   -- attribute_iterator attributes_end() const;
+
 
    function Name(Obj: XML_Attribute) return String;
    function Value(Obj: XML_Attribute) return String;
@@ -86,6 +138,11 @@ package Pugi_Xml is
    function "<="(Left, Right: XML_Attribute) return Boolean;
    function ">"(Left, Right: XML_Attribute) return Boolean;
    function ">="(Left, Right: XML_Attribute) return Boolean;
+
+   procedure Next_Attribute(Obj: XML_Attribute; Next: out XML_Attribute'Class);
+   procedure Previous_Attribute(Obj: XML_Attribute; Prev: out XML_Attribute'Class);
+
+   function Is_Null(Obj: XML_Attribute) return Boolean;
 
 private
 

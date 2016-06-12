@@ -21,21 +21,21 @@ begin
 
    pragma Assert(Node.Empty = True);
 
-   Ada.Text_IO.Put_Line("Running");
+   Put_Line("Running");
    Load(Doc,"pugitest.xml");
 
-   Ada.Text_IO.Put_Line("Getting Child");
+   Put_Line("Getting Child");
    Child(Doc,"entities",Node);
-   Ada.Text_IO.Put("Node name is '");
-   Ada.Text_IO.Put(Node.Name);
-   Ada.Text_IO.Put_Line("', Type=" & XML_Node_Type'Image(Node.Node_Type));
+   Put("Node name is '");
+   Put(Node.Name);
+   Put_Line("', Type=" & XML_Node_Type'Image(Node.Node_Type));
 
    pragma Assert(Node.Empty = False);
 
    Child(Node,"gnatprep",Gnat_Prep);
-   Ada.Text_IO.Put("Gnat_Prep name is '");
-   Ada.Text_IO.Put(Gnat_Prep.Name);
-   Ada.Text_IO.Put_Line("'");
+   Put("Gnat_Prep name is '");
+   Put(Gnat_Prep.Name);
+   Put_Line("'");
 
    pragma Assert(Gnat_Prep = Gnat_Prep);
    declare
@@ -49,9 +49,9 @@ begin
    declare
       V : String := Gnat_Prep.Value;
    begin
-      Ada.Text_IO.Put("Value='");
-      Ada.Text_IO.Put(V);
-      Ada.Text_IO.Put_line("'");
+      Put("Value='");
+      Put(V);
+      Put_line("'");
    end;
 
    declare
@@ -59,46 +59,54 @@ begin
    begin
       First_Child(Gnat_Prep,First);
       Last_Child(Gnat_Prep,Last);
-      Ada.Text_IO.Put("First and last child of Gnat_Prep are ");
-      Ada.Text_IO.Put(First.Name);
-      Ada.Text_IO.Put(" and ");
-      Ada.Text_IO.Put_Line(Last.Name);
+      Put("First and last child of Gnat_Prep are ");
+      Put(First.Name);
+      Put(" and ");
+      Put_Line(Last.Name);
 
-      Ada.Text_IO.Put_Line("All Siblings are:");
+      Put_Line("All Siblings are:");
       Temp := First;
       loop
-         Ada.Text_IO.Put_Line(Temp.Name);
+         Put_Line(Temp.Name);
          Temp.Next_Sibling(Temp);
          exit when Temp.Is_Null;
       end loop;
-      Ada.Text_IO.Put_Line("--");
+      Put_Line("--");
 
-      Ada.Text_IO.Put_Line("All Siblings in Reverse Order:");
+      Put_Line("All Siblings in Reverse Order:");
       Temp := Last;
       loop
-         Ada.Text_IO.Put_Line(Temp.Name);
+         Put_Line(Temp.Name);
          Temp.Previous_Sibling(Temp);
          exit when Temp.Is_Null;
       end loop;
-      Ada.Text_IO.Put_Line("--");
+      Put_Line("--");
 
       declare
          Middle : String := First.Child_Value;
       begin
-         Ada.Text_IO.Put_Line("Child value is '" & Middle & "'");
+         Put_Line("Child value is '" & Middle & "'");
       end;
 
       declare
          Middle : String := Gnat_Prep.Child_Value("Middle");
+         M : XML_Node;
       begin
-         Ada.Text_IO.Put_Line("Child value('Middle') is '" & Middle & "'");
+         Put_Line("Child value('Middle') is '" & Middle & "'");
+         Gnat_Prep.Child("Middle",M);
+
+         declare
+            Mid2 : String := M.Text;
+         begin
+         pragma Assert(Mid2 = Middle);
+         end;
       end;
    end;
 
    Parent(Gnat_Prep,Par_Node);
-   Ada.Text_IO.Put("Parent name is '");
-   Ada.Text_IO.Put(Par_Node.Name);
-   Ada.Text_IO.Put_Line("'");
+   Put("Parent name is '");
+   Put(Par_Node.Name);
+   Put_Line("'");
 
    declare
       Root : XML_Node;
@@ -107,20 +115,48 @@ begin
       Gnat_Prep.Root_Node(Root);
       Root.First_Child(Temp);
       pragma Assert(Temp.Name = "entities");
-      Ada.Text_IO.Put_Line("Root passed.");
+      Put_Line("Root passed.");
+   end;
+
+   declare
+      Attr : XML_Attribute;
+   begin
+      Gnat_Prep.First_Attribute(Attr);
+      loop
+         Put("Attribute: ");
+         Put_Line(Attr.Name);
+         Attr.Next_Attribute(Attr);
+         exit when Attr.Is_Null;
+      end loop;
+
+      Put_Line("In Reverse Order:");
+      Gnat_Prep.Last_Attribute(Attr);
+      loop
+         Put("Attribute: ");
+         Put_Line(Attr.Name);
+         Attr.Previous_Attribute(Attr);
+         exit when Attr.Is_Null;
+      end loop;
    end;
 
    declare
       Root : XML_Node;
       Temp : XML_Node;
+      A1, A2, A3, A4: XML_Attribute;
    begin
       Doc.As_Node(Root);
       Root.First_Child(Temp);
       pragma Assert(Temp.Name = "entities");
-      Ada.Text_IO.Put_Line("As_Node passed.");
+      Put_Line("As_Node passed.");
+
+      Temp.Append_Attribute("A4",A4);
+      Temp.Prepend_Attribute("A1",A1);
+      Temp.Insert_Attribute_After("A2",A1,A2);
+      Temp.Insert_Attribute_Before("A3",A4,A3);
+
    end;
 
-   Ada.Text_IO.Put_Line("Testing document creation:");
+   Put_Line("Testing document creation:");
 
    declare
       New_Doc : XML_Document;
@@ -134,7 +170,7 @@ begin
       pragma Assert(OK);
       pragma Assert(Root.Name = "Named_Root");
       pragma Assert(Root.Value = "OINKERS");
-      Ada.Text_IO.Put_Line("New Document Test passed.");
+      Put_Line("New Document Test passed.");
    end;
 
    declare
@@ -159,6 +195,6 @@ begin
       Put_Line("Attributes passed.");
    end;
 
-   Ada.Text_IO.Put_Line("Done");
+   Put_Line("Done");
 
 end PugiTest;

@@ -271,6 +271,17 @@ package body Pugi_Xml is
       Attr.Attr := get_last(Obj.Node);
    end Last_Attribute;
 
+   function Text(Obj: XML_Node) return String is
+      function text(Node: System.Address) return System.Address;
+      pragma Import(C,text,"pugi_text");
+      C_Str :  constant System.Address := text(Obj.Node);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Text;
+
    procedure Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class) is
       function get_attr(Node: System.Address; Name: System.Address) return System.Address;
       pragma Import(C,get_attr,"pugi_attr");
@@ -342,5 +353,57 @@ package body Pugi_Xml is
    begin
       return is_ge(Left.Attr'Address,Right.Attr'Address) /= 0;
    end ">=";
+
+   procedure Append_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class) is
+      function insert(Obj, Name: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_append_attr");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Attr.Attr := insert(Obj.Node,C_Name'Address);
+   end Append_Attribute;
+   
+   procedure Prepend_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class) is
+      function insert(Obj, Name: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_prepend_attr");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Attr.Attr := insert(Obj.Node,C_Name'Address);
+   end Prepend_Attribute;
+   
+   procedure Insert_Attribute_After(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class) is
+      function insert(Obj, Name, Other: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_append_after");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Attr.Attr := insert(Obj.Node,C_Name'Address,Other.Attr);
+   end Insert_Attribute_After;
+   
+   procedure Insert_Attribute_Before(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class) is
+      function insert(Obj, Name, Other: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_append_before");
+      C_Name: aliased String := C_String(Name);
+   begin
+      Attr.Attr := insert(Obj.Node,C_Name'Address,Other.Attr);
+   end Insert_Attribute_Before;
+
+   procedure Next_Attribute(Obj: XML_Attribute; Next: out XML_Attribute'Class) is
+      function get_next(Obj: System.Address) return System.Address;
+      pragma Import(C,get_next,"pugi_next_attr");
+   begin
+      Next.Attr := get_next(Obj.Attr);
+   end Next_Attribute;
+
+   procedure Previous_Attribute(Obj: XML_Attribute; Prev: out XML_Attribute'Class) is
+      function get_prev(Obj: System.Address) return System.Address;
+      pragma Import(C,get_prev,"pugi_prev_attr");
+   begin
+      Prev.Attr := get_prev(Obj.Attr);
+   end Previous_Attribute;
+
+   function Is_Null(Obj: XML_Attribute) return Boolean is
+      use System;
+   begin
+      return Obj.Attr = System.Null_Address;
+   end Is_Null;
 
 end Pugi_Xml;
