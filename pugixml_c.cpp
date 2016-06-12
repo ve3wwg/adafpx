@@ -28,12 +28,17 @@ extern "C" {
 	pugi::xml_node pugi_last_child(pugi::xml_node obj);
 	pugi::xml_node pugi_root_node(pugi::xml_node obj);
 	pugi::xml_node pugi_next_sibling(pugi::xml_node obj);
+	pugi::xml_node pugi_next_named_sibling(pugi::xml_node obj,const char *name);
 	pugi::xml_node pugi_prev_sibling(pugi::xml_node obj);
+	pugi::xml_node pugi_prev_named_sibling(pugi::xml_node obj,const char *name);
 	const char *pugi_node_name(pugi::xml_node obj);
 	const char *pugi_node_value(pugi::xml_node obj);
 
 	const char *pugi_child_value(pugi::xml_node obj);
 	const char *pugi_named_child_value(pugi::xml_node obj,const char *name);
+
+	int pugi_set_name(pugi::xml_node obj,const char *data);
+	int pugi_set_value(pugi::xml_node obj,const char *data);
 }
 
 pugi::xml_document *
@@ -118,8 +123,18 @@ pugi_next_sibling(pugi::xml_node obj) {
 }
 
 pugi::xml_node
+pugi_next_named_sibling(pugi::xml_node obj,const char *name) {
+	return obj.next_sibling(name);
+}
+
+pugi::xml_node
 pugi_prev_sibling(pugi::xml_node obj) {
 	return obj.previous_sibling();
+}
+
+pugi::xml_node
+pugi_prev_named_sibling(pugi::xml_node obj,const char *name) {
+	return obj.previous_sibling(name);
 }
 
 const char *
@@ -130,6 +145,16 @@ pugi_child_value(pugi::xml_node obj) {
 const char *
 pugi_named_child_value(pugi::xml_node obj,const char *name) {
 	return obj.child_value(name);
+}
+
+int
+pugi_set_name(pugi::xml_node obj,const char *data) {
+	return obj.set_name(data) ? 1 : 0;
+}
+
+int
+pugi_set_value(pugi::xml_node obj,const char *data) {
+	return obj.set_value(data) ? 1 : 0;
 }
 
 // End pugixml_c.cpp

@@ -109,6 +109,23 @@ begin
       Ada.Text_IO.Put_Line("As_Node passed.");
    end;
 
+   Ada.Text_IO.Put_Line("Testing document creation:");
+
+   declare
+      New_Doc : XML_Document;
+      Root : XML_Node;
+      OK : Boolean;
+   begin
+      New_Doc.As_Node(Root);
+      Root.Set_Name("Named_Root",OK);
+      pragma Assert(OK);
+      Root.Set_Value("OINKERS",OK);
+      pragma Assert(OK);
+      pragma Assert(Root.Name = "Named_Root");
+      pragma Assert(Root.Node_Value = "OINKERS");
+      Ada.Text_IO.Put_Line("New Document Test passed.");
+   end;
+
    Ada.Text_IO.Put_Line("Done");
 
 end PugiTest;

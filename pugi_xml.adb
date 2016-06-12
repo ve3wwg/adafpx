@@ -146,11 +146,27 @@ package body Pugi_Xml is
       Node.Node := get_next_sibling(Obj.Node);
    end Next_Sibling;
 
+   procedure Next_Sibling(Obj: XML_Node; Name: String; Node: out XML_Node) is
+      function get_next_sibling(Node, Name: System.Address) return System.Address;
+      pragma Import(C,get_next_sibling,"pugi_next_named_sibling");
+      C_Name:  aliased String := C_String(Name);
+   begin
+      Node.Node := get_next_sibling(Obj.Node,C_Name'Address);
+   end Next_Sibling;
+
    procedure Previous_Sibling(Obj: XML_Node; Node: out XML_Node) is
       function get_prev_sibling(Node: System.Address) return System.Address;
       pragma Import(C,get_prev_sibling,"pugi_prev_sibling");
    begin
       Node.Node := get_prev_sibling(Obj.Node);
+   end Previous_Sibling;
+
+   procedure Previous_Sibling(Obj: XML_Node; Name: String; Node: out XML_Node) is
+      function get_prev_sibling(Node, Name: System.Address) return System.Address;
+      pragma Import(C,get_prev_sibling,"pugi_prev_named_sibling");
+      C_Name:  aliased String := C_String(Name);
+   begin
+      Node.Node := get_prev_sibling(Obj.Node,C_Name'Address);
    end Previous_Sibling;
 
    function Is_Null(Obj: XML_Node) return Boolean is
@@ -181,5 +197,21 @@ package body Pugi_Xml is
    begin
       return V;
    end Child_Value;
+
+   procedure Set_Name(Obj: XML_Node; Data: String; OK: out Boolean) is
+      function set_name(Node, Data: System.Address) return int_t;
+      pragma Import(C,set_name,"pugi_set_name");
+      C_Data: aliased String := C_String(Data);
+   begin
+      OK := set_name(Obj.Node,C_Data'Address) /= 0;
+   end Set_Name;
+
+   procedure Set_Value(Obj: XML_Node; Data: String; OK: out Boolean) is
+      function set_value(Node, Data: System.Address) return int_t;
+      pragma Import(C,set_value,"pugi_set_value");
+      C_Data: aliased String := C_String(Data);
+   begin
+      OK := set_value(Obj.Node,C_Data'Address) /= 0;
+   end Set_Value;
 
 end Pugi_Xml;
