@@ -27,6 +27,8 @@ extern "C" {
 	pugi::xml_node pugi_first_child(pugi::xml_node obj);
 	pugi::xml_node pugi_last_child(pugi::xml_node obj);
 	pugi::xml_node pugi_root_node(pugi::xml_node obj);
+	pugi::xml_node pugi_next_sibling(pugi::xml_node obj);
+	pugi::xml_node pugi_prev_sibling(pugi::xml_node obj);
 
 	const char *pugi_node_name(pugi::xml_node xml_node);
 	const char *pugi_node_value(pugi::xml_node xml_node);
@@ -106,6 +108,16 @@ pugi_last_child(pugi::xml_node obj) {
 pugi::xml_node 
 pugi_root_node(pugi::xml_node obj) {
 	return obj.root();
+}
+
+pugi::xml_node
+pugi_next_sibling(pugi::xml_node obj) {
+	return obj.next_sibling();
+}
+
+pugi::xml_node
+pugi_prev_sibling(pugi::xml_node obj) {
+	return obj.previous_sibling();
 }
 
 // End pugixml_c.cpp

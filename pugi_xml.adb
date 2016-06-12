@@ -139,4 +139,24 @@ package body Pugi_Xml is
       Node.Node := get_root_node(Obj.Node);
    end Root_Node;
 
+   procedure Next_Sibling(Obj: XML_Node; Node: out XML_Node) is
+      function get_next_sibling(Node: System.Address) return System.Address;
+      pragma Import(C,get_next_sibling,"pugi_next_sibling");
+   begin
+      Node.Node := get_next_sibling(Obj.Node);
+   end Next_Sibling;
+
+   procedure Previous_Sibling(Obj: XML_Node; Node: out XML_Node) is
+      function get_prev_sibling(Node: System.Address) return System.Address;
+      pragma Import(C,get_prev_sibling,"pugi_prev_sibling");
+   begin
+      Node.Node := get_prev_sibling(Obj.Node);
+   end Previous_Sibling;
+
+   function Is_Null(Obj: XML_Node) return Boolean is
+      Node_Info : XML_Node_Type := Node_Type(Obj);
+   begin
+      return Node_Info = Node_Null;
+   end Is_Null;
+
 end Pugi_Xml;

@@ -52,6 +52,9 @@ package Pugi_Xml is
    procedure First_Child(Obj: XML_Node; Node: out XML_Node);
    procedure Last_Child(Obj: XML_Node; Node: out XML_Node);
    procedure Root_Node(Obj: XML_Node; Node: out XML_Node);
+   procedure Next_Sibling(Obj: XML_Node; Node: out XML_Node);
+   procedure Previous_Sibling(Obj: XML_Node; Node: out XML_Node);
+   function Is_Null(Obj: XML_Node) return Boolean;
 
    -- // Comparison operators (compares wrapped node pointers)
    -- bool operator==(const xml_node& r) const;
@@ -64,10 +67,6 @@ package Pugi_Xml is
    -- // Get attribute list
    -- xml_attribute first_attribute() const;
    -- xml_attribute last_attribute() const;
-   -- 
-   -- // Get next/previous sibling in the children list of the parent node
-   -- xml_node next_sibling() const;
-   -- xml_node previous_sibling() const;
    -- 
    -- // Get text object for the current node
    -- xml_text text() const;

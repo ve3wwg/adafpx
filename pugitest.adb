@@ -44,7 +44,7 @@ begin
    end;
 
    declare
-      First, Last : XML_Node;
+      First, Last, Temp : XML_Node;
    begin
       First_Child(Gnat_Prep,First);
       Last_Child(Gnat_Prep,Last);
@@ -52,6 +52,24 @@ begin
       Ada.Text_IO.Put(First.Name);
       Ada.Text_IO.Put(" and ");
       Ada.Text_IO.Put_Line(Last.Name);
+
+      Ada.Text_IO.Put_Line("All Siblings are:");
+      Temp := First;
+      loop
+         Ada.Text_IO.Put_Line(Temp.Name);
+         Temp.Next_Sibling(Temp);
+         exit when Temp.Is_Null;
+      end loop;
+      Ada.Text_IO.Put_Line("--");
+
+      Ada.Text_IO.Put_Line("All Siblings in Reverse Order:");
+      Temp := Last;
+      loop
+         Ada.Text_IO.Put_Line(Temp.Name);
+         Temp.Previous_Sibling(Temp);
+         exit when Temp.Is_Null;
+      end loop;
+      Ada.Text_IO.Put_Line("--");
    end;
 
    Parent(Gnat_Prep,Par_Node);
