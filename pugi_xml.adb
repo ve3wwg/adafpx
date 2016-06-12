@@ -39,14 +39,8 @@ package body Pugi_Xml is
    end Initialize;
 
    procedure Finalize(Obj: in out Xml_Node) is
-      use System;
-      procedure pugi_delete_node(node: System.Address);
-      pragma Import(C,pugi_delete_node,"pugi_delete_node");
    begin
-      if ( Obj.Node /= System.Null_Address ) then
-         pugi_delete_node(Obj.Node);
-         Obj.Node := System.Null_Address;   
-      end if;
+      Obj.Node := System.Null_Address;   
    end Finalize;
 
    procedure Load(Obj: in out Xml_Document; Pathname: in String) is

@@ -16,18 +16,22 @@ extern "C" {
 	pugi::xml_document *pugi_new_xml_document();
 	void pugi_delete_xml_document(pugi::xml_document *doc);
 	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname);
-	pugi::xml_node *pugi_xml_child(pugi::xml_document *obj,const char *name);
-	void pugi_delete_node(pugi::xml_node *obj);
-	const char *pugi_node_name(pugi::xml_node *xml_node);
-	pugi::xml_node *pugi_xml_parent(pugi::xml_node *obj);
-	pugi::xml_node *pugi_node_child(pugi::xml_node *obj,const char *name);
-	int pugi_node_empty(pugi::xml_node *obj);
-	int pugi_node_type(pugi::xml_node *obj);
-	const char *pugi_node_value(pugi::xml_node *xml_node);
+
+	int pugi_node_empty(pugi::xml_node obj);
+	int pugi_node_type(pugi::xml_node obj);
+
+	pugi::xml_node pugi_xml_child(pugi::xml_document *obj,const char *name);
+	pugi::xml_node pugi_xml_parent(pugi::xml_node obj);
+	pugi::xml_node pugi_node_child(pugi::xml_node obj,const char *name);
+
+	const char *pugi_node_name(pugi::xml_node xml_node);
+	const char *pugi_node_value(pugi::xml_node xml_node);
 }
 
 pugi::xml_document *
 pugi_new_xml_document() {
+	assert(sizeof(pugi::xml_node) == sizeof(void*));
+	assert(sizeof(pugi::xml_attribute) == sizeof(void*));
 	return new pugi::xml_document();
 }
 
@@ -42,58 +46,42 @@ pugi_load_xml_file(pugi::xml_document *obj,const char *pathname) {
 	obj->load_file(pathname);
 }
 
-pugi::xml_node *
+pugi::xml_node
 pugi_xml_child(pugi::xml_document *doc,const char *name) {
-	pugi::xml_node child = doc->child(name);
-
-	pugi::xml_node *rchild = new pugi::xml_node;
-	*rchild = child;
-	
-	return rchild;
-}
-
-void
-pugi_delete_node(pugi::xml_node *node) {
-
-	delete node;
+	return doc->child(name);
 }
 
 const char *
-pugi_node_name(pugi::xml_node *xml_node) {
+pugi_node_name(pugi::xml_node xml_node) {
 
-	return xml_node->name();
+	return xml_node.name();
 }
 
 const char *
-pugi_node_value(pugi::xml_node *xml_node) {
+pugi_node_value(pugi::xml_node xml_node) {
 
-	return xml_node->value();
+	return xml_node.value();
 }
 
-pugi::xml_node *
-pugi_xml_parent(pugi::xml_node *obj) {
-	pugi::xml_node *rnode = new pugi::xml_node;
-
-	*rnode = obj->parent();
-	return rnode;
+pugi::xml_node 
+pugi_xml_parent(pugi::xml_node obj) {
+	return obj.parent();
 }
 
-pugi::xml_node *
-pugi_node_child(pugi::xml_node *obj,const char *name) {
-	pugi::xml_node *rnode = new pugi::xml_node;
+pugi::xml_node
+pugi_node_child(pugi::xml_node obj,const char *name) {
 
-	*rnode = obj->child(name);
-	return rnode;
+	return obj.child(name);
 }
 
 int
-pugi_node_empty(pugi::xml_node *obj) {
-	return obj->empty() ? 1 : 0;
+pugi_node_empty(pugi::xml_node obj) {
+	return obj.empty() ? 1 : 0;
 }
 
 int
-pugi_node_type(pugi::xml_node *obj) {
-	return obj->type();
+pugi_node_type(pugi::xml_node obj) {
+	return obj.type();
 }
 
 // End pugixml_c.cpp
