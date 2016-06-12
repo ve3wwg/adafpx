@@ -66,6 +66,14 @@ package body Pugi_Xml is
       Node.Node := xml_child(Obj.Doc,C_Name'Address);
    end Child;
 
+   procedure Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class) is
+      function xml_child(Doc: System.Address; Name: System.Address) return System.Address;
+      pragma Import(C,xml_child,"pugi_node_child");
+      C_Name:  aliased String := C_String(Name);
+   begin
+      Node.Node := xml_child(Obj.Node,C_Name'Address);
+   end Child;
+
    function Name(Obj: XML_Node) return String is
       function node_name(Node: System.Address) return System.Address;
       pragma Import(C,node_name,"pugi_node_name");
@@ -76,5 +84,12 @@ package body Pugi_Xml is
    begin
       return Name;
    end Name;
+
+   procedure Parent(Obj: XML_Node; Node: out XML_Node'Class) is
+      function xml_parent(Node: System.Address) return System.Address;
+      pragma Import(C,xml_parent,"pugi_xml_parent");
+   begin
+      Node.Node := xml_parent(Obj.Node);
+   end Parent;
 
 end Pugi_Xml;

@@ -17,6 +17,8 @@ package Pugi_Xml is
    procedure Child(Obj: in out Xml_Document; Name: String; Node: out XML_Node'Class);
 
    function Name(Obj: XML_Node) return String;
+   procedure Parent(Obj: XML_Node; Node: out XML_Node'Class);
+   procedure Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
 
 private
 

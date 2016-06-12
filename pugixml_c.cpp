@@ -19,6 +19,8 @@ extern "C" {
 	pugi::xml_node *pugi_xml_child(pugi::xml_document *obj,const char *name);
 	void pugi_delete_node(pugi::xml_node *obj);
 	const char *pugi_node_name(pugi::xml_node *xml_node);
+	pugi::xml_node *pugi_xml_parent(pugi::xml_node *obj);
+	pugi::xml_node *pugi_node_child(pugi::xml_node *obj,const char *name);
 }
 
 pugi::xml_document *
@@ -57,6 +59,22 @@ const char *
 pugi_node_name(pugi::xml_node *xml_node) {
 
 	return xml_node->name();
+}
+
+pugi::xml_node *
+pugi_xml_parent(pugi::xml_node *obj) {
+	pugi::xml_node *rnode = new pugi::xml_node;
+
+	*rnode = obj->parent();
+	return rnode;
+}
+
+pugi::xml_node *
+pugi_node_child(pugi::xml_node *obj,const char *name) {
+	pugi::xml_node *rnode = new pugi::xml_node;
+
+	*rnode = obj->child(name);
+	return rnode;
 }
 
 // End pugixml_c.cpp
