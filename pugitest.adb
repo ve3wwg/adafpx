@@ -17,18 +17,31 @@ procedure PugiTest is
    Par_Node: Xml_Node;
 begin
 
+   pragma Assert(Node.Empty = True);
+
    Ada.Text_IO.Put_Line("Running");
-   Load(Doc,"config.xml");
+   Load(Doc,"pugitest.xml");
+
    Ada.Text_IO.Put_Line("Getting Child");
    Child(Doc,"entities",Node);
    Ada.Text_IO.Put("Node name is '");
    Ada.Text_IO.Put(Node.Name);
-   Ada.Text_IO.Put_Line("'");
+   Ada.Text_IO.Put_Line("', Type=" & XML_Node_Type'Image(Node.Node_Type));
+
+   pragma Assert(Node.Empty = False);
 
    Child(Node,"gnatprep",Gnat_Prep);
    Ada.Text_IO.Put("Gnat_Prep name is '");
    Ada.Text_IO.Put(Gnat_Prep.Name);
    Ada.Text_IO.Put_Line("'");
+
+   declare
+      V : String := Gnat_Prep.Node_Value;
+   begin
+      Ada.Text_IO.Put("Value='");
+      Ada.Text_IO.Put(V);
+      Ada.Text_IO.Put_line("'");
+   end;
 
    Parent(Gnat_Prep,Par_Node);
    Ada.Text_IO.Put("Parent name is '");

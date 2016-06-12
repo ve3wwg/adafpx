@@ -92,4 +92,29 @@ package body Pugi_Xml is
       Node.Node := xml_parent(Obj.Node);
    end Parent;
 
+   function Empty(Obj: XML_Node) return Boolean is
+      function xml_node_empty(Node: System.Address) return int_t;
+      pragma Import(C,xml_node_empty,"pugi_node_empty");
+   begin
+      return xml_node_empty(Obj'Address) /= 0;
+   end Empty;
+
+   function Node_Type(Obj: XML_Node) return XML_Node_Type is
+      function get_xml_node_type(Node: System.Address) return int_t;
+      pragma Import(C,get_xml_node_type,"pugi_node_type");
+   begin
+      return XML_Node_Type'Val(get_xml_node_type(Obj.Node));
+   end Node_Type;   
+
+   function Node_Value(Obj: XML_Node) return String is
+      function node_value(Node: System.Address) return System.Address;
+      pragma Import(C,node_value,"pugi_node_value");
+      C_Str :  constant System.Address := node_value(Obj.Node);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Node_Value;
+
 end Pugi_Xml;

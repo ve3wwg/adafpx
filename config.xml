@@ -4,6 +4,7 @@
 		<define symbol="POSIX_PLATFORM" string="%platform"/>
 		<define symbol="POSIX_MACHINE"  string="%machine"/>
 		<define symbol="POSIX_VERSION" string="%version"/>
+Value_Text
 	</gnatprep>
 	<copies>
 		<copy name="0050.ads"/>

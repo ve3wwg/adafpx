@@ -10,15 +10,89 @@ use Posix;
 
 package Pugi_Xml is
 
+   type XML_Node_Type is (
+      Node_Null,        -- Empty (null) node handle
+      Node_Document,	-- A document tree's absolute root
+      Node_Element,	-- Element tag, i.e. '<node/>'
+      Node_Pcdata,	-- Plain character data, i.e. 'text'
+      Node_Cdata,	-- Character data, i.e. '<![CDATA[text]]>'
+      Node_Comment,	-- Comment tag, i.e. '<!-- text -->'
+      Node_Pi,		-- Processing instruction, i.e. '<?name?>'
+      Node_Declaration,	-- Document declaration, i.e. '<?xml version="1.0"?>'
+      Node_Doctype	-- Document type declaration, i.e. '<!DOCTYPE doc>'
+   );   
+
+   for XML_Node_Type use (    -- These must match pugixml.hpp values
+      Node_Null => 0,
+      Node_Document => 1,
+      Node_Element => 2,
+      Node_Pcdata => 3,
+      Node_Cdata => 4,
+      Node_Comment => 5,
+      Node_Pi => 6,
+      Node_Declaration => 7,
+      Node_Doctype => 8
+   );
+
    type XML_Document is new Ada.Finalization.Controlled with private;
    type XML_Node is new Ada.Finalization.Controlled with private;
 
+   -- XML_Document
    procedure Load(Obj: in out Xml_Document; Pathname: string);
    procedure Child(Obj: in out Xml_Document; Name: String; Node: out XML_Node'Class);
 
+   -- XML_Node
    function Name(Obj: XML_Node) return String;
    procedure Parent(Obj: XML_Node; Node: out XML_Node'Class);
    procedure Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
+   function Empty(Obj: XML_Node) return Boolean;
+   function Node_Type(Obj: XML_Node) return XML_Node_Type;
+   function Node_Value(Obj: XML_Node) return String;
+
+   -- // Comparison operators (compares wrapped node pointers)
+   -- bool operator==(const xml_node& r) const;
+   -- bool operator!=(const xml_node& r) const;
+   -- bool operator<(const xml_node& r) const;
+   -- bool operator>(const xml_node& r) const;
+   -- bool operator<=(const xml_node& r) const;
+   -- bool operator>=(const xml_node& r) const;
+   -- 
+   -- // Get attribute list
+   -- xml_attribute first_attribute() const;
+   -- xml_attribute last_attribute() const;
+   -- 
+   -- // Get children list
+   -- xml_node first_child() const;
+   -- xml_node last_child() const;
+   -- 
+   -- // Get next/previous sibling in the children list of the parent node
+   -- xml_node next_sibling() const;
+   -- xml_node previous_sibling() const;
+   -- 
+   -- // Get parent node
+   -- xml_node parent() const;
+   -- 
+   -- // Get root of DOM tree this node belongs to
+   -- xml_node root() const;
+   -- 
+   -- // Get text object for the current node
+   -- xml_text text() const;
+   -- 
+   -- // Get child, attribute or next/previous sibling with the specified name
+   -- xml_node child(const char_t* name) const;
+   -- xml_attribute attribute(const char_t* name) const;
+   -- xml_node next_sibling(const char_t* name) const;
+   -- xml_node previous_sibling(const char_t* name) const;
+   -- 
+   -- // Get child value of current node; that is, value of the first child node of type PCDATA/CDATA
+   -- const char_t* child_value() const;
+   -- 
+   -- // Get child value of child with specified name. Equivalent to child(name).child_value().
+   -- const char_t* child_value(const char_t* name) const;
+   -- 
+   -- // Set node name/value (returns false if node is empty, there is not enough memory, or node can not have name/value)
+   -- bool set_name(const char_t* rhs);
+   -- bool set_value(const char_t* rhs);
 
 private
 
