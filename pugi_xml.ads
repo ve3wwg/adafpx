@@ -55,6 +55,8 @@ package Pugi_Xml is
    procedure Next_Sibling(Obj: XML_Node; Node: out XML_Node);
    procedure Previous_Sibling(Obj: XML_Node; Node: out XML_Node);
    function Is_Null(Obj: XML_Node) return Boolean;
+   function Child_Value(Obj: XML_Node) return String;
+   function Child_Value(Obj: XML_Node; Name: String) return String;
 
    -- // Comparison operators (compares wrapped node pointers)
    -- bool operator==(const xml_node& r) const;
@@ -72,16 +74,10 @@ package Pugi_Xml is
    -- xml_text text() const;
    -- 
    -- // Get child, attribute or next/previous sibling with the specified name
-   -- xml_node child(const char_t* name) const;
    -- xml_attribute attribute(const char_t* name) const;
    -- xml_node next_sibling(const char_t* name) const;
    -- xml_node previous_sibling(const char_t* name) const;
    -- 
-   -- // Get child value of current node; that is, value of the first child node of type PCDATA/CDATA
-   -- const char_t* child_value() const;
-   -- 
-   -- // Get child value of child with specified name. Equivalent to child(name).child_value().
-   -- const char_t* child_value(const char_t* name) const;
    -- 
    -- // Set node name/value (returns false if node is empty, there is not enough memory, or node can not have name/value)
    -- bool set_name(const char_t* rhs);

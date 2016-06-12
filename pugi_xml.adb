@@ -159,4 +159,27 @@ package body Pugi_Xml is
       return Node_Info = Node_Null;
    end Is_Null;
 
+   function Child_Value(Obj: XML_Node) return String is
+      function child_value(Node: System.Address) return System.Address;
+      pragma Import(C,child_value,"pugi_child_value");
+      C_Str :  constant System.Address := child_value(Obj.Node);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Child_Value;
+
+   function Child_Value(Obj: XML_Node; Name: String) return String is
+      function child_value(Node: System.Address; Name: System.Address) return System.Address;
+      pragma Import(C,child_value,"pugi_named_child_value");
+      C_Name:  aliased String := C_String(Name);
+      C_Str :  constant System.Address := child_value(Obj.Node,C_Name'Address);
+      Len :    constant Natural := Strlen(C_Str);
+      V :   String(1..Len);
+      for V'Address use C_Str;
+   begin
+      return V;
+   end Child_Value;
+
 end Pugi_Xml;

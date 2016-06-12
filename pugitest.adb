@@ -70,6 +70,18 @@ begin
          exit when Temp.Is_Null;
       end loop;
       Ada.Text_IO.Put_Line("--");
+
+      declare
+         Middle : String := First.Child_Value;
+      begin
+         Ada.Text_IO.Put_Line("Child value is '" & Middle & "'");
+      end;
+
+      declare
+         Middle : String := Gnat_Prep.Child_Value("Middle");
+      begin
+         Ada.Text_IO.Put_Line("Child value('Middle') is '" & Middle & "'");
+      end;
    end;
 
    Parent(Gnat_Prep,Par_Node);
