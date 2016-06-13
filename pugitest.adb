@@ -5,7 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Posix, Pugi_Xml;
+with Posix, Pugi_Xml, Interfaces.C;
 use Posix, Pugi_Xml;
 
 with Ada.Text_IO;
@@ -13,7 +13,8 @@ with Ada.Text_IO;
 procedure PugiTest is
    use Ada.Text_IO;
 
-   Doc:  Xml_Document;
+   Doc:  XML_Document;
+   Res:  XML_Parse_Result;
    Node: Xml_Node;
    Gnat_Prep: Xml_Node;
    Par_Node: Xml_Node;
@@ -22,7 +23,17 @@ begin
    pragma Assert(Node.Empty = True);
 
    Put_Line("Running");
-   Load(Doc,"pugitest.xml");
+   Load(Doc,"pugitest.xml",Res);
+   Put("Load Results: Status: ");
+   Put(XML_Parse_Status'Image(Status(Res)));
+   Put(" Offset: ");
+   Put(Interfaces.C.Unsigned'Image(Offset(Res)));
+   Put(" Encoding: ");
+   Put(XML_Encoding'Image(Encoding(Res)));
+   Put(" OK: ");
+   Put(Boolean'Image(OK(Res)));
+   Put(" Description: ");
+   Put_Line(Description(Res));
 
    Put_Line("Getting Child");
    Child(Doc,"entities",Node);

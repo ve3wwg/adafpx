@@ -16,7 +16,7 @@ extern "C" {
 	pugi::xml_document *pugi_new_xml_document();
 	pugi::xml_node pugi_doc_node(pugi::xml_document *doc);
 	void pugi_delete_xml_document(pugi::xml_document *doc);
-	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname);
+	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname,int *status,unsigned *offset,int *encoding,int *ok,const char **desc);
 	void pugi_reset(pugi::xml_document *obj);
 	void pugi_reset_proto(pugi::xml_document *obj,pugi::xml_document *proto);
 
@@ -128,9 +128,14 @@ pugi_delete_xml_document(pugi::xml_document *obj) {
 }
 
 void
-pugi_load_xml_file(pugi::xml_document *obj,const char *pathname) {
+pugi_load_xml_file(pugi::xml_document *obj,const char *pathname,int *status,unsigned *offset,int *encoding,int *ok,const char **desc) {
 	
-	obj->load_file(pathname);
+	pugi::xml_parse_result r = obj->load_file(pathname);
+	*status = int(r.status);
+	*offset = r.offset;
+	*encoding = int(r.encoding);
+	*ok = bool(r) ? 1 : 0;
+	*desc = r.description();
 }
 
 void

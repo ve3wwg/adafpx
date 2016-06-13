@@ -24,7 +24,7 @@ package body Pugi_Xml is
    end Initialize;
 
    procedure Finalize(Obj: in out Xml_Document) is
-      procedure delete_xml_document(doc: System.Address);
+      procedure delete_xml_document(Doc: System.Address);
       pragma Import(C,delete_xml_document,"pugi_delete_xml_document");
    begin
       delete_xml_document(Obj.Doc);
@@ -58,13 +58,22 @@ package body Pugi_Xml is
       Node.Node := as_node(Obj.Doc);
    end As_Node;
 
-   procedure Load(Obj: XML_Document; Pathname: in String) is
-      function load_xml_file(doc: System.Address; Pathname: System.Address) return System.Address;
+   procedure Load(Obj: XML_Document; Pathname: in String; Result: out XML_Parse_Result'Class) is
+      procedure load_xml_file(Doc, Path, Status, Offset, Encoding, OK, C_Desc: System.Address);
       pragma Import(C,load_xml_file,"pugi_load_xml_file");
       C_Path:  aliased String := C_String(Pathname);
-      Ignored: System.Address;
+      Status:  aliased Standard.Integer;
+      Offset:  aliased Interfaces.C.Unsigned;
+      Encoding: aliased Standard.Integer;
+      OK: aliased Standard.Integer;
+      C_Desc:  aliased System.Address;
    begin
-      Ignored := load_xml_file(Obj.Doc,C_Path'Address);
+      load_xml_file(Obj.Doc,C_Path'Address,Status'Address,Offset'Address,Encoding'Address,OK'Address,C_Desc'Address);
+      Result.Status := XML_Parse_Status'Val(Status);
+      Result.Offset := Offset;
+      Result.Encoding := XML_Encoding'Val(Encoding);
+      Result.OK := OK /= 0;
+      Result.C_Desc := C_Desc;
    end Load;
 
    procedure Child(Obj: XML_Document; Name: String; Node: out XML_Node'Class) is
@@ -666,4 +675,34 @@ package body Pugi_Xml is
       end if;
    end Set_Value;
    
+   function Status(Obj: XML_Parse_Result) return XML_Parse_Status is
+   begin
+      return Obj.Status;
+   end Status;
+
+   function Offset(Obj: XML_Parse_Result) return Interfaces.C.Unsigned is
+   begin
+      return Obj.Offset;
+   end Offset;
+
+   function Encoding(Obj: XML_Parse_Result) return XML_Encoding is
+   begin
+      return Obj.Encoding;
+   end Encoding;
+   
+   function Description(Obj: XML_Parse_Result) return String is
+      Len :    constant Natural := Strlen(Obj.C_Desc);
+      Desc :   String(1..Len);
+      for Desc'Address use Obj.C_Desc;
+   begin
+      return Desc;
+   end Description;
+
+   function OK(Obj: XML_Parse_Result) return Boolean is
+      function is_ok(Obj: System.Address) return Standard.Integer;
+      pragma Import(C,is_ok,"pugi_is_parse_ok");
+   begin
+      return Obj.OK;
+   end OK;
+
 end Pugi_Xml;
