@@ -39,14 +39,14 @@ package Pugi_Xml is
    type XML_Attribute is new Ada.Finalization.Controlled with private;
 
    -- XML_Document
-   procedure As_Node(Obj: in out XML_Document; Node: out XML_Node'Class);
-   procedure Load(Obj: in out XML_Document; Pathname: string);
-   procedure Child(Obj: in out XML_Document; Name: String; Node: out XML_Node'Class);
+   procedure As_Node(Obj: XML_Document; Node: out XML_Node'Class);
+   procedure Load(Obj: XML_Document; Pathname: string);
+   procedure Child(Obj: XML_Document; Name: String; Node: out XML_Node'Class);
 
    -- XML_Node
    function Name(Obj: XML_Node) return String;
    procedure Parent(Obj: XML_Node; Node: out XML_Node'Class);
-   procedure Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
+   procedure Child(Obj: XML_Node; Name: String; Node: out XML_Node'Class);
    function Empty(Obj: XML_Node) return Boolean;
    function Node_Type(Obj: XML_Node) return XML_Node_Type;
    function Value(Obj: XML_Node) return String;
@@ -61,10 +61,10 @@ package Pugi_Xml is
    function Child_Value(Obj: XML_Node) return String;
    function Child_Value(Obj: XML_Node; Name: String) return String;
 
-   procedure Append_Copy(Obj: in out XML_Node; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
-   procedure Prepend_Copy(Obj: in out XML_Node; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
-   procedure Insert_Copy_After(Obj: in out XML_Node; After: XML_Attribute'Class; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
-   procedure Insert_Copy_Before(Obj: in out XML_Node; Before: XML_Attribute'Class; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Append_Copy(Obj: XML_Node; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Prepend_Copy(Obj: XML_Node; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Insert_Copy_After(Obj: XML_Node; After: XML_Attribute'Class; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Insert_Copy_Before(Obj: XML_Node; Before: XML_Attribute'Class; Proto: XML_Attribute'Class; Attr: out XML_Attribute'Class);
 
    function "="(Left: XML_Node; Right: XML_Node) return Boolean;
    function "<"(Left: XML_Node; Right: XML_Node) return Boolean;
@@ -81,20 +81,20 @@ package Pugi_Xml is
 
    function Text(Obj: XML_Node) return String;
 
-   procedure Append_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class);
-   procedure Prepend_Attribute(Obj: in out XML_Node; Name: String; Attr: out XML_Attribute'Class);
-   procedure Insert_Attribute_After(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
-   procedure Insert_Attribute_Before(Obj: in out XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Append_Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class);
+   procedure Prepend_Attribute(Obj: XML_Node; Name: String; Attr: out XML_Attribute'Class);
+   procedure Insert_Attribute_After(Obj: XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
+   procedure Insert_Attribute_Before(Obj: XML_Node; Name: String; Other: XML_Attribute'Class; Attr: out XML_Attribute'Class);
 
-   procedure Append_Child(Obj: in out XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
-   procedure Prepend_Child(Obj: in out XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
-   procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
-   procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
+   procedure Append_Child(Obj: XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
+   procedure Prepend_Child(Obj: XML_Node; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
+   procedure Insert_Child_After(Obj: XML_Node; After: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
+   procedure Insert_Child_Before(Obj: XML_Node; Before: XML_Node'Class; Node_Type: XML_Node_Type; Node: out XML_Node'Class);
 
-   procedure Append_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
-   procedure Prepend_Child(Obj: in out XML_Node; Name: String; Node: out XML_Node'Class);
-   procedure Insert_Child_After(Obj: in out XML_Node; After: XML_Node'Class; Name: String; Node: out XML_Node'Class);
-   procedure Insert_Child_Before(Obj: in out XML_Node; Before: XML_Node'Class; Name: String; Node: out XML_Node'Class);
+   procedure Append_Child(Obj: XML_Node; Name: String; Node: out XML_Node'Class);
+   procedure Prepend_Child(Obj: XML_Node; Name: String; Node: out XML_Node'Class);
+   procedure Insert_Child_After(Obj: XML_Node; After: XML_Node'Class; Name: String; Node: out XML_Node'Class);
+   procedure Insert_Child_Before(Obj: XML_Node; Before: XML_Node'Class; Name: String; Node: out XML_Node'Class);
 
    procedure Append_Copy(Obj: XML_Node; Proto: XML_Node'Class; Node: out XML_Node'Class);
    procedure Prepend_Copy(Obj: XML_Node; Proto: XML_Node'Class; Node: out XML_Node'Class);
