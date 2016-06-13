@@ -522,4 +522,19 @@ package body Pugi_Xml is
       Node.Node := insert(Obj.Node,Before.Node,Proto.Node);
    end Insert_Copy_Before;
 
+   procedure Remove_Attribute(Obj: XML_Node; Attr: XML_Attribute'Class; OK: out Boolean) is
+      function remove(Obj, Attr: System.Address) return Standard.Integer;
+      pragma Import(C,remove,"pugi_remove_attr");
+   begin
+      OK := remove(Obj.Node,Attr.Attr) /= 0;
+   end Remove_Attribute;
+   
+   procedure Remove_Attribute(Obj: XML_Node; Name: String; OK: out Boolean) is
+      function remove(Obj, Name: System.Address) return Standard.Integer;
+      pragma Import(C,remove,"pugi_remove_attr_name");
+      C_Name: aliased String := C_String(Name);
+   begin
+      OK := remove(Obj.Node,C_Name'Address) /= 0;
+   end Remove_Attribute;
+
 end Pugi_Xml;

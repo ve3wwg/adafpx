@@ -71,6 +71,9 @@ extern "C" {
 	pugi::xml_node pugi_insert_copy_node_after(pugi::xml_node obj,pugi::xml_node after,pugi::xml_node proto);
 	pugi::xml_node pugi_insert_copy_node_before(pugi::xml_node obj,pugi::xml_node before,pugi::xml_node proto);
 
+	int pugi_remove_attr(pugi::xml_node obj,pugi::xml_attribute attr);
+	int pugi_remove_attr_name(pugi::xml_node obj,const char *name);
+
 	pugi::xml_attribute pugi_first_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_attr(pugi::xml_node obj,const char *name);
@@ -401,6 +404,16 @@ pugi_insert_copy_node_after(pugi::xml_node obj,pugi::xml_node after,pugi::xml_no
 pugi::xml_node 
 pugi_insert_copy_node_before(pugi::xml_node obj,pugi::xml_node before,pugi::xml_node proto) {
 	return obj.insert_copy_before(proto,before);
+}
+
+int
+pugi_remove_attr(pugi::xml_node obj,pugi::xml_attribute attr) {
+	return obj.remove_attribute(attr) ? 1 : 0;
+}
+
+int
+pugi_remove_attr_name(pugi::xml_node obj,const char *name) {
+	return obj.remove_attribute(name) ? 1 : 0;
 }
 
 // End pugixml_c.cpp
