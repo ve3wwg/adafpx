@@ -75,6 +75,20 @@ package body Pugi_Xml is
       Node.Node := xml_child(Obj.Doc,C_Name'Address);
    end Child;
 
+   procedure Reset(Obj: XML_Document) is
+      procedure reset(Doc: System.Address);
+      pragma Import(C,reset,"pugi_reset");
+   begin
+      reset(Obj.Doc);
+   end Reset;
+
+   procedure Reset(Obj: XML_Document; Proto: XML_Document'Class) is
+      procedure reset(Doc, Proto: System.Address);
+      pragma Import(C,reset,"pugi_reset_proto");
+   begin
+      reset(Obj.Doc,Proto.Doc);
+   end Reset;
+
    procedure Child(Obj: XML_Node; Name: String; Node: out XML_Node'Class) is
       function xml_child(Doc: System.Address; Name: System.Address) return System.Address;
       pragma Import(C,xml_child,"pugi_node_child");
@@ -562,4 +576,94 @@ package body Pugi_Xml is
       return Node;
    end Find_First_By_Path;
 
+   function As_Int(Obj: XML_Attribute) return Standard.Integer is
+      function as_value(Obj: System.Address) return Standard.Integer;
+      pragma Import(C,as_value,"pugi_attr_as_int");
+   begin
+      return as_value(Obj.Attr);
+   end As_Int;
+
+   function As_Uint(Obj: XML_Attribute) return Interfaces.C.unsigned is
+      function as_value(Obj: System.Address) return Interfaces.C.unsigned;
+      pragma Import(C,as_value,"pugi_attr_as_uint");
+   begin
+      return as_value(Obj.Attr);
+   end As_Uint;
+   
+   function As_Double(Obj: XML_Attribute) return Interfaces.C.double is
+      function as_value(Obj: System.Address) return Interfaces.C.double;
+      pragma Import(C,as_value,"pugi_attr_as_double");
+   begin
+      return as_value(Obj.Attr);
+   end As_Double;
+
+   function As_Float(Obj: XML_Attribute) return Standard.Float is
+      function as_value(Obj: System.Address) return Interfaces.C.C_float;
+      pragma Import(C,as_value,"pugi_attr_as_float");
+   begin
+      return Standard.Float(as_value(Obj.Attr));
+ end As_Float;
+
+   function As_Boolean(Obj: XML_Attribute) return Boolean is
+      function as_value(Obj: System.Address) return Standard.Integer;
+      pragma Import(C,as_value,"pugi_attr_as_bool");
+   begin
+      return as_value(Obj.Attr) /= 0;
+   end As_Boolean;
+
+   procedure Set_Name(Obj: XML_Attribute; Name: String) is
+      procedure set_name(Obj, Name: System.Address);
+      pragma Import(C,set_name,"pugi_set_attr_name");
+      C_Name: aliased String := C_String(Name);
+   begin
+      set_name(Obj.Attr,C_Name'Address);
+   end Set_Name;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: String) is
+      procedure set_value(Obj, Name: System.Address);
+      pragma Import(C,set_value,"pugi_set_attr_value");
+      C_Value: aliased String := C_String(Value);
+   begin
+      set_value(Obj.Attr,C_Value'Address);
+   end Set_Value;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: Standard.Integer) is
+      procedure set_value(Obj: System.Address; Value: Standard.Integer);
+      pragma Import(C,set_value,"pugi_set_attr_int");
+   begin
+      set_value(Obj.Attr,Value);
+   end Set_Value;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: Interfaces.C.Unsigned) is
+      procedure set_value(Obj: System.Address; Value: Interfaces.C.Unsigned);
+      pragma Import(C,set_value,"pugi_set_attr_uint");
+   begin
+      set_value(Obj.Attr,Value);
+ end Set_Value;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: Standard.Float) is
+      procedure set_value(Obj: System.Address; Value: Standard.Float);
+      pragma Import(C,set_value,"pugi_set_attr_float");
+   begin
+      set_value(Obj.Attr,Value);
+   end Set_Value;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: Interfaces.C.Double) is
+      procedure set_value(Obj: System.Address; Value: Interfaces.C.Double);
+      pragma Import(C,set_value,"pugi_set_attr_double");
+   begin
+      set_value(Obj.Attr,Value);
+   end Set_Value;
+   
+   procedure Set_Value(Obj: XML_Attribute; Value: Boolean) is
+      procedure set_value(Obj: System.Address; Value: Standard.Integer);
+      pragma Import(C,set_value,"pugi_set_attr_bool");
+   begin
+      if Value then
+         set_value(Obj.Attr,1);
+      else
+         set_value(Obj.Attr,0);
+      end if;
+   end Set_Value;
+   
 end Pugi_Xml;

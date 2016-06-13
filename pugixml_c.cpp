@@ -17,6 +17,8 @@ extern "C" {
 	pugi::xml_node pugi_doc_node(pugi::xml_document *doc);
 	void pugi_delete_xml_document(pugi::xml_document *doc);
 	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname);
+	void pugi_reset(pugi::xml_document *obj);
+	void pugi_reset_proto(pugi::xml_document *obj,pugi::xml_document *proto);
 
 	int pugi_node_empty(pugi::xml_node obj);
 	int pugi_node_type(pugi::xml_node obj);
@@ -97,6 +99,20 @@ extern "C" {
 
 	pugi::xml_attribute pugi_next_attr(pugi::xml_attribute obj);
 	pugi::xml_attribute pugi_prev_attr(pugi::xml_attribute obj);
+
+	int pugi_attr_as_int(pugi::xml_attribute obj);
+	unsigned pugi_attr_as_uint(pugi::xml_attribute obj);
+	float pugi_attr_as_float(pugi::xml_attribute obj);
+	double pugi_attr_as_double(pugi::xml_attribute obj);
+	int pugi_attr_as_bool(pugi::xml_attribute obj);
+
+	void pugi_set_attr_name(pugi::xml_attribute obj,const char *name);
+	void pugi_set_attr_value(pugi::xml_attribute obj,const char *value);
+	void pugi_set_attr_int(pugi::xml_attribute obj,int value);
+	void pugi_set_attr_uint(pugi::xml_attribute obj,unsigned value);
+	void pugi_set_attr_float(pugi::xml_attribute obj,float value);
+	void pugi_set_attr_double(pugi::xml_attribute obj,double value);
+	void pugi_set_attr_bool(pugi::xml_attribute obj,int value);
 }
 
 pugi::xml_document *
@@ -115,6 +131,16 @@ void
 pugi_load_xml_file(pugi::xml_document *obj,const char *pathname) {
 	
 	obj->load_file(pathname);
+}
+
+void
+pugi_reset(pugi::xml_document *obj) {
+	obj->reset();
+}
+
+void
+pugi_reset_proto(pugi::xml_document *obj,pugi::xml_document *proto) {
+	obj->reset(*proto);
 }
 
 pugi::xml_node
@@ -433,6 +459,66 @@ pugi_remove_child_name(pugi::xml_node obj,const char *name) {
 pugi::xml_node
 pugi_find_by_path(pugi::xml_node obj,const char *path,char delimiter) {
 	return obj.first_element_by_path(path,delimiter);
+}
+
+int
+pugi_attr_as_int(pugi::xml_attribute obj) {
+	return obj.as_int();
+}
+
+unsigned
+pugi_attr_as_uint(pugi::xml_attribute obj) {
+	return obj.as_uint();
+}
+
+float
+pugi_attr_as_float(pugi::xml_attribute obj) {
+	return obj.as_float();
+}
+
+double
+pugi_attr_as_double(pugi::xml_attribute obj) {
+	return obj.as_double();
+}
+
+int
+pugi_attr_as_bool(pugi::xml_attribute obj) {
+	return obj.as_bool() ? 1 : 0;
+}
+
+void 
+pugi_set_attr_name(pugi::xml_attribute obj,const char *name) {
+	obj.set_name(name);
+}
+
+void 
+pugi_set_attr_value(pugi::xml_attribute obj,const char *value) {
+	obj.set_value(value);
+}
+
+void 
+pugi_set_attr_int(pugi::xml_attribute obj,int value) {
+	obj.set_value(value);
+}
+
+void 
+pugi_set_attr_uint(pugi::xml_attribute obj,unsigned value) {
+	obj.set_value(value);
+}
+
+void 
+pugi_set_attr_float(pugi::xml_attribute obj,float value) {
+	obj.set_value(value);
+}
+
+void 
+pugi_set_attr_double(pugi::xml_attribute obj,double value) {
+	obj.set_value(value);
+}
+
+void 
+pugi_set_attr_bool(pugi::xml_attribute obj,int value) {
+	obj.set_value(value != 0);
 }
 
 // End pugixml_c.cpp

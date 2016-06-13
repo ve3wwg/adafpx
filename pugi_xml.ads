@@ -5,7 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Posix, System, Ada.Finalization;
+with Posix, System, Ada.Finalization, Interfaces.C;
 use Posix;
 
 package Pugi_Xml is
@@ -42,6 +42,8 @@ package Pugi_Xml is
    procedure As_Node(Obj: XML_Document; Node: out XML_Node'Class);
    procedure Load(Obj: XML_Document; Pathname: string);
    procedure Child(Obj: XML_Document; Name: String; Node: out XML_Node'Class);
+   procedure Reset(Obj: XML_Document);
+   procedure Reset(Obj: XML_Document; Proto: XML_Document'Class);
 
    -- XML_Node
    function Name(Obj: XML_Node) return String;
@@ -123,6 +125,20 @@ package Pugi_Xml is
    procedure Previous_Attribute(Obj: XML_Attribute; Prev: out XML_Attribute'Class);
 
    function Is_Null(Obj: XML_Attribute) return Boolean;
+
+   function As_Int(Obj: XML_Attribute) return Standard.Integer;
+   function As_Uint(Obj: XML_Attribute) return Interfaces.C.unsigned;
+   function As_Double(Obj: XML_Attribute) return Interfaces.C.double;
+   function As_Float(Obj: XML_Attribute) return Standard.Float;
+   function As_Boolean(Obj: XML_Attribute) return Boolean;
+   
+   procedure Set_Name(Obj: XML_Attribute; Name: String);
+   procedure Set_Value(Obj: XML_Attribute; Value: String);
+   procedure Set_Value(Obj: XML_Attribute; Value: Standard.Integer);
+   procedure Set_Value(Obj: XML_Attribute; Value: Interfaces.C.Unsigned);
+   procedure Set_Value(Obj: XML_Attribute; Value: Standard.Float);
+   procedure Set_Value(Obj: XML_Attribute; Value: Interfaces.C.Double);
+   procedure Set_Value(Obj: XML_Attribute; Value: Boolean);
 
 private
 
