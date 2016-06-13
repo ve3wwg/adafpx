@@ -494,4 +494,32 @@ package body Pugi_Xml is
       Node.Node := insert(Obj.Node,Before.Node,C_Name'Address);
    end Insert_Child_Before;
    
+   procedure Append_Copy(Obj: XML_Node; Proto: XML_Node'Class; Node: out XML_Node'Class) is
+      function append(Obj, Proto: System.Address) return System.Address;
+      pragma Import(C,append,"pugi_append_copy_node");
+   begin
+      Node.Node := append(Obj.Node,Proto.Node);
+   end Append_Copy;
+
+   procedure Prepend_Copy(Obj: XML_Node; Proto: XML_Node'Class; Node: out XML_Node'Class) is
+      function prepend(Obj, Proto: System.Address) return System.Address;
+      pragma Import(C,prepend,"pugi_prepend_copy_node");
+   begin
+      Node.Node := prepend(Obj.Node,Proto.Node);
+   end Prepend_Copy;
+
+   procedure Insert_Copy_After(Obj: XML_Node; After, Proto: XML_Node'Class; Node: out XML_Node'Class) is
+    function insert(Obj, After, Proto: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_insert_copy_node_after");
+   begin
+      Node.Node := insert(Obj.Node,After.Node,Proto.Node);
+   end Insert_Copy_After;
+
+   procedure Insert_Copy_Before(Obj: XML_Node; Before, Proto: XML_Node'Class; Node: out XML_Node'Class) is
+      function insert(Obj, Before, Proto: System.Address) return System.Address;
+      pragma Import(C,insert,"pugi_insert_copy_node_before");
+   begin
+      Node.Node := insert(Obj.Node,Before.Node,Proto.Node);
+   end Insert_Copy_Before;
+
 end Pugi_Xml;
