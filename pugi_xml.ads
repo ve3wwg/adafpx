@@ -104,25 +104,10 @@ package Pugi_Xml is
    procedure Remove_Attribute(Obj: XML_Node; Attr: XML_Attribute'Class; OK: out Boolean);
    procedure Remove_Attribute(Obj: XML_Node; Name: String; OK: out Boolean);
 
-   -- // Remove specified child
-   -- bool remove_child(const xml_node& n);
-   -- bool remove_child(const char_t* name);
-   -- 
-   -- // Search for a node by path consisting of node names and . or .. elements.
-   -- xml_node first_element_by_path(const char_t* path, char_t delimiter = '/') const;
-   -- 
-   -- // Child nodes iterators
-   -- typedef xml_node_iterator iterator;
-   -- 
-   -- iterator begin() const;
-   -- iterator end() const;
-   -- 
-   -- // Attribute iterators
-   -- typedef xml_attribute_iterator attribute_iterator;
-   -- 
-   -- attribute_iterator attributes_begin() const;
-   -- attribute_iterator attributes_end() const;
+   procedure Remove_Child(Obj: XML_Node; Node: XML_Node'Class; OK: out Boolean);
+   procedure Remove_Child(Obj: XML_Node; Name: String; OK: out Boolean);
 
+   function Find_First_By_Path(Obj: XML_Node; Path: String; Delimiter: Character := '/') return XML_Node;
 
    function Name(Obj: XML_Attribute) return String;
    function Value(Obj: XML_Attribute) return String;

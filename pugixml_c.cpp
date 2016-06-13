@@ -71,8 +71,12 @@ extern "C" {
 	pugi::xml_node pugi_insert_copy_node_after(pugi::xml_node obj,pugi::xml_node after,pugi::xml_node proto);
 	pugi::xml_node pugi_insert_copy_node_before(pugi::xml_node obj,pugi::xml_node before,pugi::xml_node proto);
 
+	pugi::xml_node pugi_find_by_path(pugi::xml_node obj,const char *path,char delimiter);
+
 	int pugi_remove_attr(pugi::xml_node obj,pugi::xml_attribute attr);
 	int pugi_remove_attr_name(pugi::xml_node obj,const char *name);
+	int pugi_remove_child(pugi::xml_node obj,pugi::xml_node child);
+	int pugi_remove_child_name(pugi::xml_node obj,const char *name);
 
 	pugi::xml_attribute pugi_first_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
@@ -414,6 +418,21 @@ pugi_remove_attr(pugi::xml_node obj,pugi::xml_attribute attr) {
 int
 pugi_remove_attr_name(pugi::xml_node obj,const char *name) {
 	return obj.remove_attribute(name) ? 1 : 0;
+}
+
+int
+pugi_remove_child(pugi::xml_node obj,pugi::xml_node child) {
+	return obj.remove_child(child);
+}
+
+int
+pugi_remove_child_name(pugi::xml_node obj,const char *name) {
+	return obj.remove_child(name);
+}
+
+pugi::xml_node
+pugi_find_by_path(pugi::xml_node obj,const char *path,char delimiter) {
+	return obj.first_element_by_path(path,delimiter);
 }
 
 // End pugixml_c.cpp

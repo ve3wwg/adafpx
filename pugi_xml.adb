@@ -537,4 +537,29 @@ package body Pugi_Xml is
       OK := remove(Obj.Node,C_Name'Address) /= 0;
    end Remove_Attribute;
 
+   procedure Remove_Child(Obj: XML_Node; Node: XML_Node'Class; OK: out Boolean) is
+      function remove(Obj, Attr: System.Address) return Standard.Integer;
+      pragma Import(C,remove,"pugi_remove_attr");
+   begin
+      OK := remove(Obj.Node,Node.Node) /= 0;
+   end Remove_Child;
+   
+   procedure Remove_Child(Obj: XML_Node; Name: String; OK: out Boolean) is
+      function remove(Obj, Name: System.Address) return Standard.Integer;
+      pragma Import(C,remove,"pugi_remove_child_name");
+      C_Name: aliased String := C_String(Name);
+   begin
+      OK := remove(Obj.Node,C_Name'Address) /= 0;
+   end Remove_Child;
+
+   function Find_First_By_Path(Obj: XML_Node; Path: String; Delimiter: Character := '/') return XML_Node is
+      function find(Obj, Path: System.Address; Delim: Character) return System.Address;
+      pragma Import(C,find,"pugi_find_by_path");
+      C_Path: aliased String := C_String(Path);
+      Node: XML_Node;
+   begin
+      Node.Node := find(Obj.Node,C_Path'Address,Delimiter);
+      return Node;
+   end Find_First_By_Path;
+
 end Pugi_Xml;
