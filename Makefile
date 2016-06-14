@@ -5,11 +5,6 @@
 include Makefile.incl
 -include Makefile.tests
 
-x:   xrm pugitest
-
-xrm:
-	rm -f pugixml_c.o pugi_xml.o
-
 all:	main run atest
 
 OBJS	= ansi-c-lex.o ansi-c-yacc.o pugixml.o main.o config.o utils.o comp.o \
@@ -52,12 +47,6 @@ clobber: clean
 	rm -f Makefile.tests pugitest
 
 distclean: clobber
-
-pugi_xml.o:
-	$(GNAT) -c -gnata pugi_xml.adb
-	
-pugitest: pugixml_c.o pugi_xml.o pugixml.o
-	$(GNAT) -g -gnata pugitest pugi_xml -largs pugixml_c.o pugixml.o -L. -ladafpx --LINK=g++
 
 ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 
