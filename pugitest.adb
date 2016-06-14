@@ -20,7 +20,7 @@ procedure PugiTest is
    Par_Node: Xml_Node;
 begin
 
-   pragma Assert(Node.Empty = True);
+   pragma Assert(Node.Is_Null);
 
    Put_Line("Running");
    Load(Doc,"pugitest.xml",Res);
@@ -41,9 +41,21 @@ begin
    Put(Node.Name);
    Put_Line("', Type=" & XML_Node_Type'Image(Node.Node_Type));
 
+   Node.Child("gnatprep",Gnat_Prep);
+   Put_Line("Gnat_Prep name is '" & Gnat_Prep.Name & "'");
+
+   declare
+      F, L: XML_Attribute;
+   begin
+      Gnat_Prep.First_Attribute(F);
+      Gnat_Prep.Last_Attribute(L);
+      Put_Line("gnatprep First attr " & F.Name & " and last attr " & L.Name);
+      Put_Line("Values are '" & F.Value & "' and '" & L.Value & "'");
+   end;
+
    pragma Assert(Node.Empty = False);
 
-   Child(Node,"gnatprep",Gnat_Prep);
+   Node.Child("gnatprep",Gnat_Prep);
    Put("Gnat_Prep name is '");
    Put(Gnat_Prep.Name);
    Put_Line("'");
@@ -52,8 +64,9 @@ begin
    declare
       Other : XML_Node;
    begin
-      Child(Node,"gnatprep",Other);
-      pragma Assert(Gnat_Prep = Other);
+      Node.Child("gnatprep",Other);
+      pragma Assert(Gnat_Prep = Gnat_Prep);
+      pragma Assert(Gnat_Prep /= Other);
       pragma Assert(Other /= Par_Node);
    end;
 
@@ -155,7 +168,7 @@ begin
       Temp : XML_Node;
       A1, A2, A3, A4: XML_Attribute;
    begin
-      Doc.As_Node(Root);
+      Doc.As_Root(Root);
       Root.First_Child(Temp);
       pragma Assert(Temp.Name = "entities");
       Put_Line("As_Node passed.");
@@ -172,24 +185,42 @@ begin
    declare
       New_Doc : XML_Document;
       Root : XML_Node;
+      Node : XML_Node;
+      Attr1 : XML_Attribute;
+   begin
+      New_Doc.As_Root(Root);
+      Root.Append_Child("Named_Root",Node);
+      pragma Assert(Node.Name = "Named_Root");
+      Put_Line("New Document Test passed.");
+   end;
+
+   declare
+      New_Doc : XML_Document;
+      Root, Node : XML_Node;
+      Attr1 : XML_Attribute;
       OK : Boolean;
    begin
-      New_Doc.As_Node(Root);
-      Root.Set_Name("Named_Root",OK);
-      pragma Assert(OK);
-      Root.Set_Value("OINKERS",OK);
-      pragma Assert(OK);
-      pragma Assert(Root.Name = "Named_Root");
-      pragma Assert(Root.Value = "OINKERS");
-      Put_Line("New Document Test passed.");
+      New_Doc.As_Root(Root);
+      Root.Append_Child("Node",Node);
+      pragma Assert(Node.Is_Null = False);
+      Node.Append_Attribute("Attr1",Attr1);
+      Attr1.Set_Value("ATTR_ONE");
+      pragma Assert(Attr1.Is_Null = False);
+      Save(New_Doc,"out.xml",OK);
+      pragma assert(OK);
+      Put_Line("Saved as out.xml");
    end;
 
    declare
       First, Two, Last: XML_Attribute;
    begin
       First_Attribute(Gnat_Prep,First);
-      Attribute(Gnat_Prep,"Two",Two);
+      Attribute(Gnat_Prep,"attr2",Two);
       Last_Attribute(Gnat_Prep,Last);
+
+      Put_Line("attr1.name = " & First.Name);
+      Put_Line("attr2.name = " & Two.Name);
+      Put_Line("attr3.name = " & Last.Name);
 
       pragma Assert(First.Name = "attr1");
       pragma Assert(Two.Name = "attr2");
@@ -204,6 +235,33 @@ begin
       pragma Assert(Last.Empty = False);
 
       Put_Line("Attributes passed.");
+   end;
+
+   declare
+      Content: aliased String := "<Root_Node><Node1 Attr1=""One"" /></Root_Node>";
+      Doc: XML_Document;
+      Res: XML_Parse_Result;
+      Root, Root_Node, Node1: XML_Node;
+      Attr1 : XML_Attribute;
+   begin
+      Doc.Load_In_Place(Content(1)'Address,Content'Length,Result=>Res);
+      pragma Assert(Res.OK = True);
+      Doc.As_Root(Root);
+      Root.Child("Root_Node",Root_Node);
+      Put_Line("Root Node name is '" & Root_Node.Name & "'");
+      pragma Assert(Root_Node.Name = "Root_Node");
+      Root_Node.Child("Node1",Node1);
+      Put_Line("Node1 name is '" & Node1.Name & "'");
+      pragma Assert(Node1.Name = "Node1");
+      Node1.Attribute("Attr1",Attr1);
+      pragma Assert(Attr1.Name = "Attr1");
+      pragma Assert(Attr1.Value = "One");
+
+      Put("Node1.Attr1=""");
+      Put(Attr1.Value);
+      Put_Line("""");
+
+      Put_Line("Load_In_Place verified.");
    end;
 
    Put_Line("Done");

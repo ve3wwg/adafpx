@@ -51,12 +51,12 @@ package body Pugi_Xml is
       Obj.Attr := System.Null_Address;   
    end Finalize;
 
-   procedure As_Node(Obj: XML_Document; Node: out XML_Node'Class) is
-      function as_node(Doc: System.Address) return System.Address;
-      pragma Import(C,as_node,"pugi_doc_node");
+   procedure As_Root(Obj: XML_Document; Node: out XML_Node'Class) is
+      function root(Doc: System.Address) return System.Address;
+      pragma Import(C,root,"pugi_doc_root");
    begin
-      Node.Node := as_node(Obj.Doc);
-   end As_Node;
+      Node.Node := root(Obj.Doc);
+   end As_Root;
 
    procedure Load(Obj: XML_Document; Pathname: in String; Result: out XML_Parse_Result'Class) is
       procedure load_xml_file(Doc, Path, Status, Offset, Encoding, OK, C_Desc: System.Address);
@@ -75,6 +75,42 @@ package body Pugi_Xml is
       Result.OK := OK /= 0;
       Result.C_Desc := C_Desc;
    end Load;
+
+   procedure Load_In_Place(Obj: XML_Document; Contents: System.Address; Bytes: Standard.Integer; Encoding: XML_Encoding := Encoding_Auto; Result: out XML_Parse_Result'Class) is
+      procedure load_in_place(Obj, Contents, Status, Offset, Enc, OK, C_Desc: System.Address; Size, Encoding: Standard.Integer);
+      pragma Import(C,load_in_place,"pugi_load_in_place");
+      Status:  aliased Standard.Integer;
+      Offset:  aliased Interfaces.C.Unsigned;
+      Enc: aliased Standard.Integer;
+      OK: aliased Standard.Integer;
+      C_Desc:  aliased System.Address;
+   begin
+      load_in_place(
+         Obj      => Obj.Doc,
+         Contents => Contents,
+         Status   => Status'Address,
+         Offset   => Offset'Address,
+         Enc      => Enc'Address,
+         OK       => OK'Address,
+         C_Desc   => C_Desc'Address,
+         Size     => Bytes,
+         Encoding => XML_Encoding'Pos(Encoding)
+      );
+      Result.Status := XML_Parse_Status'Val(Status);
+      Result.Offset := Offset;
+      Result.Encoding := XML_Encoding'Val(Enc);
+      Result.OK := OK /= 0;
+      Result.C_Desc := C_Desc;
+   end Load_In_Place;
+
+   procedure Save(Obj: XML_Document; Pathname: String; OK: out Boolean; Indent: String := Indent_Default; Encoding: XML_Encoding := Encoding_Auto) is
+      function save(Doc, Path, Indent: System.Address; Encoding: Standard.Integer) return Standard.Integer;
+      pragma Import(C,save,"pugi_save_file");
+      C_Path:  aliased String := C_String(Pathname);
+      C_Indent: aliased String := C_String(Indent);
+   begin
+      OK := save(Obj.Doc,C_Path'Address,C_Indent'Address,XML_Encoding'Pos(Encoding)) /= 0;
+   end Save;
 
    procedure Child(Obj: XML_Document; Name: String; Node: out XML_Node'Class) is
       function xml_child(Doc: System.Address; Name: System.Address) return System.Address;
@@ -310,7 +346,7 @@ package body Pugi_Xml is
       pragma Import(C,get_attr,"pugi_attr");
       C_Name:  aliased String := C_String(Name);
    begin
-      Attr.Attr := get_attr(Obj.Node,Name'Address);
+      Attr.Attr := get_attr(Obj.Node,C_Name'Address);
    end Attribute;
 
    function Name(Obj: XML_Attribute) return String is

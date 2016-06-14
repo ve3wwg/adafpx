@@ -5,7 +5,7 @@
 -- Protected under the following license:
 -- GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 
-with Posix, System, Ada.Finalization, Interfaces.C;
+with Posix, System, Ada.Finalization, Interfaces.C, Ada.Characters.Latin_1;
 use Posix;
 
 package Pugi_Xml is
@@ -109,11 +109,16 @@ package Pugi_Xml is
    function OK(Obj: XML_Parse_Result) return Boolean;
 
    -- XML_Document
-   procedure As_Node(Obj: XML_Document; Node: out XML_Node'Class);
+   procedure As_Root(Obj: XML_Document; Node: out XML_Node'Class);
    procedure Load(Obj: XML_Document; Pathname: string; Result: out XML_Parse_Result'Class);
+   procedure Load_In_Place(Obj: XML_Document; Contents: System.Address; Bytes: Standard.Integer; Encoding: XML_Encoding := Encoding_Auto; Result: out XML_Parse_Result'Class);
    procedure Child(Obj: XML_Document; Name: String; Node: out XML_Node'Class);
    procedure Reset(Obj: XML_Document);
    procedure Reset(Obj: XML_Document; Proto: XML_Document'Class);
+
+   Indent_Default : constant String(1..1) := (others => Ada.Characters.Latin_1.HT);
+
+   procedure Save(Obj: XML_Document; Pathname: String; OK: out Boolean; Indent: String := Indent_Default; Encoding: XML_Encoding := Encoding_Auto);
 
    -- // Load document from buffer. Copies/converts the buffer, so it may be deleted or changed after the function returns.
    -- xml_parse_result load_buffer(const void* contents, size_t size, unsigned int options = parse_default, xml_encoding encoding = encoding_auto);

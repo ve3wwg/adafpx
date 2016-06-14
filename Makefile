@@ -54,10 +54,10 @@ clobber: clean
 distclean: clobber
 
 pugi_xml.o:
-	$(GNAT) -c pugi_xml.adb
+	$(GNAT) -c -gnata pugi_xml.adb
 	
 pugitest: pugixml_c.o pugi_xml.o pugixml.o
-	$(GNAT) -g pugitest pugi_xml -largs pugixml_c.o pugixml.o -L. -ladafpx --LINK=g++
+	$(GNAT) -g -gnata pugitest pugi_xml -largs pugixml_c.o pugixml.o -L. -ladafpx --LINK=g++
 
 ansi-c-lex.o: ansi-c-yacc.cpp ansi-c-yacc.hpp
 

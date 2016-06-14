@@ -17,6 +17,8 @@ extern "C" {
 	pugi::xml_node pugi_doc_node(pugi::xml_document *doc);
 	void pugi_delete_xml_document(pugi::xml_document *doc);
 	void pugi_load_xml_file(pugi::xml_document *obj,const char *pathname,int *status,unsigned *offset,int *encoding,int *ok,const char **desc);
+	void pugi_load_in_place(pugi::xml_document *obj,void *content,int *status,unsigned *offset,int *encout,int *ok,const char **desc,int size,int encoding);
+	int pugi_save_file(pugi::xml_document *obj,const char *pathname,const char *indent,int encoding);
 	void pugi_reset(pugi::xml_document *obj);
 	void pugi_reset_proto(pugi::xml_document *obj,pugi::xml_document *proto);
 
@@ -28,6 +30,7 @@ extern "C" {
 	pugi::xml_node pugi_node_child(pugi::xml_node obj,const char *name);
 	pugi::xml_node pugi_first_child(pugi::xml_node obj);
 	pugi::xml_node pugi_last_child(pugi::xml_node obj);
+	pugi::xml_node pugi_doc_root(pugi::xml_document *obj);
 	pugi::xml_node pugi_root_node(pugi::xml_node obj);
 	pugi::xml_node pugi_next_sibling(pugi::xml_node obj);
 	pugi::xml_node pugi_next_named_sibling(pugi::xml_node obj,const char *name);
@@ -84,8 +87,8 @@ extern "C" {
 	pugi::xml_attribute pugi_last_attr(pugi::xml_node obj);
 	pugi::xml_attribute pugi_attr(pugi::xml_node obj,const char *name);
 
-	const char *pugi_attr_name(pugi::xml_node obj);
-	const char *pugi_attr_value(pugi::xml_node obj);
+	const char *pugi_attr_name(pugi::xml_attribute obj);
+	const char *pugi_attr_value(pugi::xml_attribute obj);
 
 	const char *pugi_text(pugi::xml_node obj);
 
@@ -136,6 +139,22 @@ pugi_load_xml_file(pugi::xml_document *obj,const char *pathname,int *status,unsi
 	*encoding = int(r.encoding);
 	*ok = bool(r) ? 1 : 0;
 	*desc = r.description();
+}
+
+void
+pugi_load_in_place(pugi::xml_document *obj,void *content,int *status,unsigned *offset,int *encout,int *ok,const char **desc,int size,int encoding) {
+	
+	pugi::xml_parse_result r = obj->load_buffer_inplace(content,size_t(size),pugi::parse_default,pugi::xml_encoding(encoding));
+	*status = int(r.status);
+	*offset = r.offset;
+	*encout = int(r.encoding);
+	*ok = bool(r) ? 1 : 0;
+	*desc = r.description();
+}
+
+int
+pugi_save_file(pugi::xml_document *obj,const char *pathname,const char *indent,int encoding) {
+	return obj->save_file(pathname,indent,pugi::xml_encoding(encoding)) ? 1 : 0;
 }
 
 void
@@ -199,6 +218,11 @@ pugi_first_child(pugi::xml_node obj) {
 pugi::xml_node 
 pugi_last_child(pugi::xml_node obj) {
 	return obj.last_child();
+}
+
+pugi::xml_node
+pugi_doc_root(pugi::xml_document *obj) {
+	return obj->root();
 }
 
 pugi::xml_node 
@@ -287,12 +311,12 @@ pugi_attr(pugi::xml_node obj,const char *name) {
 }
 
 const char *
-pugi_attr_name(pugi::xml_node obj) {
+pugi_attr_name(pugi::xml_attribute obj) {
 	return obj.name();
 }
 
 const char *
-pugi_attr_value(pugi::xml_node obj) {
+pugi_attr_value(pugi::xml_attribute obj) {
 	return obj.value();
 }
 
