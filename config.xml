@@ -4971,6 +4971,7 @@ Value_Text
 				<case name="SO_ACCEPTCONN"/>
 				<case name="SO_BROADCAST"/>
 				<case name="SO_REUSEADDR"/>
+				<case name="SO_REUSEPORT"/>
 				<case name="SO_KEEPALIVE"/>
 				<case name="SO_OOBINLINE"/>
 				<case name="SO_SNDBUF"/>
@@ -5054,6 +5055,7 @@ Value_Text
 				<case name="SO_ACCEPTCONN"/>
 				<case name="SO_BROADCAST"/>
 				<case name="SO_REUSEADDR"/>
+				<case name="SO_REUSEPORT"/>
 				<case name="SO_KEEPALIVE"/>
 				<case name="SO_OOBINLINE"/>
 				<case name="SO_SNDBUF"/>
